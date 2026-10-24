@@ -1,8 +1,8 @@
 # r2p 生产工程与源码交付验证
 
-日期：2026-10-24；记录：VAL-20261024-04。
-源码：SDK 验证快照 `f9e8d6461f51b7149b436844339dd9df7abb9e00` 加本次生产工程目录/文档/工作流变更。
-状态：本地相关验证通过；远端交付结果单独记录。
+日期：2026-10-24；最终核验：2026-10-25；记录：VAL-20261024-04。
+受测源码：`839ddb30dc3c936049a26f946b6206af25a99ba9`；主分支合并：`2cc5fbcddea3b35d6a0a95caf6177478b79e79be`。
+状态：本地相关验证、远端 PR 检查及源码合并通过；本次回执仅更新文档。
 
 ## 1. 范围和既有证据
 
@@ -48,34 +48,39 @@ no_std UI 的 enum constructor 快照仍保留旧包名列号，按实际诊断�
 ## 3. 远端核验
 
 分支、PR、合并和两历史引用结果保存到[交付记录](../../releases/records/2026-10-24-production-baseline.md)。
-本地结果不能声称完整 GitHub 平台矩阵通过，远端缺失/失败和原因单列。
-源码修正提交 `fcc20c0b2e6b35e53be344ba3c9cc70987b4124d` 的[指南构建和链接检查](https://github.com/jelven007/r2p/actions/runs/40110047778)已通过。
-同提交的[CI 运行](https://github.com/jelven007/r2p/actions/runs/40110047892)最终 31 个检查成功、13 个条件跳过、2 个失败。
-失败为 no_std Rust 的两份诊断快照及正确阻断的 conclusion；快照已按第 2 节补正并在本地严格复验，仍须在新提交远端重跑。
-日志摘要保存在 `.tools/production-ci-fcc-watch.log`；对应 PR 测试合并树为 `60bf07e5f87765b59eff04264cfd2306d47fe713`。
+最终提交的 [CI 运行](https://github.com/jelven007/r2p/actions/runs/40112259362)为 33 个检查成功、13 个条件跳过，零失败，conclusion 通过。
+对应 PR 测试合并树为 `7670dfdf976772330d681ae6bc097d14ab78d0f6`；正常合并后执行 `git diff --exit-code 839ddb30 HEAD` 无差异。
+GitHub 平台的完整发行矩阵未启用，本表只声明实际运行的 PR 组合。
 
 | 远端组合/检查 | 结果与证据边界 |
 | --- | --- |
 | CPython 3.14 / stable | Linux x64/arm64、macOS arm64、Windows x64/x86/arm64 六个 build 任务通过 |
-| CPython 3.14t / stable | Linux x64 build 通过；Python 行为 196 passed、1 skipped |
+| CPython 3.14t / stable | Linux x64 build 通过；free-threaded 组合单独运行 |
 | CPython 3.15 / stable | Linux x64 build 通过 |
-| CPython 3.15t / stable | Linux x64 build 通过；Python 行为 196 passed、1 skipped |
+| CPython 3.15t / stable | Linux x64 build 通过；free-threaded 组合单独运行 |
 | CPython 3.14 / nightly | Linux x64 build 通过；该任务使用 `UI_TEST=ignore`，不作为严格诊断证据 |
-| MSRV、静态与实验检查 | MSRV、九个 stable Clippy 目标、beta Clippy、nightly check、格式、zizmor、mypy/pyrefly、内省、no_std Python/clippy 均通过 |
-| 指南、变更记录、覆盖率基线 | 指南及链接检查、changelog 和 coverage-pr-base 通过；覆盖率任务成功不证明已启用第三方服务 |
+| MSRV、静态与实验检查 | MSRV、九个 stable Clippy 目标、beta Clippy、nightly check、格式、zizmor、mypy/pyrefly、内省均通过 |
+| no_std | Rust、Python、Clippy 三项均通过；严格 UI 的 full 组合 56 passed、13 ignored、7 filtered，macros 组合 59 passed、10 ignored、7 filtered |
+| 指南、变更记录、覆盖率基线 | [指南及链接检查](https://github.com/jelven007/r2p/actions/runs/40112259370)、changelog 和 coverage-pr-base 通过；覆盖率任务成功不证明已启用第三方服务 |
 | 条件跳过 | PR 未启用完整矩阵，13 个任务跳过 |
-| 基准运行与上传 | [benches 运行](https://github.com/jelven007/r2p/actions/runs/40110047774)执行成功；上传 CodSpeed 返回 401，任务最终失败 |
+| 基准运行与上传 | [最终 benches 运行](https://github.com/jelven007/r2p/actions/runs/40112259314)通过；21 个 Rust 套件完成，31 个 Python 基准通过、2 skipped、174 deselected |
 
-Linux x64 和 macOS arm64 的 Python 行为均为 197 passed，远端各示例测试通过。
-build 任务包括对应 FFI 检查、文档、Rust 回归和 Python 示例；实际 ignored/filtered 项保留在任务日志，不按“所有用例运行”解释。
-本会话后续 GitHub CLI 凭据不可用；重新授权成功，但授权工具要求新会话后才能使用，最终修正尚未推送或合并。
-完整源码历史保留，Git 标签不匹配 `v*`；外部发布/部署需要对应 `R2P_ENABLE_*` 为 `true`。
+十个 build 任务包括文档、Rust 回归和 Python 示例；九个 stable 任务另运行 FFI 校验，nightly 按既有条件跳过 FFI。
+实际 ignored/filtered 项保留在任务日志，不按“所有用例运行”解释。
+最终基准中一项 Rust custom iterations 不受 CodSpeed 支持而跳过；simulation 测量成功不代表性能退化阈值已验收。
+本地证据保存在 `.tools/production-ci-final-jobs.json`、`.tools/production-ci-nostd-final.log` 和 `.tools/production-ci-bench-final.log`，可通过上述远端链接重新获取。
 
-2026-10-25 继续交付时认证已恢复，取回基准最终日志 `.tools/production-ci-bench-fcc.log`。
-21 个 Rust 基准套件运行完成，31 个 Python 基准通过、2 skipped、174 deselected；Rust 一项 custom iterations 不受 CodSpeed 支持而跳过。
-任务失败发生在后续上传：目标仓库未注册或无权限，CodSpeed 返回 401。
+### 3.1 失败修正与复验
+
+前一提交 `fcc20c0b2e6b35e53be344ba3c9cc70987b4124d` 的 [CI 运行](https://github.com/jelven007/r2p/actions/runs/40110047892)为 31 成功、13 跳过、2 失败。
+两项失败是 no_std Rust 诊断快照及正确阻断的 conclusion，按第 2 节修正后在最终 CI 关闭。
+该次 Linux x64/macOS arm64 的 Python 行为均为 197 passed，Linux 3.14t/3.15t 为 196 passed、1 skipped；这些数量保留为对应提交的历史证据。
+
+前一 [benches 运行](https://github.com/jelven007/r2p/actions/runs/40110047774)完成测量后，在上传阶段因仓库未注册或无权限返回 401。
 固定 runner v5.4.2 的 `CODSPEED_SKIP_UPLOAD` 已由其源码核实，基准继续 simulation 测量；仅 `R2P_ENABLE_CODSPEED=true` 时上传。
-该配置修正须按新提交远端复验；未采用 `continue-on-error` 或跳过基准执行来关闭失败。
+最终日志确认该变量为 true，所有基准步骤成功；未采用 `continue-on-error` 或跳过基准执行来关闭失败。
+交付期间一次 CLI 认证中断已恢复，最终修正已推送并正常合并。
+完整源码历史保留，Git 标签不匹配 `v*`；外部发布/部署需要对应 `R2P_ENABLE_*` 为 `true`。
 
 ## 4. 限制
 

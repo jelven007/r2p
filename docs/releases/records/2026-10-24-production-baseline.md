@@ -1,6 +1,6 @@
 # 2026-10-24 r2p 生产工程源码交付记录
 
-记录：DEL-20261024-01；类型：源码交付；状态：目录和文档已推送，最终 CI 修正待推送及合并。
+记录：DEL-20261024-01；类型：源码交付；状态：已合并、已核验；最终核验日期：2026-10-25。
 目标：[jelven007/r2p](https://github.com/jelven007/r2p) 的 `main`。
 范围：FR-007/008、NFR-003–008、ADR-0001/0002/0003。
 
@@ -32,17 +32,22 @@ SDK 回归见[内核迁移验证](../../testing/reports/kernel-migration-validat
 
 | 项目 | 状态 |
 | --- | --- |
-| 功能分支 | `refactor/production-layout-docs` 已推送至 `fcc20c0b2e6b35e53be344ba3c9cc70987b4124d`；最后两份 no_std 快照修正和报告在本地提交，待推送 |
-| PR/主分支合并 | [PR #1](https://github.com/jelven007/r2p/pull/1) 已创建；10 个平台/Python build 任务通过，最终修正远端复验后普通合并 |
+| 功能分支 | `refactor/production-layout-docs` 已推送至 `839ddb30dc3c936049a26f946b6206af25a99ba9` 并合并 |
+| PR/主分支合并 | [PR #1](https://github.com/jelven007/r2p/pull/1) 已普通合并；合并 SHA 为 `2cc5fbcddea3b35d6a0a95caf6177478b79e79be` |
+| 源码 CI | [最终 CI](https://github.com/jelven007/r2p/actions/runs/40112259362) 33 成功、13 条件跳过、零失败；十个平台/Python build 任务通过 |
+| 指南与基准 | [指南/链接检查](https://github.com/jelven007/r2p/actions/runs/40112259370)及[基准测量](https://github.com/jelven007/r2p/actions/runs/40112259314)通过 |
 | 远端两标签 | 两标签已推送，逐项查询 SHA 与第 2 节清单一致 |
-| 本地与远端 main | 待合并后核验一致、工作区干净 |
+| 本地与远端 main | 合并后 fetch、切换 main、ff-only 同步完成，SHA 一致、工作区干净，合并树与受测提交逐文件一致 |
 | crates.io/PyPI/Netlify | 未执行，发布开关默认关闭 |
+| CodSpeed | simulation 测量已执行；结果上传默认关闭，待目标仓库接入后单独启用 |
 
-最后一轮 CI 的 no_std 快照失败及其汇总已定位，修正后本地 macros 严格 UI 59 项通过。
-本会话 GitHub CLI 凭据后续不可用；重新授权已成功，授权工具明确要求新会话后才可继续服务操作。
-因此本记录未将最终推送、主分支合并和交付闭环写为完成。
-远端结果以目标 GitHub PR、main 和标签查询为准；本记录后续追加实际链接和核验结果。
-源码提交无法自包含自己的最终 SHA，使用 Git 提交/PR 标识追溯。
+GitHub 返回合并时间 `2026-10-24T22:12:39Z`，即北京时间 2026-10-25 06:12:39。
+合并包含基线和功能分支两个父提交，全部祖先保留。
+最后一轮 no_std Rust/Python/Clippy 均通过，早期诊断快照失败和 CodSpeed 上传 401 的处置详见验证报告。
+
+本回执及支持矩阵的补记为合并后的纯文档更新，沿用上述源码 CI 证据，并运行文档格式、仓库路径/追踪和差异检查。
+后续 main 的自动缓存预热与扩展平台任务不计入本表已通过的 PR 矩阵。
+消费方可固定上述合并 SHA；包含本回执的文档修订通过 Git main 和本文件历史追溯，无需在提交内自包含其最终 SHA。
 
 ## 5. 恢复与限制
 
