@@ -39,12 +39,35 @@ Rust/Python 核心算法未在本期继续修改。
 no_std UI 的 enum constructor 快照仍保留旧包名列号，按实际诊断修正一列并保持严格检查。
 本地 FFI 头文件/签名/布局对照及 32 DLL 名、24 x86 私有导入校验通过，日志 `.tools/production-ffi-check.log`。
 本地 no_std 严格 UI 复验 56 通过、13 ignored、7 条件过滤，`.tools/production-ui-nostd.log`；修正后的完整 fmt 七会话再次通过。
+远端后续执行 no_std 的 macros 组合，发现另两份未在 full 组合启用的快照仍有旧包名列号和 trait 名称下划线宽度。
+逐项对照实际诊断修正 `invalid_property_args.nostd.stderr` 和 `invalid_pyclass_args.nostd.stderr`，未放宽断言。
+该组合补验 59 通过、10 ignored、7 条件过滤，日志 `.tools/production-ui-nostd-macros.log`；直接固定 CPython 3.14.9 可执行文件后通过。
+首次补验的虚拟环境入口意外运行系统 Python 3.9.6，四项 check-pass 因缺少其链接库失败；未修改这些正确用例。
 首次远端指南外链检查访问合并前 main 的新目录得到 404；流水线现在提供 `R2P_SOURCE_REV`，校验实际测试 SHA 的链接，未忽略失败链接。
 
 ## 3. 远端核验
 
 分支、PR、合并和两历史引用结果保存到[交付记录](../../releases/records/2026-10-24-production-baseline.md)。
 本地结果不能声称完整 GitHub 平台矩阵通过，远端缺失/失败和原因单列。
+源码修正提交 `fcc20c0b2e6b35e53be344ba3c9cc70987b4124d` 的[指南构建和链接检查](https://github.com/jelven007/r2p/actions/runs/40110047778)已通过。
+同提交的[CI 运行](https://github.com/jelven007/r2p/actions/runs/40110047892)最终 31 个检查成功、13 个条件跳过、2 个失败。
+失败为 no_std Rust 的两份诊断快照及正确阻断的 conclusion；快照已按第 2 节补正并在本地严格复验，仍须在新提交远端重跑。
+日志摘要保存在 `.tools/production-ci-fcc-watch.log`；对应 PR 测试合并树为 `60bf07e5f87765b59eff04264cfd2306d47fe713`。
+
+| 远端组合/检查 | 结果与证据边界 |
+| --- | --- |
+| CPython 3.14 / stable | Linux x64/arm64、macOS arm64、Windows x64/x86/arm64 六个 build 任务通过 |
+| CPython 3.14t / stable | Linux x64 build 通过；Python 行为 196 passed、1 skipped |
+| CPython 3.15 / stable | Linux x64 build 通过 |
+| CPython 3.15t / stable | Linux x64 build 通过；Python 行为 196 passed、1 skipped |
+| CPython 3.14 / nightly | Linux x64 build 通过；该任务使用 `UI_TEST=ignore`，不作为严格诊断证据 |
+| MSRV、静态与实验检查 | MSRV、九个 stable Clippy 目标、beta Clippy、nightly check、格式、zizmor、mypy/pyrefly、内省、no_std Python/clippy 均通过 |
+| 指南、变更记录、覆盖率基线 | 指南及链接检查、changelog 和 coverage-pr-base 通过；覆盖率任务成功不证明已启用第三方服务 |
+| 条件跳过与未收齐 | PR 未启用完整矩阵，13 个任务跳过；benches 运行已启动，最终结果未核验 |
+
+Linux x64 和 macOS arm64 的 Python 行为均为 197 passed，远端各示例测试通过。
+build 任务包括对应 FFI 检查、文档、Rust 回归和 Python 示例；实际 ignored/filtered 项保留在任务日志，不按“所有用例运行”解释。
+本会话后续 GitHub CLI 凭据不可用；重新授权成功，但授权工具要求新会话后才能使用，最终修正尚未推送或合并。
 完整源码历史保留，Git 标签不匹配 `v*`；外部发布/部署需要对应 `R2P_ENABLE_*` 为 `true`。
 
 ## 4. 限制

@@ -1,6 +1,6 @@
 # 2026-10-24 r2p 生产工程源码交付记录
 
-记录：DEL-20261024-01；类型：源码交付；状态：本地准备完成，远端核验结果在本记录追加。
+记录：DEL-20261024-01；类型：源码交付；状态：目录和文档已推送，最终 CI 修正待推送及合并。
 目标：[jelven007/r2p](https://github.com/jelven007/r2p) 的 `main`。
 范围：FR-007/008、NFR-003–008、ADR-0001/0002/0003。
 
@@ -32,12 +32,15 @@ SDK 回归见[内核迁移验证](../../testing/reports/kernel-migration-validat
 
 | 项目 | 状态 |
 | --- | --- |
-| 功能分支 | `refactor/production-layout-docs`，待本次最终推送 |
-| PR/主分支合并 | 待本次最终源码验证后执行 |
-| 远端两标签 | 待推送后逐项 SHA 核验 |
+| 功能分支 | `refactor/production-layout-docs` 已推送至 `fcc20c0b2e6b35e53be344ba3c9cc70987b4124d`；最后两份 no_std 快照修正和报告在本地提交，待推送 |
+| PR/主分支合并 | [PR #1](https://github.com/jelven007/r2p/pull/1) 已创建；10 个平台/Python build 任务通过，最终修正远端复验后普通合并 |
+| 远端两标签 | 两标签已推送，逐项查询 SHA 与第 2 节清单一致 |
 | 本地与远端 main | 待合并后核验一致、工作区干净 |
 | crates.io/PyPI/Netlify | 未执行，发布开关默认关闭 |
 
+最后一轮 CI 的 no_std 快照失败及其汇总已定位，修正后本地 macros 严格 UI 59 项通过。
+本会话 GitHub CLI 凭据后续不可用；重新授权已成功，授权工具明确要求新会话后才可继续服务操作。
+因此本记录未将最终推送、主分支合并和交付闭环写为完成。
 远端结果以目标 GitHub PR、main 和标签查询为准；本记录后续追加实际链接和核验结果。
 源码提交无法自包含自己的最终 SHA，使用 Git 提交/PR 标识追溯。
 

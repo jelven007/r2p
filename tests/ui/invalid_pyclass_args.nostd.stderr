@@ -95,22 +95,22 @@ error: The `ord` option requires the `eq` option.
     |           ^^^
 
 error: expected one of: `get`, `set`, `name`
-   --> tests/ui/invalid_pyclass_args.rs:114:12
+   --> tests/ui/invalid_pyclass_args.rs:114:11
     |
 114 |     #[r2p(foo)]
-    |            ^^^
+    |           ^^^
 
 error: expected one of: `get`, `set`, `name`
-   --> tests/ui/invalid_pyclass_args.rs:116:12
+   --> tests/ui/invalid_pyclass_args.rs:116:11
     |
 116 |     #[r2p(blah)]
-    |            ^^^^
+    |           ^^^^
 
 error: expected one of: `get`, `set`, `name`
-   --> tests/ui/invalid_pyclass_args.rs:119:12
+   --> tests/ui/invalid_pyclass_args.rs:119:11
     |
 119 |     #[r2p(pop)]
-    |            ^^^
+    |           ^^^
 
 error: invalid format string: expected `}` but string was terminated
    --> tests/ui/invalid_pyclass_args.rs:143:19
