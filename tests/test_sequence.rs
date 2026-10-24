@@ -2,11 +2,11 @@
 #![allow(clippy::undocumented_unsafe_blocks)]
 #![cfg(feature = "macros")]
 
-use pyo3::exceptions::{PyIndexError, PyValueError};
-use pyo3::types::{IntoPyDict, PyList, PyMapping, PySequence};
-use pyo3::{ffi, prelude::*};
+use r2p::exceptions::{PyIndexError, PyValueError};
+use r2p::types::{IntoPyDict, PyList, PyMapping, PySequence};
+use r2p::{ffi, prelude::*};
 
-use pyo3::py_run;
+use r2p::py_run;
 
 mod test_utils;
 
@@ -18,7 +18,7 @@ struct ByteSequence {
 #[pymethods]
 impl ByteSequence {
     #[new]
-    #[pyo3(signature=(elements = None))]
+    #[r2p(signature=(elements = None))]
     fn new(elements: Option<&Bound<'_, PyList>>) -> PyResult<Self> {
         if let Some(pylist) = elements {
             let mut elems = Vec::with_capacity(pylist.len());
@@ -107,7 +107,7 @@ impl ByteSequence {
 }
 
 /// Return a dict with `s = ByteSequence([1, 2, 3])`.
-fn seq_dict(py: Python<'_>) -> Bound<'_, pyo3::types::PyDict> {
+fn seq_dict(py: Python<'_>) -> Bound<'_, r2p::types::PyDict> {
     let d = [("ByteSequence", py.get_type::<ByteSequence>())]
         .into_py_dict(py)
         .unwrap();
@@ -294,11 +294,11 @@ fn sequence_operators_use_distinct_slots() {
     });
 }
 
-// Check that #[pyo3(get, set)] works correctly for Vec<PyObject>
+// Check that #[r2p(get, set)] works correctly for Vec<PyObject>
 
 #[pyclass]
 struct AnyObjectList {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     items: Vec<Py<PyAny>>,
 }
 
@@ -336,7 +336,7 @@ fn test_any_object_list_set() {
 
 #[pyclass(sequence)]
 struct OptionList {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     items: Vec<Option<i64>>,
 }
 
@@ -414,7 +414,7 @@ fn sequence_length() {
 #[cfg(Py_3_10)]
 #[pyclass(generic, sequence)]
 struct GenericList {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     items: Vec<Py<PyAny>>,
 }
 
@@ -427,7 +427,7 @@ impl GenericList {
 
     fn __getitem__(&self, idx: isize) -> PyResult<Py<PyAny>> {
         match self.items.get(idx as usize) {
-            Some(x) => pyo3::Python::attach(|py| Ok(x.clone_ref(py))),
+            Some(x) => r2p::Python::attach(|py| Ok(x.clone_ref(py))),
             None => Err(PyIndexError::new_err("Index out of bounds")),
         }
     }
@@ -436,7 +436,7 @@ impl GenericList {
 #[cfg(Py_3_10)]
 #[test]
 fn test_generic_both_subscriptions_types() {
-    use pyo3::types::PyInt;
+    use r2p::types::PyInt;
     use std::convert::Infallible;
 
     Python::attach(|py| {

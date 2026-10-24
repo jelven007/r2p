@@ -9,7 +9,7 @@
 ///
 /// # Examples
 /// ```
-/// use pyo3::{prelude::*, py_run, types::PyList};
+/// use r2p::{prelude::*, py_run, types::PyList};
 ///
 /// # fn main() -> PyResult<()> {
 /// Python::attach(|py| {
@@ -23,7 +23,7 @@
 /// You can use this macro to test pyfunctions or pyclasses quickly.
 ///
 /// ```
-/// use pyo3::{prelude::*, py_run};
+/// use r2p::{prelude::*, py_run};
 ///
 /// #[pyclass]
 /// #[derive(Debug)]
@@ -61,8 +61,8 @@
 /// If you need to prepare the `locals` dict by yourself, you can pass it as `*locals`.
 ///
 /// ```
-/// use pyo3::prelude::*;
-/// use pyo3::types::IntoPyDict;
+/// use r2p::prelude::*;
+/// use r2p::types::IntoPyDict;
 ///
 /// #[pyclass]
 /// struct MyClass;
@@ -78,7 +78,7 @@
 /// # fn main() -> PyResult<()> {
 /// Python::attach(|py| {
 ///     let locals = [("C", py.get_type::<MyClass>())].into_py_dict(py)?;
-///     pyo3::py_run!(py, *locals, "c = C()");
+///     r2p::py_run!(py, *locals, "c = C()");
 /// #   Ok(())
 /// })
 /// # }
@@ -138,7 +138,7 @@ macro_rules! py_run_impl {
 ///
 /// # Examples
 /// ```
-/// use pyo3::prelude::*;
+/// use r2p::prelude::*;
 /// #[pyfunction]
 /// fn add(x: i32, y: i32) -> i32 {
 ///     x + y
@@ -176,7 +176,7 @@ macro_rules! wrap_pyfunction {
             use $function as wrapped_pyfunction;
             $crate::impl_::pyfunction::WrapPyFunctionArg::wrap_pyfunction(
                 py_or_module,
-                &wrapped_pyfunction::_PYO3_DEF,
+                &wrapped_pyfunction::_R2P_DEF,
             )
         }
     };
@@ -184,7 +184,7 @@ macro_rules! wrap_pyfunction {
         use $function as wrapped_pyfunction;
         $crate::impl_::pyfunction::WrapPyFunctionArg::wrap_pyfunction(
             $py_or_module,
-            &wrapped_pyfunction::_PYO3_DEF,
+            &wrapped_pyfunction::_R2P_DEF,
         )
     }};
 }
@@ -199,7 +199,7 @@ macro_rules! wrap_pymodule {
     ($module:path) => {
         &|py| {
             use $module as wrapped_pymodule;
-            wrapped_pymodule::_PYO3_DEF
+            wrapped_pymodule::_R2P_DEF
                 .make_module(py)
                 .expect("failed to wrap pymodule")
         }
@@ -222,8 +222,8 @@ macro_rules! append_to_inittab {
                 );
             }
             $crate::ffi::PyImport_AppendInittab(
-                $module::__PYO3_NAME.as_ptr(),
-                ::core::option::Option::Some($module::__pyo3_init),
+                $module::__R2P_NAME.as_ptr(),
+                ::core::option::Option::Some($module::__r2p_init),
             );
         }
     };

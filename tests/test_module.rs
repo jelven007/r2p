@@ -1,10 +1,10 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
-use pyo3::py_run;
-use pyo3::types::PyString;
-use pyo3::types::{IntoPyDict, PyDict, PyTuple};
+use r2p::py_run;
+use r2p::types::PyString;
+use r2p::types::{IntoPyDict, PyDict, PyTuple};
 
 mod test_utils;
 
@@ -35,7 +35,7 @@ fn double(x: usize) -> usize {
 
 #[test]
 fn test_module_with_functions() {
-    use pyo3::wrap_pymodule;
+    use r2p::wrap_pymodule;
 
     /// This module is implemented in Rust.
     #[pymodule]
@@ -55,13 +55,13 @@ fn test_module_with_functions() {
         }
 
         #[pyfunction]
-        #[pyo3(name = "no_parameters")]
+        #[r2p(name = "no_parameters")]
         fn function_with_name() -> usize {
             42
         }
 
         #[pyfunction]
-        #[pyo3(pass_module)]
+        #[r2p(pass_module)]
         fn with_module<'py>(module: &Bound<'py, PyModule>) -> PyResult<Bound<'py, PyString>> {
             module.name()
         }
@@ -122,19 +122,19 @@ fn test_module_with_functions() {
 #[test]
 #[allow(deprecated)]
 fn test_module_with_pyfn() {
-    use pyo3::wrap_pymodule;
+    use r2p::wrap_pymodule;
 
     /// This module is implemented in Rust.
     #[pymodule]
     fn module_with_pyfn(m: &Bound<'_, PyModule>) -> PyResult<()> {
         #[pyfn(m)]
-        #[pyo3(name = "no_parameters")]
+        #[r2p(name = "no_parameters")]
         fn function_with_name() -> usize {
             42
         }
 
         #[pyfn(m)]
-        #[pyo3(pass_module)]
+        #[r2p(pass_module)]
         fn with_module<'py>(module: &Bound<'py, PyModule>) -> PyResult<Bound<'py, PyString>> {
             module.name()
         }
@@ -209,7 +209,7 @@ fn module_with_explicit_py_arg(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyRe
 
 #[test]
 fn test_module_with_explicit_py_arg() {
-    use pyo3::wrap_pymodule;
+    use r2p::wrap_pymodule;
 
     Python::attach(|py| {
         let d = [(
@@ -231,7 +231,7 @@ fn some_name(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
 #[test]
 fn test_module_renaming() {
-    use pyo3::wrap_pymodule;
+    use r2p::wrap_pymodule;
 
     Python::attach(|py| {
         let d = [("different_name", wrap_pymodule!(some_name)(py))]
@@ -279,7 +279,7 @@ fn raw_ident_module(module: &Bound<'_, PyModule>) -> PyResult<()> {
 
 #[test]
 fn test_raw_idents() {
-    use pyo3::wrap_pymodule;
+    use r2p::wrap_pymodule;
 
     Python::attach(|py| {
         let module = wrap_pymodule!(raw_ident_module)(py);
@@ -289,7 +289,7 @@ fn test_raw_idents() {
 }
 
 #[pyfunction]
-#[pyo3(name = "foobar")]
+#[r2p(name = "foobar")]
 fn custom_named_fn() -> usize {
     42
 }
@@ -303,7 +303,7 @@ fn test_custom_names() {
     }
 
     Python::attach(|py| {
-        let module = pyo3::wrap_pymodule!(custom_names)(py);
+        let module = r2p::wrap_pymodule!(custom_names)(py);
 
         py_assert!(py, module, "not hasattr(module, 'custom_named_fn')");
         py_assert!(py, module, "module.foobar() == 42");
@@ -319,7 +319,7 @@ fn test_module_dict() {
     }
 
     Python::attach(|py| {
-        let module = pyo3::wrap_pymodule!(module_dict)(py);
+        let module = r2p::wrap_pymodule!(module_dict)(py);
 
         py_assert!(py, module, "module.yay == 'me'");
     });
@@ -335,7 +335,7 @@ fn test_module_dunder_all() {
             Ok(())
         }
 
-        let module = pyo3::wrap_pymodule!(dunder_all)(py);
+        let module = r2p::wrap_pymodule!(dunder_all)(py);
 
         py_assert!(py, module, "module.__all__ == ['foobar']");
     });
@@ -376,7 +376,7 @@ fn supermodule(module: &Bound<'_, PyModule>) -> PyResult<()> {
 
 #[test]
 fn test_module_nesting() {
-    use pyo3::wrap_pymodule;
+    use r2p::wrap_pymodule;
 
     Python::attach(|py| {
         let supermodule = wrap_pymodule!(supermodule)(py);
@@ -444,19 +444,19 @@ fn test_module_with_constant() {
     }
 
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(module_with_constant)(py);
+        let m = r2p::wrap_pymodule!(module_with_constant)(py);
         py_assert!(py, m, "isinstance(m.ANON, m.AnonClass)");
     });
 }
 
 #[pyfunction]
-#[pyo3(pass_module)]
+#[r2p(pass_module)]
 fn pyfunction_with_module<'py>(module: &Bound<'py, PyModule>) -> PyResult<Bound<'py, PyString>> {
     module.name()
 }
 
 #[pyfunction]
-#[pyo3(pass_module)]
+#[r2p(pass_module)]
 fn pyfunction_with_module_owned(
     module: Py<PyModule>,
     py: Python<'_>,
@@ -465,7 +465,7 @@ fn pyfunction_with_module_owned(
 }
 
 #[pyfunction]
-#[pyo3(pass_module)]
+#[r2p(pass_module)]
 fn pyfunction_with_module_and_py<'py>(
     module: &Bound<'py, PyModule>,
     _python: Python<'py>,
@@ -474,7 +474,7 @@ fn pyfunction_with_module_and_py<'py>(
 }
 
 #[pyfunction]
-#[pyo3(pass_module)]
+#[r2p(pass_module)]
 fn pyfunction_with_module_and_arg<'py>(
     module: &Bound<'py, PyModule>,
     string: String,
@@ -483,7 +483,7 @@ fn pyfunction_with_module_and_arg<'py>(
 }
 
 #[pyfunction(signature = (string="foo"))]
-#[pyo3(pass_module)]
+#[r2p(pass_module)]
 fn pyfunction_with_module_and_default_arg<'py>(
     module: &Bound<'py, PyModule>,
     string: &str,
@@ -492,7 +492,7 @@ fn pyfunction_with_module_and_default_arg<'py>(
 }
 
 #[pyfunction(signature = (*args, **kwargs))]
-#[pyo3(pass_module)]
+#[r2p(pass_module)]
 fn pyfunction_with_module_and_args_kwargs<'py>(
     module: &Bound<'py, PyModule>,
     args: &Bound<'py, PyTuple>,
@@ -518,7 +518,7 @@ fn module_with_functions_with_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 #[test]
 fn test_module_functions_with_module() {
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(module_with_functions_with_module)(py);
+        let m = r2p::wrap_pymodule!(module_with_functions_with_module)(py);
         py_assert!(
             py,
             m,
@@ -559,7 +559,7 @@ fn test_module_doc_hidden() {
     }
 
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(my_module)(py);
+        let m = r2p::wrap_pymodule!(my_module)(py);
         py_assert!(py, m, "m.__doc__ == ''");
     })
 }

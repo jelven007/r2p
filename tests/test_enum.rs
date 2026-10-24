@@ -1,8 +1,8 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::py_run;
-use pyo3::types::PyString;
+use r2p::prelude::*;
+use r2p::py_run;
+use r2p::types::PyString;
 
 mod test_utils;
 
@@ -212,7 +212,7 @@ fn test_rename_enum_repr_correct() {
 #[pyclass(eq, eq_int)]
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum RenameVariantEnum {
-    #[pyo3(name = "VARIANT")]
+    #[r2p(name = "VARIANT")]
     Variant,
 }
 
@@ -230,7 +230,7 @@ fn test_rename_variant_repr_correct() {
 enum RenameAllVariantsEnum {
     VariantOne,
     VariantTwo,
-    #[pyo3(name = "VariantThree")]
+    #[r2p(name = "VariantThree")]
     VariantFour,
 }
 
@@ -297,7 +297,7 @@ enum SimpleEnumWithHash {
 #[cfg(wip_feature_std)]
 fn test_simple_enum_with_hash() {
     Python::attach(|py| {
-        use pyo3::types::IntoPyDict;
+        use r2p::types::IntoPyDict;
         let class = SimpleEnumWithHash::A;
         let hash = {
             use std::hash::{Hash, Hasher};
@@ -329,7 +329,7 @@ enum ComplexEnumWithHash {
 #[cfg(wip_feature_std)]
 fn test_complex_enum_with_hash() {
     Python::attach(|py| {
-        use pyo3::types::IntoPyDict;
+        use r2p::types::IntoPyDict;
         let class = ComplexEnumWithHash::B {
             msg: String::from("Hello"),
         };
@@ -450,7 +450,7 @@ fn complex_enum_variant_qualname() {
 fn complex_enum_renamed_variant_qualname() {
     #[pyclass(name = "ComplexEnum")]
     pub enum PyComplexEnum {
-        #[pyo3(name = "A")]
+        #[r2p(name = "A")]
         PyA(i32),
         B {
             msg: String,

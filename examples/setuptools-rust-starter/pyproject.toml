@@ -23,3 +23,5 @@ include = ["setuptools_rust_starter"]
 [[tool.setuptools-rust.ext-modules]]
 target = "setuptools_rust_starter._setuptools_rust_starter"
 path = "Cargo.toml"
+binding = "NoBinding"
+features = ["r2p/extension-module"]

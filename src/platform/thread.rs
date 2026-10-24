@@ -8,7 +8,7 @@ pub use thread_local::*;
 mod thread_local;
 
 #[cfg(not(wip_feature_std))]
-use pyo3_ffi::PyThread_get_thread_ident;
+use r2p_ffi::PyThread_get_thread_ident;
 
 #[must_use]
 pub fn current() -> Thread {

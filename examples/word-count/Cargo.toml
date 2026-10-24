@@ -9,7 +9,8 @@ name = "word_count"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { path = "../.." }
+r2p-maturin-bridge = { package = "pyo3-ffi", path = "../../tools/maturin-bridge" }
+r2p = { path = "../.." }
 rayon = "1.0.2"
 
 [workspace]

@@ -1,4 +1,4 @@
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pymodule]
 mod module {
@@ -11,7 +11,7 @@ mod module {
 
 #[pymodule]
 mod module_result {
-    use pyo3::prelude::*;
+    use r2p::prelude::*;
 
     #[pymodule_init]
     fn init() -> PyResult<usize> {

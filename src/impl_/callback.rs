@@ -12,11 +12,11 @@ pub trait PyCallbackOutput: Copy + py_callback_output::Sealed {
     const ERR_VALUE: Self;
 }
 
-/// Seals `PyCallbackOutput` so that types outside PyO3 cannot implement it.
+/// Seals `PyCallbackOutput` so that types outside r2p cannot implement it.
 mod py_callback_output {
     use core::ffi::c_int;
 
-    use pyo3_ffi::Py_ssize_t;
+    use r2p_ffi::Py_ssize_t;
 
     use crate::ffi::PyObject;
 
@@ -44,9 +44,9 @@ pub trait IntoPyCallbackOutput<'py, Target>: into_py_callback_output::Sealed<'py
     fn convert(self, py: Python<'py>) -> PyResult<Target>;
 }
 
-/// Seals `IntoPyCallbackOutput` so that types outside PyO3 cannot implement it.
+/// Seals `IntoPyCallbackOutput` so that types outside r2p cannot implement it.
 mod into_py_callback_output {
-    use pyo3_ffi::Py_hash_t;
+    use r2p_ffi::Py_hash_t;
 
     use crate::{
         IntoPyObject, Py, PyAny, PyErr, ffi,
@@ -130,7 +130,7 @@ impl IntoPyCallbackOutput<'_, ffi::Py_ssize_t> for usize {
     }
 }
 
-// Conversion traits needed by pyo3's macros
+// Conversion traits needed by r2p's macros
 
 impl IntoPyCallbackOutput<'_, bool> for bool {
     #[inline]
@@ -163,7 +163,7 @@ pub trait WrappingCastTo<T>: wrapping_cast_to::Sealed<T> {
     fn wrapping_cast(self) -> T;
 }
 
-/// Seals `WrappingCastTo` so that types outside PyO3 cannot implement it.
+/// Seals `WrappingCastTo` so that types outside r2p cannot implement it.
 mod wrapping_cast_to {
     pub trait Sealed<T> {}
 }

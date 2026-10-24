@@ -25,10 +25,10 @@ error: Unit variant `UnitVariant` is not yet supported in a complex enum
    |     ^^^^^^^^^^^
 
 error: `constructor` can't be used on a simple enum variant
-  --> tests/ui/invalid_pyclass_enum.rs:34:12
+  --> tests/ui/invalid_pyclass_enum.rs:34:11
    |
-34 |     #[pyo3(constructor = (a, b))]
-   |            ^^^^^^^^^^^
+34 |     #[r2p(constructor = (a, b))]
+   |           ^^^^^^^^^^^
 
 error: The `eq_int` option requires the `eq` option.
   --> tests/ui/invalid_pyclass_enum.rs:56:11

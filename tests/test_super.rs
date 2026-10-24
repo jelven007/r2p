@@ -1,7 +1,7 @@
 #![cfg(feature = "macros")]
 #![cfg(not(any(PyPy, GraalPy)))]
 
-use pyo3::{prelude::*, types::PySuper};
+use r2p::{prelude::*, types::PySuper};
 
 #[pyclass(subclass)]
 struct BaseClass {
@@ -45,7 +45,7 @@ impl SubClass {
 fn test_call_super_method() {
     Python::attach(|py| {
         let cls = py.get_type::<SubClass>();
-        pyo3::py_run!(
+        r2p::py_run!(
             py,
             cls,
             r#"

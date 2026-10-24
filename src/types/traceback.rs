@@ -13,7 +13,7 @@ use crate::{PyTypeCheck, Python, types::PyFrame};
 
 /// Represents a Python traceback.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyTraceback>`][crate::Py] or [`Bound<'py, PyTraceback>`][Bound].
 ///
 /// For APIs available on traceback objects, see the [`PyTracebackMethods`] trait which is implemented for
@@ -80,7 +80,7 @@ pub trait PyTracebackMethods<'py>: crate::sealed::Sealed {
     /// The following code formats a Python traceback and exception pair from Rust:
     ///
     /// ```rust
-    /// # use pyo3::{Python, PyResult, prelude::PyTracebackMethods, ffi::c_str};
+    /// # use r2p::{Python, PyResult, prelude::PyTracebackMethods, ffi::c_str};
     /// # let result: PyResult<()> =
     /// Python::attach(|py| {
     ///     let err = py

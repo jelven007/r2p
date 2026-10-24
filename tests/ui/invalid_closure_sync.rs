@@ -1,5 +1,5 @@
-use pyo3::prelude::*;
-use pyo3::types::{PyCFunction, PyDict, PyTuple};
+use r2p::prelude::*;
+use r2p::types::{PyCFunction, PyDict, PyTuple};
 
 fn main() {
     // Closure must be `Sync`

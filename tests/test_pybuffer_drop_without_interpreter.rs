@@ -12,7 +12,7 @@
 //!
 //! This test runs in its own process to control the interpreter lifecycle.
 
-use pyo3::{buffer::PyBuffer, types::PyBytes};
+use r2p::{buffer::PyBuffer, types::PyBytes};
 
 #[test]
 fn test_pybuffer_drop_without_interpreter() {
@@ -22,17 +22,17 @@ fn test_pybuffer_drop_without_interpreter() {
     // However we should still be able to drop it without causing undefined behavior,
     // so that process shutdown is sound.
     let obj: PyBuffer<u8> = unsafe {
-        pyo3::with_embedded_python_interpreter(|py| {
+        r2p::with_embedded_python_interpreter(|py| {
             PyBuffer::get(&PyBytes::new(py, b"abcdef")).unwrap()
         })
     };
 
     // there should be no interpreter outside of the `with_embedded_python_interpreter` block
-    assert_eq!(unsafe { pyo3_ffi::Py_IsInitialized() }, 0);
+    assert_eq!(unsafe { r2p_ffi::Py_IsInitialized() }, 0);
 
     // dropping object should be sound
     drop(obj);
 
     // dropping object should not re-initialize the interpreter
-    assert_eq!(unsafe { pyo3_ffi::Py_IsInitialized() }, 0);
+    assert_eq!(unsafe { r2p_ffi::Py_IsInitialized() }, 0);
 }

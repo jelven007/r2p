@@ -1,7 +1,7 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyTuple};
+use r2p::prelude::*;
+use r2p::types::{PyDict, PyTuple};
 
 mod test_utils;
 
@@ -11,13 +11,13 @@ struct MyClass {}
 #[pymethods]
 impl MyClass {
     #[staticmethod]
-    #[pyo3(signature = (*args))]
+    #[r2p(signature = (*args))]
     fn test_args(args: Bound<'_, PyTuple>) -> Bound<'_, PyTuple> {
         args
     }
 
     #[staticmethod]
-    #[pyo3(signature = (**kwargs))]
+    #[r2p(signature = (**kwargs))]
     fn test_kwargs(kwargs: Option<Bound<'_, PyDict>>) -> Option<Bound<'_, PyDict>> {
         kwargs
     }

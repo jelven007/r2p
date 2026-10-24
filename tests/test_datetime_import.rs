@@ -1,7 +1,7 @@
 #![cfg(not(Py_LIMITED_API))]
 
 #[cfg(wip_feature_std)]
-use pyo3::{prelude::*, types::PyDate};
+use r2p::{prelude::*, types::PyDate};
 #[cfg(wip_feature_std)]
 use tempfile::Builder;
 
@@ -12,7 +12,7 @@ fn test_bad_datetime_module_panic() {
     // Create an empty temporary directory
     // with an empty "datetime" module which we'll put on the sys.path
     let tmpdir = Builder::new()
-        .prefix("pyo3_test_data_check")
+        .prefix("r2p_test_data_check")
         .tempdir()
         .unwrap();
     std::fs::File::create(tmpdir.path().join("datetime.py")).unwrap();

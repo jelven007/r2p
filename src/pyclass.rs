@@ -66,8 +66,8 @@ impl CompareOp {
     /// Usage example:
     ///
     /// ```rust,no_run
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::class::basic::CompareOp;
+    /// # use r2p::prelude::*;
+    /// # use r2p::class::basic::CompareOp;
     ///
     /// #[pyclass]
     /// struct Size {

@@ -14,6 +14,4 @@ def test_example_class() -> None:
 def test_doc() -> None:
     import maturin_starter
 
-    assert (
-        maturin_starter.__doc__ == "An example module implemented in Rust using PyO3."
-    )
+    assert maturin_starter.__doc__ == "An example module implemented in Rust using r2p."

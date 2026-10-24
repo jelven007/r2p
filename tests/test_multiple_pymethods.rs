@@ -1,7 +1,7 @@
 #![cfg(feature = "multiple-pymethods")]
 
-use pyo3::prelude::*;
-use pyo3::types::PyType;
+use r2p::prelude::*;
+use r2p::types::PyType;
 
 #[macro_use]
 mod test_utils;

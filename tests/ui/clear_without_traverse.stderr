@@ -2,7 +2,7 @@ error[E0080]: evaluation panicked: an implementation of `__clear__` requires an 
  --> tests/ui/clear_without_traverse.rs:8:8
   |
 8 |     fn __clear__(&mut self) {}
-  |        ^^^^^^^^^ evaluation of `<impl pyo3::impl_::pyclass::PyMethods<ClearWithoutTraverse> for pyo3::impl_::pyclass::PyClassImplCollector<ClearWithoutTraverse>>::py_methods::ITEMS::_` failed here
+  |        ^^^^^^^^^ evaluation of `<impl r2p::impl_::pyclass::PyMethods<ClearWithoutTraverse> for r2p::impl_::pyclass::PyClassImplCollector<ClearWithoutTraverse>>::py_methods::ITEMS::_` failed here
 
 error: aborting due to 1 previous error
 

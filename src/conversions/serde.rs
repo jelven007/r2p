@@ -8,7 +8,7 @@
 //!
 //! ```toml
 //! [dependencies]
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"serde\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"serde\"] }")]
 //! serde = "1.0"
 //! ```
 

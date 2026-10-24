@@ -10,11 +10,11 @@
 //! ```toml
 //! [dependencies]
 //! jiff = "0.2"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"jiff-02\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"jiff-02\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of jiff and PyO3.
-//! The required jiff version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of jiff and r2p.
+//! The required jiff version may vary based on the version of r2p.
 //!
 //! # Example: Convert a `datetime.datetime` to jiff `Zoned`
 //!
@@ -24,7 +24,7 @@
 //! # #[cfg(not(windows))]
 //! use jiff::{Zoned, SignedDuration, ToSpan};
 //! # #[cfg(not(windows))]
-//! use pyo3::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
+//! use r2p::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
 //!
 //! # #[cfg(windows)]
 //! # fn main() -> () {}
@@ -672,7 +672,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_date_into_pyobject() {
+    fn test_r2p_date_into_pyobject() {
         let eq_ymd = |name: &'static str, year, month, day| {
             Python::attach(|py| {
                 let date = Date::new(year, month, day)
@@ -695,7 +695,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_date_frompyobject() {
+    fn test_r2p_date_frompyobject() {
         let eq_ymd = |name: &'static str, year, month, day| {
             Python::attach(|py| {
                 let py_date = new_py_datetime_ob(py, "date", (year, month, day));
@@ -712,7 +712,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_into_pyobject_utc() {
+    fn test_r2p_datetime_into_pyobject_utc() {
         Python::attach(|py| {
             let check_utc =
                 |name: &'static str, year, month, day, hour, minute, second, ms, py_ms| {
@@ -747,7 +747,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_into_pyobject_fixed_offset() {
+    fn test_r2p_datetime_into_pyobject_fixed_offset() {
         Python::attach(|py| {
             let check_fixed_offset =
                 |name: &'static str, year, month, day, hour, minute, second, ms, py_ms| {
@@ -776,7 +776,7 @@ mod tests {
 
     #[test]
     #[cfg(not(windows))]
-    fn test_pyo3_datetime_into_pyobject_tz() {
+    fn test_r2p_datetime_into_pyobject_tz() {
         Python::attach(|py| {
             let datetime = DateTime::new(2024, 12, 11, 23, 3, 13, 0)
                 .unwrap()
@@ -802,7 +802,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_frompyobject_utc() {
+    fn test_r2p_datetime_frompyobject_utc() {
         Python::attach(|py| {
             let year = 2014;
             let month = 5;
@@ -910,7 +910,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_frompyobject_fixed_offset() {
+    fn test_r2p_datetime_frompyobject_fixed_offset() {
         Python::attach(|py| {
             let year = 2014;
             let month = 5;
@@ -936,7 +936,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_fixed_into_pyobject() {
+    fn test_r2p_offset_fixed_into_pyobject() {
         Python::attach(|py| {
             // jiff offset
             let offset = Offset::from_seconds(3600)
@@ -961,7 +961,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_fixed_frompyobject() {
+    fn test_r2p_offset_fixed_frompyobject() {
         Python::attach(|py| {
             let py_timedelta = new_py_datetime_ob(py, "timedelta", (0, 3600, 0));
             let py_tzinfo = new_py_datetime_ob(py, "timezone", (py_timedelta,));
@@ -971,7 +971,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_utc_into_pyobject() {
+    fn test_r2p_offset_utc_into_pyobject() {
         Python::attach(|py| {
             let utc = Offset::UTC.into_pyobject(py).unwrap();
             let py_utc = python_utc(py);
@@ -980,7 +980,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_utc_frompyobject() {
+    fn test_r2p_offset_utc_frompyobject() {
         Python::attach(|py| {
             let py_utc = python_utc(py);
             let py_utc: Offset = py_utc.extract().unwrap();
@@ -998,7 +998,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_time_into_pyobject() {
+    fn test_r2p_time_into_pyobject() {
         Python::attach(|py| {
             let check_time = |name: &'static str, hour, minute, second, ms, py_ms| {
                 let time = Time::new(hour, minute, second, ms * 1000)
@@ -1014,7 +1014,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_time_frompyobject() {
+    fn test_r2p_time_frompyobject() {
         let hour = 3;
         let minute = 5;
         let second = 7;
@@ -1120,7 +1120,7 @@ mod tests {
 
             // Range is limited to 1970 to 2038 due to windows limitations
             #[test]
-            fn test_pyo3_offset_fixed_frompyobject_created_in_python(timestamp in 0..(i32::MAX as i64), timedelta in -86399i32..=86399i32) {
+            fn test_r2p_offset_fixed_frompyobject_created_in_python(timestamp in 0..(i32::MAX as i64), timedelta in -86399i32..=86399i32) {
                 Python::attach(|py| {
                     let globals = [("datetime", py.import("datetime").unwrap())].into_py_dict(py).unwrap();
                     let code = format!("datetime.datetime.fromtimestamp({timestamp}).replace(tzinfo=datetime.timezone(datetime.timedelta(seconds={timedelta})))");

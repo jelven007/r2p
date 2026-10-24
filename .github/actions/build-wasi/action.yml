@@ -33,14 +33,14 @@ runs:
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: .nox/wasi
-        key: wasi-${{ hashFiles('wasm/wasi/*', 'wasm/common.mk') }}-${{ hashFiles('noxfile.py') }}-${{ steps.python.outputs.version }}
+        key: wasi-${{ hashFiles('infrastructure/wasm/wasi/*', 'infrastructure/wasm/common.mk') }}-${{ hashFiles('noxfile.py') }}-${{ steps.python.outputs.version }}
     - name: Restore and save build cache
       if: inputs.save-cache == 'true'
       id: cache
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: .nox/wasi
-        key: wasi-${{ hashFiles('wasm/wasi/*', 'wasm/common.mk') }}-${{ hashFiles('noxfile.py') }}-${{ steps.python.outputs.version }}
+        key: wasi-${{ hashFiles('infrastructure/wasm/wasi/*', 'infrastructure/wasm/common.mk') }}-${{ hashFiles('noxfile.py') }}-${{ steps.python.outputs.version }}
     - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
       with:
         save-if: ${{ inputs.save-cache }}

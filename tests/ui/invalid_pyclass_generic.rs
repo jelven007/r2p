@@ -1,5 +1,5 @@
-use pyo3::prelude::*;
-use pyo3::types::PyType;
+use r2p::prelude::*;
+use r2p::types::PyType;
 
 #[pyclass(generic)]
 //~^ ERROR: duplicate definitions with name `__pymethod___class_getitem____`
@@ -24,7 +24,7 @@ impl ClassRedefinesClassGetItem {
         key: &Bound<'_, PyAny>,
     ) -> PyResult<Py<PyAny>> {
         //~^ ERROR: multiple applicable items in scope
-        pyo3::types::PyGenericAlias::new(cls.py(), cls.as_any(), key)
+        r2p::types::PyGenericAlias::new(cls.py(), cls.as_any(), key)
         //~^ ERROR: mismatched types
     }
 }

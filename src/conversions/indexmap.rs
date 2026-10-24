@@ -18,11 +18,11 @@
 //! [dependencies]
 //! # change * to the latest versions
 //! indexmap = "*"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"indexmap\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"indexmap\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of indexmap and PyO3.
-//! The required indexmap version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of indexmap and r2p.
+//! The required indexmap version may vary based on the version of r2p.
 //!
 //! # Examples
 //!
@@ -31,7 +31,7 @@
 //! always print the same result, matching users' expectations about Python's dict.
 //! ```rust
 //! use indexmap::{indexmap, IndexMap};
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! fn median(data: &Vec<i32>) -> f32 {
 //!     let sorted_data = data.clone().sort();
@@ -71,7 +71,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_indexmap")]
+//! # #[r2p(name = "example_indexmap")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(calculate_statistics, m)?)?;
 //!     Ok(())

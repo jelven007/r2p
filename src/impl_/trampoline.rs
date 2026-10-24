@@ -2,7 +2,7 @@
 
 //! Trampolines for various pyfunction and pymethod implementations.
 //!
-//! They exist to monomorphise std::panic::catch_unwind once into PyO3, rather than inline in every
+//! They exist to monomorphise std::panic::catch_unwind once into r2p, rather than inline in every
 //! function, thus saving a huge amount of compile-time complexity.
 
 #[cfg(wip_feature_std)]

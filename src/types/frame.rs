@@ -5,11 +5,11 @@ use crate::sealed::Sealed;
 use crate::types::{PyCode, PyDict};
 use crate::{Bound, PyResult, Python, ffi};
 use core::ffi::CStr;
-use pyo3_ffi::PyObject;
+use r2p_ffi::PyObject;
 
 /// Represents a Python frame.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyFrame>`][crate::Py] or [`Bound<'py, PyFrame>`][crate::Bound].
 #[repr(transparent)]
 pub struct PyFrame(PyAny);

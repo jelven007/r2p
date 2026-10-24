@@ -1,6 +1,6 @@
-use pyo3::prelude::*;
-use pyo3::PyTraverseError;
-use pyo3::PyVisit;
+use r2p::prelude::*;
+use r2p::PyTraverseError;
+use r2p::PyVisit;
 
 #[pyclass]
 struct TraverseTriesToTakePyRef {}

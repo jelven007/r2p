@@ -6,16 +6,16 @@ use std::collections::BTreeMap;
 use std::sync::atomic::{AtomicI32, Ordering};
 
 #[cfg(any(not(Py_LIMITED_API), Py_3_11))]
-use pyo3::buffer::PyBuffer;
+use r2p::buffer::PyBuffer;
 #[cfg(any(not(Py_LIMITED_API), Py_3_12))]
-use pyo3::exceptions::PyWarning;
-use pyo3::exceptions::{PyFutureWarning, PyUserWarning};
-use pyo3::prelude::*;
-use pyo3::types::PyDateTime;
+use r2p::exceptions::PyWarning;
+use r2p::exceptions::{PyFutureWarning, PyUserWarning};
+use r2p::prelude::*;
+use r2p::types::PyDateTime;
 #[cfg(not(PyPy))]
-use pyo3::types::PyFunction;
-use pyo3::types::{self, PyCFunction};
-use pyo3_macros::pyclass;
+use r2p::types::PyFunction;
+use r2p::types::{self, PyCFunction};
+use r2p_macros::pyclass;
 
 mod test_utils;
 
@@ -51,7 +51,7 @@ fn test_optional_bool() {
 
 #[test]
 fn test_trailing_optional_no_signature() {
-    // Since PyO3 0.24, trailing optional arguments are treated like any other required argument
+    // Since r2p 0.24, trailing optional arguments are treated like any other required argument
     // (previously would get an implicit default of `None`)
 
     #[pyfunction]
@@ -76,7 +76,7 @@ fn test_trailing_optional_no_signature() {
 }
 
 #[pyfunction]
-#[pyo3(signature=(arg))]
+#[r2p(signature=(arg))]
 fn required_optional_str(arg: Option<&str>) -> &str {
     arg.unwrap_or("")
 }
@@ -97,7 +97,7 @@ fn test_optional_str() {
 struct MyClass();
 
 #[pyfunction]
-#[pyo3(signature=(arg))]
+#[r2p(signature=(arg))]
 fn required_optional_class(arg: Option<&MyClass>) {
     let _ = arg;
 }
@@ -144,7 +144,7 @@ f(a, b)
             PyBufferError
         );
 
-        pyo3::py_run!(
+        r2p::py_run!(
             py,
             f,
             r#"
@@ -177,7 +177,7 @@ fn test_functions_with_function_args() {
         let py_cfunc_arg = wrap_pyfunction!(function_with_pycfunction_arg)(py).unwrap();
         let bool_to_string = wrap_pyfunction!(optional_bool)(py).unwrap();
 
-        pyo3::py_run!(
+        r2p::py_run!(
             py,
             py_cfunc_arg
             bool_to_string,
@@ -190,7 +190,7 @@ fn test_functions_with_function_args() {
         {
             let py_func_arg = wrap_pyfunction!(function_with_pyfunction_arg)(py).unwrap();
 
-            pyo3::py_run!(
+            r2p::py_run!(
                 py,
                 py_func_arg,
                 r#"
@@ -211,7 +211,7 @@ fn datetime_to_timestamp(dt: &Bound<'_, PyAny>) -> PyResult<i64> {
 
 #[pyfunction]
 fn function_with_custom_conversion(
-    #[pyo3(from_py_with = datetime_to_timestamp)] timestamp: i64,
+    #[r2p(from_py_with = datetime_to_timestamp)] timestamp: i64,
 ) -> i64 {
     timestamp
 }
@@ -221,7 +221,7 @@ fn test_function_with_custom_conversion() {
     Python::attach(|py| {
         let custom_conv_func = wrap_pyfunction!(function_with_custom_conversion)(py).unwrap();
 
-        pyo3::py_run!(
+        r2p::py_run!(
             py,
             custom_conv_func,
             r#"
@@ -262,14 +262,14 @@ fn test_from_py_with_defaults() {
 
     // issue 2280 combination of from_py_with and Option<T> did not compile
     #[pyfunction]
-    #[pyo3(signature = (int=None))]
-    fn from_py_with_option(#[pyo3(from_py_with = optional_int)] int: Option<i32>) -> i32 {
+    #[r2p(signature = (int=None))]
+    fn from_py_with_option(#[r2p(from_py_with = optional_int)] int: Option<i32>) -> i32 {
         int.unwrap_or(0)
     }
 
     #[pyfunction(signature = (len=0))]
     fn from_py_with_default(
-        #[pyo3(from_py_with = <Bound<'_, _> as PyAnyMethods>::len)] len: usize,
+        #[r2p(from_py_with = <Bound<'_, _> as PyAnyMethods>::len)] len: usize,
     ) -> usize {
         len
     }
@@ -292,12 +292,12 @@ fn test_from_py_with_defaults() {
 #[pyclass]
 #[derive(Debug, FromPyObject)]
 struct ValueClass {
-    #[pyo3(get)]
+    #[r2p(get)]
     value: usize,
 }
 
 #[pyfunction]
-#[pyo3(signature=(str_arg, int_arg, tuple_arg, option_arg = None, struct_arg = None))]
+#[r2p(signature=(str_arg, int_arg, tuple_arg, option_arg = None, struct_arg = None))]
 fn conversion_error(
     str_arg: &str,
     int_arg: i64,
@@ -427,7 +427,7 @@ fn extract_traceback(py: Python<'_>, mut error: PyErr) -> String {
 
 #[test]
 fn test_pycfunction_new() {
-    use pyo3::ffi;
+    use r2p::ffi;
 
     Python::attach(|py| {
         unsafe extern "C" fn c_fn(
@@ -457,7 +457,7 @@ fn test_pycfunction_new() {
 
 #[test]
 fn test_pycfunction_new_with_keywords() {
-    use pyo3::ffi;
+    use r2p::ffi;
     use std::ffi::c_long;
     use std::ptr;
 
@@ -581,7 +581,7 @@ fn test_closure_counter() {
 #[test]
 fn use_pyfunction() {
     mod function_in_module {
-        use pyo3::prelude::*;
+        use r2p::prelude::*;
 
         #[pyfunction]
         pub fn foo(x: i32) -> i32 {
@@ -661,7 +661,7 @@ fn test_some_wrap_arguments() {
 #[test]
 fn test_reference_to_bound_arguments() {
     #[pyfunction]
-    #[pyo3(signature = (x, y = None))]
+    #[r2p(signature = (x, y = None))]
     fn reference_args<'py>(
         x: &Bound<'py, PyAny>,
         y: Option<&Bound<'py, PyAny>>,
@@ -684,7 +684,7 @@ fn test_pyfunction_raw_ident() {
     }
 
     #[pyfunction]
-    #[pyo3(name = "r#enum")]
+    #[r2p(name = "r#enum")]
     fn raw_ident() -> bool {
         true
     }
@@ -697,7 +697,7 @@ fn test_pyfunction_raw_ident() {
     }
 
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(m)(py);
+        let m = r2p::wrap_pymodule!(m)(py);
         py_assert!(py, m, "m.struct()");
         py_assert!(py, m, "m.enum()");
     })
@@ -711,7 +711,7 @@ pub struct UserDefinedWarning {}
 #[pymethods]
 impl UserDefinedWarning {
     #[new]
-    #[pyo3(signature = (*_args, **_kwargs))]
+    #[r2p(signature = (*_args, **_kwargs))]
     fn new(_args: Bound<'_, PyAny>, _kwargs: Option<Bound<'_, PyAny>>) -> Self {
         Self {}
     }
@@ -720,7 +720,7 @@ impl UserDefinedWarning {
 #[test]
 fn test_pyfunction_warn() {
     #[pyfunction]
-    #[pyo3(warn(message = "TPW: this function raises warning"))]
+    #[r2p(warn(message = "TPW: this function raises warning"))]
     fn function_with_warning() {}
 
     py_expect_warning_for_fn!(
@@ -730,7 +730,7 @@ fn test_pyfunction_warn() {
     );
 
     #[pyfunction]
-    #[pyo3(warn(message = "TPW: this function raises warning with category", category = PyFutureWarning))]
+    #[r2p(warn(message = "TPW: this function raises warning with category", category = PyFutureWarning))]
     fn function_with_warning_with_category() {}
 
     py_expect_warning_for_fn!(
@@ -743,7 +743,7 @@ fn test_pyfunction_warn() {
     );
 
     #[pyfunction]
-    #[pyo3(warn(message = "TPW: custom deprecated category", category = pyo3::exceptions::PyDeprecationWarning))]
+    #[r2p(warn(message = "TPW: custom deprecated category", category = r2p::exceptions::PyDeprecationWarning))]
     fn function_with_warning_with_custom_category() {}
 
     py_expect_warning_for_fn!(
@@ -751,13 +751,13 @@ fn test_pyfunction_warn() {
         f,
         [(
             "TPW: custom deprecated category",
-            pyo3::exceptions::PyDeprecationWarning
+            r2p::exceptions::PyDeprecationWarning
         )]
     );
 
     #[cfg(any(not(Py_LIMITED_API), Py_3_12))]
     #[pyfunction]
-    #[pyo3(warn(message = "TPW: this function raises user-defined warning", category = UserDefinedWarning))]
+    #[r2p(warn(message = "TPW: this function raises user-defined warning", category = UserDefinedWarning))]
     fn function_with_warning_and_user_defined_category() {}
 
     #[cfg(any(not(Py_LIMITED_API), Py_3_12))]
@@ -774,8 +774,8 @@ fn test_pyfunction_warn() {
 #[test]
 fn test_pyfunction_multiple_warnings() {
     #[pyfunction]
-    #[pyo3(warn(message = "TPMW: this function raises warning"))]
-    #[pyo3(warn(message = "TPMW: this function raises FutureWarning", category = PyFutureWarning))]
+    #[r2p(warn(message = "TPMW: this function raises warning"))]
+    #[r2p(warn(message = "TPMW: this function raises FutureWarning", category = PyFutureWarning))]
     fn function_with_multiple_warnings() {}
 
     py_expect_warning_for_fn!(
@@ -789,8 +789,8 @@ fn test_pyfunction_multiple_warnings() {
 
     #[cfg(not(Py_LIMITED_API))]
     #[pyfunction]
-    #[pyo3(warn(message = "TPMW: this function raises FutureWarning", category = PyFutureWarning))]
-    #[pyo3(warn(message = "TPMW: this function raises user-defined warning", category = UserDefinedWarning))]
+    #[r2p(warn(message = "TPMW: this function raises FutureWarning", category = PyFutureWarning))]
+    #[r2p(warn(message = "TPMW: this function raises user-defined warning", category = UserDefinedWarning))]
     fn function_with_multiple_custom_warnings() {}
 
     #[cfg(not(Py_LIMITED_API))]
@@ -810,7 +810,7 @@ fn test_pyfunction_multiple_warnings() {
 #[test]
 #[cfg(any(not(PyPy), Py_3_12))]
 fn test_pyfunction_is_not_static() {
-    use pyo3::ffi;
+    use r2p::ffi;
 
     // one function for each calling convention
     #[pyfunction]
@@ -820,7 +820,7 @@ fn test_pyfunction_is_not_static() {
     fn positional(_arg: i32) {}
 
     #[pyfunction]
-    #[pyo3(signature = (**_kwargs))]
+    #[r2p(signature = (**_kwargs))]
     fn keywords(_kwargs: Option<&Bound<'_, types::PyDict>>) {}
 
     Python::attach(|py| {

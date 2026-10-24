@@ -1,7 +1,7 @@
 // TODO https://github.com/PyO3/pyo3/issues/5487
 #![allow(clippy::undocumented_unsafe_blocks)]
 
-use pyo3_ffi::Py_TPFLAGS_HEAPTYPE;
+use r2p_ffi::Py_TPFLAGS_HEAPTYPE;
 
 use crate::exceptions::PyStopAsyncIteration;
 use crate::impl_::callback::IntoPyCallbackOutput;
@@ -318,8 +318,8 @@ impl PyDeleterDef {
 /// NB cannot accept `'static` visitor, this is a sanity check below:
 ///
 /// ```rust,compile_fail
-/// use pyo3::prelude::*;
-/// use pyo3::pyclass::{PyTraverseError, PyVisit};
+/// use r2p::prelude::*;
+/// use r2p::pyclass::{PyTraverseError, PyVisit};
 ///
 /// #[pyclass]
 /// struct Foo;
@@ -335,8 +335,8 @@ impl PyDeleterDef {
 /// Elided lifetime should compile ok:
 ///
 /// ```rust,no_run
-/// use pyo3::prelude::*;
-/// use pyo3::pyclass::{PyTraverseError, PyVisit};
+/// use r2p::prelude::*;
+/// use r2p::pyclass::{PyTraverseError, PyVisit};
 ///
 /// #[pyclass]
 /// struct Foo;
@@ -444,7 +444,7 @@ where
 /// - if the base type is known in this module, can potentially look it up directly in module state
 ///   (when we have it)
 /// - if the base type is a Python builtin, can jut call the C function directly
-/// - if the base type is a PyO3 type defined in the same module, can potentially do similar to
+/// - if the base type is a r2p type defined in the same module, can potentially do similar to
 ///   tp_alloc where we solve this at compile time
 unsafe fn call_super_traverse(
     obj: *mut ffi::PyObject,
@@ -483,14 +483,14 @@ unsafe fn call_super_traverse(
     }
 
     // If the base with a different traverse is not a heap type, this type is responsible
-    // for traversing the type object of this heap type (all PyO3 types are heap types).
+    // for traversing the type object of this heap type (all r2p types are heap types).
     //
     // See also <https://github.com/python/cpython/blob/10a84540c2c2533e31f5f0649cc4e4afdd991ba2/Objects/typeobject.c#L2574-L2583>
     // which demonstrates CPython's expectation that the base heap type is responsible
     // for the traversal of the instance's type object.
     if ty.is_null() || unsafe { ffi::PyType_HasFeature(ty, Py_TPFLAGS_HEAPTYPE) } == 0 {
         // If the base does not exist or is not a heap type, we are responsible for
-        // traversing the type object now (all PyO3 types are heap types).
+        // traversing the type object now (all r2p types are heap types).
         debug_assert_eq!(
             unsafe { ffi::PyType_HasFeature(this_type, Py_TPFLAGS_HEAPTYPE) },
             1
@@ -559,7 +559,7 @@ where
 /// - if the base type is known in this module, can potentially look it up directly in module state
 ///   (when we have it)
 /// - if the base type is a Python builtin, can jut call the C function directly
-/// - if the base type is a PyO3 type defined in the same module, can potentially do similar to
+/// - if the base type is a r2p type defined in the same module, can potentially do similar to
 ///   tp_alloc where we solve this at compile time
 unsafe fn call_super_clear(
     py: Python<'_>,

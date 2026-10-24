@@ -1,5 +1,6 @@
 target
 Cargo.lock
+!/Cargo.lock
 /doc
 /gh-pages
 build/
@@ -13,9 +14,9 @@ dist/
 .hypothesis/
 .eggs/
 venv*
-guide/book/
-guide/src/LICENSE-APACHE
-guide/src/LICENSE-MIT
+docs/guide/book/
+docs/guide/src/LICENSE-APACHE
+docs/guide/src/LICENSE-MIT
 *.so
 *.out
 *.egg-info
@@ -29,3 +30,6 @@ netlify_build/
 .nox/
 .vscode/
 .lycheecache
+.tools/
+.venv/
+.DS_Store

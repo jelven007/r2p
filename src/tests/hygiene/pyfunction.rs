@@ -1,27 +1,27 @@
 #[crate::pyfunction]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 fn do_something(x: i32) -> crate::PyResult<i32> {
     ::core::result::Result::Ok(x)
 }
 
 #[crate::pyfunction]
-#[pyo3(crate = "crate", name = "check5012")]
+#[r2p(crate = "crate", name = "check5012")]
 fn check_5012(x: i32) -> crate::PyResult<i32> {
     ::core::result::Result::Ok(x)
 }
 
 #[crate::pyfunction]
-#[pyo3(crate = "crate")]
-#[pyo3(warn(message = "This is a warning message"))]
+#[r2p(crate = "crate")]
+#[r2p(warn(message = "This is a warning message"))]
 fn function_with_warning() {}
 
 #[crate::pyfunction(crate = "crate")]
-#[pyo3(warn(message = "This is a warning message with custom category", category = crate::exceptions::PyFutureWarning))]
+#[r2p(warn(message = "This is a warning message with custom category", category = crate::exceptions::PyFutureWarning))]
 fn function_with_warning_and_category() {}
 
 #[crate::pyfunction(crate = "crate")]
-#[pyo3(warn(message = "This is a warning message"))]
-#[pyo3(warn(message = "This is another warning message", category = crate::exceptions::PyFutureWarning))]
+#[r2p(warn(message = "This is a warning message"))]
+#[r2p(warn(message = "This is another warning message", category = crate::exceptions::PyFutureWarning))]
 fn multiple_warning_function() {}
 
 #[test]

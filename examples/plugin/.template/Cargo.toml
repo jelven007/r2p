@@ -5,5 +5,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-pyo3 = "{{PYO3_VERSION}}"
+r2p = "{{R2P_VERSION}}"
 plugin_api = { path = "plugin_api" }

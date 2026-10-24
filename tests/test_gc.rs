@@ -8,12 +8,12 @@
 
 use core::ffi::{c_int, c_void};
 use core::num::NonZero;
-use pyo3::class::PyTraverseError;
-use pyo3::class::PyVisit;
-use pyo3::ffi;
-use pyo3::prelude::*;
+use r2p::class::PyTraverseError;
+use r2p::class::PyVisit;
+use r2p::ffi;
+use r2p::prelude::*;
 #[cfg(all(wip_feature_std, not(Py_GIL_DISABLED)))]
-use pyo3::py_run;
+use r2p::py_run;
 #[cfg(not(target_arch = "wasm32"))]
 use std::cell::Cell;
 use std::collections::HashMap;
@@ -111,7 +111,7 @@ impl DropCheck {
     }
 
     #[track_caller]
-    fn assert_drops_with_gc(&self, object: *mut pyo3::ffi::PyObject) {
+    fn assert_drops_with_gc(&self, object: *mut r2p::ffi::PyObject) {
         // running the GC might take a few cycles to collect an object
         for _ in 0..100 {
             if self.0.is_completed() {
@@ -510,7 +510,7 @@ impl DropDuringTraversal {
     }
 }
 
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 #[cfg(wip_feature_std)]
 #[test]
 fn drop_during_traversal_with_gil() {
@@ -545,7 +545,7 @@ fn drop_during_traversal_with_gil() {
     check.assert_drops_with_gc(ptr);
 }
 
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 #[cfg(wip_feature_std)]
 #[test]
 fn drop_during_traversal_without_gil() {
@@ -717,8 +717,8 @@ fn test_traverse_subclass_override_clear() {
 }
 
 // the fields visited below, set before driving the traversal
-static BASE_FIELD: AtomicPtr<pyo3::ffi::PyObject> = AtomicPtr::new(std::ptr::null_mut());
-static CHILD_FIELD: AtomicPtr<pyo3::ffi::PyObject> = AtomicPtr::new(std::ptr::null_mut());
+static BASE_FIELD: AtomicPtr<r2p::ffi::PyObject> = AtomicPtr::new(std::ptr::null_mut());
+static CHILD_FIELD: AtomicPtr<r2p::ffi::PyObject> = AtomicPtr::new(std::ptr::null_mut());
 static BASE_VISITED: AtomicBool = AtomicBool::new(false);
 static CHILD_VISITED: AtomicBool = AtomicBool::new(false);
 
@@ -739,8 +739,8 @@ fn visit_error_on_base_field(object: Borrowed<'_, '_, PyAny>) -> Result<(), NonZ
 #[cfg(wip_feature_std)]
 #[cfg(any(not(Py_LIMITED_API), Py_3_11))] // buffer availability
 fn test_drop_buffer_during_traversal_without_gil() {
-    use pyo3::buffer::PyBuffer;
-    use pyo3::types::PyBytes;
+    use r2p::buffer::PyBuffer;
+    use r2p::types::PyBytes;
 
     // `PyBuffer` has a drop method which attempts to attach to the Python interpreter,
     // if the thread is during traverse we leak it for safety. This should _never_ be happening
@@ -844,8 +844,8 @@ fn test_super_traverse_early_return_does_not_abort() {
     }
 
     Python::attach(|py| {
-        let base_field = pyo3::types::PyList::empty(py).into_any().unbind();
-        let child_field = pyo3::types::PyList::empty(py).into_any().unbind();
+        let base_field = r2p::types::PyList::empty(py).into_any().unbind();
+        let child_field = r2p::types::PyList::empty(py).into_any().unbind();
 
         let initializer = PyClassInitializer::from(TraverseBase {
             field: base_field.clone_ref(py),
@@ -892,11 +892,11 @@ fn python_subclass_type_cycle_is_collected() {
         }
     }
 
-    // Create subtype from Python; by creating a non-PyO3 subclass we can
-    // demonstrate PyO3 implements heap type traversal & deallocation
+    // Create subtype from Python; by creating a non-r2p subclass we can
+    // demonstrate r2p implements heap type traversal & deallocation
     // properly.
     let sub = Python::attach(|py| {
-        let locals = pyo3::types::PyDict::new(py);
+        let locals = r2p::types::PyDict::new(py);
         locals.set_item("Base", py.get_type::<Base>()).unwrap();
         py.run(
             c"\
@@ -1046,7 +1046,7 @@ fn dict_cycle_collected_with_traverse_and_clear() {
 #[test]
 #[cfg(wip_feature_std)]
 fn test_subclass_clear() {
-    // An incorrect PyO3 implementation would prevent subclass `__clear__`
+    // An incorrect r2p implementation would prevent subclass `__clear__`
     // from ever being installed, thus causing this cycle test to leak.
 
     #[pyclass(subclass)]
@@ -1103,7 +1103,7 @@ fn test_gc_during_classattr_initialization() {
     static CLASSATTR_CALLED: AtomicBool = AtomicBool::new(false);
 
     #[cfg_attr(not(Py_3_12), pyclass(frozen))]
-    #[cfg_attr(Py_3_12, pyclass(frozen, extends=pyo3::types::PyList))]
+    #[cfg_attr(Py_3_12, pyclass(frozen, extends=r2p::types::PyList))]
     struct GcDuringClassattr;
 
     #[pymethods]
@@ -1118,7 +1118,7 @@ fn test_gc_during_classattr_initialization() {
 
             let instance = Py::new(py, Self)?;
 
-            // Run GC traversal on a separate thread; an incorrect PyO3 implementation could
+            // Run GC traversal on a separate thread; an incorrect r2p implementation could
             // trigger class attribute initialization to be triggered during GC traversal,
             // which will corrupt GC state.
             //
@@ -1159,8 +1159,8 @@ fn test_gc_during_classattr_initialization() {
 
 // Manual traversal utilities
 
-unsafe fn get_type_traverse(tp: *mut pyo3::ffi::PyTypeObject) -> Option<pyo3::ffi::traverseproc> {
-    unsafe { std::mem::transmute(pyo3::ffi::PyType_GetSlot(tp, pyo3::ffi::Py_tp_traverse)) }
+unsafe fn get_type_traverse(tp: *mut r2p::ffi::PyTypeObject) -> Option<r2p::ffi::traverseproc> {
+    unsafe { std::mem::transmute(r2p::ffi::PyType_GetSlot(tp, r2p::ffi::Py_tp_traverse)) }
 }
 
 /// Traverse `obj` with the given `visitor` function. This is guaranteed to not

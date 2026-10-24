@@ -1,0 +1,232 @@
+use std::{
+    ffi::{CStr, c_void},
+    process::exit,
+};
+
+use r2p_ffi_check_definitions::{bindgen as bindings, r2p_ffi};
+
+/// Functions which don't have equivalent addresses between r2p-ffi and bindgen.
+static SPECIAL_CASE_FUNCTIONS: &[&str] = &[
+    "PyEval_RestoreThread", // r2p adds special handling for pthread_exit
+    "PyGILState_Ensure",    // Similar to PyEval_RestoreThread
+];
+
+fn main() {
+    println!(
+        "comparing r2p-ffi against headers generated for {}",
+        CStr::from_bytes_with_nul(bindings::PY_VERSION)
+            .unwrap()
+            .to_string_lossy()
+    );
+
+    let mut failed = false;
+
+    macro_rules! check_struct {
+        ($name:ident) => {{
+            let r2p_ffi_size = std::mem::size_of::<r2p_ffi::$name>();
+            let bindgen_size = std::mem::size_of::<bindings::$name>();
+
+            let r2p_ffi_align = std::mem::align_of::<r2p_ffi::$name>();
+            let bindgen_align = std::mem::align_of::<bindings::$name>();
+
+            // Check if sizes differ, but ignore zero-sized types (probably "opaque" in r2p-ffi)
+            if r2p_ffi_size == 0 {
+                println!(
+                    "warning: ignoring zero-sized r2p_ffi type {}",
+                    stringify!($name),
+                );
+            } else if r2p_ffi_size != bindgen_size {
+                failed = true;
+                println!(
+                    "error: size of {} differs between r2p_ffi ({}) and bindgen ({})",
+                    stringify!($name),
+                    r2p_ffi_size,
+                    bindgen_size
+                );
+            } else if r2p_ffi_align != bindgen_align {
+                failed = true;
+                println!(
+                    "error: alignment of {} differs between r2p_ffi ({}) and bindgen ({})",
+                    stringify!($name),
+                    r2p_ffi_align,
+                    bindgen_align
+                );
+            }
+
+            r2p_ffi_check_macro::for_all_fields!($name, check_field);
+        }};
+    }
+
+    macro_rules! check_field {
+        ($struct_name:ident, $field:ident, $bindgen_field:ident) => {{
+            // some struct fields are deprecated but still present in the ABI
+            #[allow(clippy::used_underscore_binding, deprecated)]
+            let r2p_ffi_offset = std::mem::offset_of!(r2p_ffi::$struct_name, $field);
+            #[allow(clippy::used_underscore_binding)]
+            let bindgen_offset = std::mem::offset_of!(bindings::$struct_name, $bindgen_field);
+
+            if r2p_ffi_offset != bindgen_offset {
+                failed = true;
+                println!(
+                    "error: field offset of {}.{} differs between r2p_ffi ({}) and bindgen ({})",
+                    stringify!($struct_name),
+                    stringify!($field),
+                    r2p_ffi_offset,
+                    bindgen_offset
+                );
+            }
+        }};
+    }
+
+    r2p_ffi_check_macro::for_all_structs!(check_struct);
+
+    struct ReturnTypeSniffer<T> {
+        _marker: std::marker::PhantomData<T>,
+    }
+
+    impl<T> ReturnTypeSniffer<T> {
+        /// Uses type inference of return value from a closure to sniff return type `T` without needing
+        /// to ever call the function.
+        fn new(_: impl FnOnce() -> T) -> Self {
+            Self {
+                _marker: std::marker::PhantomData,
+            }
+        }
+
+        fn check_compatible<U>(
+            symbol: &str,
+            _r2p_ffi_type: &ReturnTypeSniffer<T>,
+            _bindgen_type: &ReturnTypeSniffer<U>,
+        ) -> bool {
+            let mut compatible = true;
+            if std::mem::size_of::<T>() != std::mem::size_of::<U>() {
+                compatible = false;
+                println!(
+                    "error: {symbol} return type size differs (r2p-ffi type is {}, bindgen type is {})",
+                    std::any::type_name::<T>(),
+                    std::any::type_name::<U>(),
+                );
+            }
+
+            if std::mem::align_of::<T>() != std::mem::align_of::<U>() {
+                compatible = false;
+                println!(
+                    "error: {symbol} return type alignment differs (r2p-ffi type is {}, bindgen type is {})",
+                    std::any::type_name::<T>(),
+                    std::any::type_name::<U>(),
+                );
+            }
+            compatible
+        }
+    }
+
+    /// tt muncher macro replacing arg types with `todo!()` to
+    /// allow to sniff return type
+    macro_rules! todo_args {
+        // entry point
+        (($f:expr)($($args:tt)*)) => {
+            todo_args!(@[($f)()] $($args)*)
+        };
+        // terminate when no more args
+        (@[($f:expr)($($inferred:tt)*)]) => {
+            // allow not expect because args might be empty
+            #[allow(unreachable_code, reason = "args are todo!()")]
+            ($f)($($inferred)*)
+        };
+        // consume comma
+        (@[($f:expr)($($inferred:tt)*)] , $($args:tt)*) => {
+            todo_args!(@[($f)($($inferred)* ,)] $($args)*)
+        };
+        // consume `_`
+        (@[($f:expr)($($inferred:tt)*)] _ $($args:tt)*) => {
+            todo_args!(@[($f)($($inferred)* todo!())] $($args)*)
+        };
+        // consume trailing `...`
+        (@[($f:expr)($($inferred:tt)*)] ...) => {
+            todo_args!(@[($f)($($inferred)*)])
+        };
+    }
+
+    // Check that the function signatures are compatible between r2p-ffi and bindgen.
+    //
+    // Typically `name` == `bindgen_name`, but e.g. for PyPy this is not the case.
+    macro_rules! check_function {
+        ($name:ident, $bindgen_name:ident, [$($modifiers:tt)*] ($($arg_types:tt)*)) => {{
+            // Check functions have the same number of arguments
+            #[allow(deprecated)]
+            let r2p_ffi_fn = { r2p_ffi::$name as $($modifiers)* fn($($arg_types)*) -> _ };
+            let bindgen_fn = bindings::$bindgen_name as $($modifiers)* fn($($arg_types)*) -> _;
+
+            // Check function addresses are the same (i.e. link is configured as expected).
+            // This will also trigger build errors if linker fails to find the symbol r2p-ffi
+            // is expecting.
+            if !std::ptr::fn_addr_eq(r2p_ffi_fn, bindgen_fn)
+                && !SPECIAL_CASE_FUNCTIONS.contains(&stringify!($name))
+            {
+                failed = true;
+                println!(
+                    "error: function address of {} differs between r2p_ffi ({:p}) and bindgen ({:p})",
+                    stringify!($name),
+                    r2p_ffi_fn,
+                    bindgen_fn
+                );
+            }
+
+            // TODO: can probably sniff arg types by binding sniffers for each argument position and then passing
+            // those inside `todo_args!` to use type inference for each argument.
+
+            // Check return types are compatible
+            #[allow(deprecated)]
+            let r2p_ffi_return_type = ReturnTypeSniffer::new(|| unsafe { todo_args!((r2p_ffi::$name)($($arg_types)*)) });
+            let bindgen_return_type = ReturnTypeSniffer::new(|| unsafe { todo_args!((bindings::$bindgen_name)($($arg_types)*)) });
+
+            failed |= !ReturnTypeSniffer::check_compatible(stringify!($name), &r2p_ffi_return_type, &bindgen_return_type);
+        }};
+        // case when the function is an inline function in the headers, in which case r2p-ffi will use the
+        // Rust abi and the extern symbol uses the C abi
+        (@inline $name:ident, $bindgen_name:ident, ($($arg_types:tt)*)) => {{
+            // Check functions have the same number of arguments
+            #[allow(deprecated)]
+            { r2p_ffi::$name as unsafe fn($($arg_types)*) -> _ };
+            bindings::$bindgen_name as unsafe extern "C" fn($($arg_types)*) -> _;
+
+            // TODO: can probably sniff arg types by binding sniffers for each argument position and then passing
+            // those inside `todo_args!` to use type inference for each argument.
+
+            // Check return types are compatible
+            #[allow(deprecated)]
+            let r2p_ffi_return_type = ReturnTypeSniffer::new(|| unsafe { todo_args!((r2p_ffi::$name)($($arg_types)*)) });
+            let bindgen_return_type = ReturnTypeSniffer::new(|| unsafe { todo_args!((bindings::$bindgen_name)($($arg_types)*)) });
+
+            failed |= !ReturnTypeSniffer::check_compatible(stringify!($name), &r2p_ffi_return_type, &bindgen_return_type);
+        }};
+    }
+
+    r2p_ffi_check_macro::for_all_functions!(check_function);
+
+    macro_rules! check_static {
+        ($name:ident, $bindgen_name:ident) => {{
+            #[allow(deprecated)]
+            let r2p_ffi_ptr = (&raw const r2p_ffi::$name).cast::<c_void>();
+            let bindgen_ptr = (&raw const bindings::$bindgen_name).cast::<c_void>();
+
+            if r2p_ffi_ptr != bindgen_ptr {
+                failed = true;
+                println!(
+                    "error: static address of {} differs between r2p_ffi ({:p}) and bindgen ({:p})",
+                    stringify!($name),
+                    r2p_ffi_ptr,
+                    bindgen_ptr
+                );
+            }
+        }};
+    }
+
+    r2p_ffi_check_macro::for_all_statics!(check_static);
+
+    if failed {
+        exit(1);
+    } else {
+        exit(0);
+    }
+}

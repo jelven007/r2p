@@ -106,12 +106,14 @@ jobs:
           ref: ${{ github.event.merge_group.head_ref }}
           filters: |
             changed:
-              - 'pyo3-ffi/**'
-              - 'pyo3-ffi-check/**'
+              - 'crates/r2p-ffi/**'
+              - 'tools/ffi-check/**'
+              - 'crates/r2p-build-config/**'
+              - 'noxfile.py'
               - '.github/workflows/ci.yml'
               - '.github/workflows/build.yml'
 
-      - name: Run pyo3-ffi-check
+      - name: Run r2p-ffi-check
         # TODO: investigate graalpy failures
         if: ${{ endsWith(inputs.python-version, '-dev') || (steps.ffi-changes.outputs.changed == 'true' && inputs.rust == 'stable' && !startsWith(inputs.python-version, 'graalpy')) }}
         run: uv run --isolated --only-group nox nox -s ffi-check

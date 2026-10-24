@@ -1,8 +1,8 @@
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass(frozen)]
 pub struct Foo {
-    #[pyo3(get)]
+    #[r2p(get)]
     field: u32,
 }
 
@@ -40,8 +40,8 @@ fn pyclass_get_of_mutable_class_fails(class: &Bound<'_, MutableBase>) {
 
 #[pyclass(frozen)]
 pub struct SetOnFrozenClass {
-    #[pyo3(set)]
-//~^ ERROR: cannot use `#[pyo3(set)]` on a `frozen` class
+    #[r2p(set)]
+//~^ ERROR: cannot use `#[r2p(set)]` on a `frozen` class
     field: u32,
 }
 

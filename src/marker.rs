@@ -5,7 +5,7 @@
 //!
 //! The Python interpreter is not thread-safe. To protect the Python interpreter in multithreaded
 //! scenarios there is a global lock, the *global interpreter lock* (hereafter referred to as *GIL*)
-//! that must be held to safely interact with Python objects. This is why in PyO3 when you acquire
+//! that must be held to safely interact with Python objects. This is why in r2p when you acquire
 //! the GIL you get a [`Python`] marker token that carries the *lifetime* of holding the GIL and all
 //! borrowed references to Python objects carry this lifetime as well. This will statically ensure
 //! that you can never use Python objects after dropping the lock - if you mess this up it will be
@@ -43,7 +43,7 @@
 //! ```rust, compile_fail
 //! # #[cfg(feature = "nightly")]
 //! # compile_error!("this actually works on nightly")
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //! use alloc::rc::Rc;
 //!
 //! fn main() {
@@ -71,8 +71,8 @@
 //! doing anything with threads:
 //!
 //! ```rust, no_run
-//! use pyo3::prelude::*;
-//! use pyo3::types::PyString;
+//! use r2p::prelude::*;
+//! use r2p::types::PyString;
 //! use send_wrapper::SendWrapper;
 //!
 //! Python::attach(|py| {
@@ -95,7 +95,7 @@
 //!
 //! # A proper implementation using an auto trait
 //!
-//! However on nightly Rust and when PyO3's `nightly` feature is
+//! However on nightly Rust and when r2p's `nightly` feature is
 //! enabled, `Ungil` is defined as the following:
 //!
 //! ```rust,no_run
@@ -148,7 +148,7 @@ use core::marker::PhantomData;
 /// For example, an `Rc` smart pointer should be usable without the GIL, but we currently prevent that:
 ///
 /// ```compile_fail
-/// # use pyo3::prelude::*;
+/// # use r2p::prelude::*;
 /// use alloc::rc::Rc;
 ///
 /// Python::attach(|py| {
@@ -164,8 +164,8 @@ use core::marker::PhantomData;
 /// one can circumvent this protection using the [`send_wrapper`](https://docs.rs/send_wrapper/) crate:
 ///
 /// ```no_run
-/// # use pyo3::prelude::*;
-/// # use pyo3::types::PyString;
+/// # use r2p::prelude::*;
+/// # use r2p::types::PyString;
 /// use send_wrapper::SendWrapper;
 ///
 /// Python::attach(|py| {
@@ -212,8 +212,8 @@ mod nightly {
         /// Types which are `Ungil` cannot be used in contexts where the GIL was released, e.g.
         ///
         /// ```compile_fail
-        /// # use pyo3::prelude::*;
-        /// # use pyo3::types::PyString;
+        /// # use r2p::prelude::*;
+        /// # use r2p::types::PyString;
         /// Python::attach(|py| {
         ///     let string = PyString::new(py, "foo");
         ///
@@ -226,7 +226,7 @@ mod nightly {
         /// This applies to the [`Python`] token itself as well, e.g.
         ///
         /// ```compile_fail
-        /// # use pyo3::prelude::*;
+        /// # use r2p::prelude::*;
         /// Python::attach(|py| {
         ///     py.detach(|| {
         ///         drop(py);
@@ -238,8 +238,8 @@ mod nightly {
         /// to prevent incorrectly circumventing it using e.g. the [`send_wrapper`](https://docs.rs/send_wrapper/) crate:
         ///
         /// ```compile_fail
-        /// # use pyo3::prelude::*;
-        /// # use pyo3::types::PyString;
+        /// # use r2p::prelude::*;
+        /// # use r2p::types::PyString;
         /// use send_wrapper::SendWrapper;
         ///
         /// Python::attach(|py| {
@@ -259,7 +259,7 @@ mod nightly {
         /// at least if they are not also bound to the GIL:
         ///
         /// ```rust
-        /// # use pyo3::prelude::*;
+        /// # use r2p::prelude::*;
         /// use std::rc::Rc;
         ///
         /// Python::attach(|py| {
@@ -319,7 +319,7 @@ pub use nightly::Ungil;
 /// - If you already have something with a lifetime bound to the GIL, such as [`Bound<'py, PyAny>`], you can
 ///   use its `.py()` method to get a token.
 /// - In a function or method annotated with [`#[pyfunction]`](crate::pyfunction) or [`#[pymethods]`](crate::pymethods) you can declare it
-///   as a parameter, and PyO3 will pass in the token when Python code calls it.
+///   as a parameter, and r2p will pass in the token when Python code calls it.
 /// - When you need to acquire the GIL yourself, such as when calling Python code from Rust, you
 ///   should call [`Python::attach`] to do that and pass your code as a closure to it.
 ///
@@ -366,7 +366,7 @@ impl Python<'_> {
     /// provided closure `F` will be executed with the acquired `Python` marker token.
     ///
     /// If implementing [`#[pymethods]`](crate::pymethods) or [`#[pyfunction]`](crate::pyfunction),
-    /// declare `py: Python` as an argument. PyO3 will pass in the token to grant access to the GIL
+    /// declare `py: Python` as an argument. r2p will pass in the token to grant access to the GIL
     /// context in which the function is running, avoiding the need to call `attach`.
     ///
     /// If the [`auto-initialize`] feature is enabled and the Python runtime is not already
@@ -396,7 +396,7 @@ impl Python<'_> {
     /// # Examples
     ///
     /// ```
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -464,7 +464,7 @@ impl Python<'_> {
     ///
     /// # Examples
     /// ```rust
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::initialize();
@@ -478,7 +478,7 @@ impl Python<'_> {
 
     /// Like [`Python::attach`] except Python interpreter state checking is skipped.
     ///
-    /// Normally when attaching to the Python interpreter, PyO3 checks that it is in
+    /// Normally when attaching to the Python interpreter, r2p checks that it is in
     /// an appropriate state (e.g. it is fully initialized). This function skips
     /// those checks.
     ///
@@ -515,7 +515,7 @@ impl<'py> Python<'py> {
     /// # Example: Releasing the GIL while running a computation in Rust-only code
     ///
     /// ```
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyfunction]
     /// fn sum_numbers(py: Python<'_>, numbers: Vec<u32>) -> PyResult<u32> {
@@ -530,7 +530,7 @@ impl<'py> Python<'py> {
     /// #
     /// # fn main() -> PyResult<()> {
     /// #     Python::attach(|py| -> PyResult<()> {
-    /// #         let fun = pyo3::wrap_pyfunction!(sum_numbers, py)?;
+    /// #         let fun = r2p::wrap_pyfunction!(sum_numbers, py)?;
     /// #         let res = fun.call1((vec![1_u32, 2, 3],))?;
     /// #         assert_eq!(res.extract::<u32>()?, 6_u32);
     /// #         Ok(())
@@ -544,8 +544,8 @@ impl<'py> Python<'py> {
     /// # Example: Passing borrowed Python references into the closure is not allowed
     ///
     /// ```compile_fail
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyString;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyString;
     ///
     /// fn parallel_print(py: Python<'_>) {
     ///     let s = PyString::new(py, "This object cannot be accessed without holding the GIL >_<");
@@ -583,7 +583,7 @@ impl<'py> Python<'py> {
     /// # Examples
     ///
     /// ```
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     /// # Python::attach(|py| {
     /// let result = py.eval(c"[i * 10 for i in range(5)]", None, None).unwrap();
     /// let res: Vec<i64> = result.extract().unwrap();
@@ -610,7 +610,7 @@ impl<'py> Python<'py> {
     ///
     /// # Examples
     /// ```
-    /// use pyo3::{
+    /// use r2p::{
     ///     prelude::*,
     ///     types::{PyBytes, PyDict},
     /// };
@@ -693,7 +693,7 @@ impl<'py> Python<'py> {
     ///
     /// # Examples
     /// ```rust
-    /// # use pyo3::Python;
+    /// # use r2p::Python;
     /// assert!(Python::version_str().starts_with("3."));
     /// ```
     pub fn version_str() -> &'static str {
@@ -707,9 +707,9 @@ impl<'py> Python<'py> {
     ///
     /// # Examples
     /// ```rust
-    /// # use pyo3::Python;
+    /// # use r2p::Python;
     /// Python::attach(|py| {
-    ///     // PyO3 supports Python 3.9 and up.
+    ///     // r2p supports Python 3.9 and up.
     ///     assert!(py.version_info() >= (3, 9));
     ///     assert!(py.version_info() >= (3, 9, 0));
     /// });
@@ -737,7 +737,7 @@ impl<'py> Python<'py> {
     ///
     /// ```rust,no_run
     /// # #![allow(dead_code)] // this example is quite impractical to test
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// # fn main() {
     /// #[pyfunction]
@@ -774,7 +774,7 @@ impl<'py> Python<'py> {
 impl<'unbound> Python<'unbound> {
     /// Unsafely creates a Python token with an unbounded lifetime.
     ///
-    /// Many of PyO3 APIs use [`Python<'_>`] as proof that the calling thread is attached to the
+    /// Many of r2p APIs use [`Python<'_>`] as proof that the calling thread is attached to the
     /// interpreter, but this function can be used to call them unsafely.
     ///
     /// # Safety
@@ -890,7 +890,7 @@ mod tests {
         });
     }
 
-    #[cfg(not(pyo3_disable_reference_pool))]
+    #[cfg(not(r2p_disable_reference_pool))]
     #[test]
     fn test_detach_pass_stuff_in() {
         let list = Python::attach(|py| PyList::new(py, vec!["foo", "bar"]).unwrap().unbind());

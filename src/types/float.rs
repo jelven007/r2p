@@ -19,7 +19,7 @@ use core::ffi::c_double;
 
 /// Represents a Python `float` object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyFloat>`][crate::Py] or [`Bound<'py, PyFloat>`][Bound].
 ///
 /// For APIs available on `float` objects, see the [`PyFloatMethods`] trait which is implemented for

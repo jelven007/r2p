@@ -10,13 +10,13 @@ use crate::{Bound, Py, PyAny, PyErr, PyResult, ffi};
 
 /// A Python iterator object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyIterator>`][crate::Py] or [`Bound<'py, PyIterator>`][Bound].
 ///
 /// # Examples
 ///
 /// ```rust
-/// use pyo3::prelude::*;
+/// use r2p::prelude::*;
 ///
 /// # fn main() -> PyResult<()> {
 /// Python::attach(|py| -> PyResult<()> {

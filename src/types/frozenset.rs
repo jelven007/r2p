@@ -52,7 +52,7 @@ impl<'py> PyFrozenSetBuilder<'py> {
 
 /// Represents a  Python `frozenset`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyFrozenSet>`][crate::Py] or [`Bound<'py, PyFrozenSet>`][Bound].
 ///
 /// For APIs available on `frozenset` objects, see the [`PyFrozenSetMethods`] trait which is implemented for
@@ -203,7 +203,7 @@ impl<'py> IntoIterator for &Bound<'py, PyFrozenSet> {
     }
 }
 
-/// PyO3 implementation of an iterator for a Python `frozenset` object.
+/// r2p implementation of an iterator for a Python `frozenset` object.
 pub struct BoundFrozenSetIterator<'py>(Bound<'py, PyIterator>);
 
 impl<'py> BoundFrozenSetIterator<'py> {

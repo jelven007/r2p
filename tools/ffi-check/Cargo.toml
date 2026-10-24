@@ -1,0 +1,19 @@
+[package]
+name = "r2p-ffi-check"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+r2p-ffi-check-definitions = { path = "definitions" }
+r2p-ffi-check-macro = { path = "macro" }
+r2p-ffi = { path = "../../crates/r2p-ffi" }
+
+[build-dependencies]
+r2p-build-config = { path = "../../crates/r2p-build-config" }
+
+[workspace]
+members = [
+    "definitions",
+    "macro"
+]

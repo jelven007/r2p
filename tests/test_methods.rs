@@ -1,14 +1,14 @@
 #![cfg(feature = "macros")]
 
-use pyo3::BoundObject;
+use r2p::BoundObject;
 #[cfg(any(not(Py_LIMITED_API), Py_3_12))]
-use pyo3::exceptions::PyWarning;
-use pyo3::exceptions::{PyFutureWarning, PyUserWarning};
-use pyo3::prelude::*;
-use pyo3::py_run;
-use pyo3::types::PySequence;
-use pyo3::types::{IntoPyDict, PyDict, PyList, PySet, PyString, PyTuple, PyType};
-use pyo3_macros::pyclass;
+use r2p::exceptions::PyWarning;
+use r2p::exceptions::{PyFutureWarning, PyUserWarning};
+use r2p::prelude::*;
+use r2p::py_run;
+use r2p::types::PySequence;
+use r2p::types::{IntoPyDict, PyDict, PyList, PySet, PyString, PyTuple, PyType};
+use r2p_macros::pyclass;
 
 use crate::test_utils::CatchWarnings;
 
@@ -265,15 +265,15 @@ struct MethSignature {}
 
 #[pymethods]
 impl MethSignature {
-    #[pyo3(signature = (test = None))]
+    #[r2p(signature = (test = None))]
     fn get_optional(&self, test: Option<i32>) -> i32 {
         test.unwrap_or(10)
     }
-    #[pyo3(signature = (test = None))]
+    #[r2p(signature = (test = None))]
     fn get_optional2(&self, test: Option<i32>) -> Option<i32> {
         test
     }
-    #[pyo3(signature=(_t1 = None, t2 = None, _t3 = None))]
+    #[r2p(signature=(_t1 = None, t2 = None, _t3 = None))]
     fn get_optional_positional(
         &self,
         _t1: Option<i32>,
@@ -283,15 +283,15 @@ impl MethSignature {
         t2
     }
 
-    #[pyo3(signature = (test = 10))]
+    #[r2p(signature = (test = 10))]
     fn get_default(&self, test: i32) -> i32 {
         test
     }
-    #[pyo3(signature = (*, test = 10))]
+    #[r2p(signature = (*, test = 10))]
     fn get_kwarg(&self, test: i32) -> i32 {
         test
     }
-    #[pyo3(signature = (*args, **kwargs))]
+    #[r2p(signature = (*args, **kwargs))]
     fn get_kwargs<'py>(
         &self,
         py: Python<'py>,
@@ -305,7 +305,7 @@ impl MethSignature {
         .into_pyobject(py)
     }
 
-    #[pyo3(signature = (a, *args, **kwargs))]
+    #[r2p(signature = (a, *args, **kwargs))]
     fn get_pos_arg_kw<'py>(
         &self,
         py: Python<'py>,
@@ -321,42 +321,42 @@ impl MethSignature {
         .into_pyobject(py)
     }
 
-    #[pyo3(signature = (a, b, /))]
+    #[r2p(signature = (a, b, /))]
     fn get_pos_only(&self, a: i32, b: i32) -> i32 {
         a + b
     }
 
-    #[pyo3(signature = (a, /, b))]
+    #[r2p(signature = (a, /, b))]
     fn get_pos_only_and_pos(&self, a: i32, b: i32) -> i32 {
         a + b
     }
 
-    #[pyo3(signature = (a, /, b, c = 5))]
+    #[r2p(signature = (a, /, b, c = 5))]
     fn get_pos_only_and_pos_and_kw(&self, a: i32, b: i32, c: i32) -> i32 {
         a + b + c
     }
 
-    #[pyo3(signature = (a, /, *, b))]
+    #[r2p(signature = (a, /, *, b))]
     fn get_pos_only_and_kw_only(&self, a: i32, b: i32) -> i32 {
         a + b
     }
 
-    #[pyo3(signature = (a, /, *, b = 3))]
+    #[r2p(signature = (a, /, *, b = 3))]
     fn get_pos_only_and_kw_only_with_default(&self, a: i32, b: i32) -> i32 {
         a + b
     }
 
-    #[pyo3(signature = (a, /, b, *, c, d = 5))]
+    #[r2p(signature = (a, /, b, *, c, d = 5))]
     fn get_all_arg_types_together(&self, a: i32, b: i32, c: i32, d: i32) -> i32 {
         a + b + c + d
     }
 
-    #[pyo3(signature = (a, /, *args))]
+    #[r2p(signature = (a, /, *args))]
     fn get_pos_only_with_varargs(&self, a: i32, args: Vec<i32>) -> i32 {
         a + args.iter().sum::<i32>()
     }
 
-    #[pyo3(signature = (a, /, **kwargs))]
+    #[r2p(signature = (a, /, **kwargs))]
     fn get_pos_only_with_kwargs(
         &self,
         py: Python<'_>,
@@ -371,7 +371,7 @@ impl MethSignature {
         .map(Bound::unbind)
     }
 
-    #[pyo3(signature = (a=0, /, **kwargs))]
+    #[r2p(signature = (a=0, /, **kwargs))]
     fn get_optional_pos_only_with_kwargs(
         &self,
         py: Python<'_>,
@@ -386,22 +386,22 @@ impl MethSignature {
         .map(Bound::unbind)
     }
 
-    #[pyo3(signature = (*, a = 2, b = 3))]
+    #[r2p(signature = (*, a = 2, b = 3))]
     fn get_kwargs_only_with_defaults(&self, a: i32, b: i32) -> i32 {
         a + b
     }
 
-    #[pyo3(signature = (*, a, b))]
+    #[r2p(signature = (*, a, b))]
     fn get_kwargs_only(&self, a: i32, b: i32) -> i32 {
         a + b
     }
 
-    #[pyo3(signature = (*, a = 1, b))]
+    #[r2p(signature = (*, a = 1, b))]
     fn get_kwargs_only_with_some_default(&self, a: i32, b: i32) -> i32 {
         a + b
     }
 
-    #[pyo3(signature = (*args, a))]
+    #[r2p(signature = (*args, a))]
     fn get_args_and_required_keyword(
         &self,
         py: Python<'_>,
@@ -414,17 +414,17 @@ impl MethSignature {
             .map(Bound::unbind)
     }
 
-    #[pyo3(signature = (a, b = 2, *, c = 3))]
+    #[r2p(signature = (a, b = 2, *, c = 3))]
     fn get_pos_arg_kw_sep1(&self, a: i32, b: i32, c: i32) -> i32 {
         a + b + c
     }
 
-    #[pyo3(signature = (a, *, b = 2, c = 3))]
+    #[r2p(signature = (a, *, b = 2, c = 3))]
     fn get_pos_arg_kw_sep2(&self, a: i32, b: i32, c: i32) -> i32 {
         a + b + c
     }
 
-    #[pyo3(signature = (a, **kwargs))]
+    #[r2p(signature = (a, **kwargs))]
     fn get_pos_kw(
         &self,
         py: Python<'_>,
@@ -440,7 +440,7 @@ impl MethSignature {
     }
 
     // "args" can be anything that can be extracted from PyTuple
-    #[pyo3(signature = (*args))]
+    #[r2p(signature = (*args))]
     fn args_as_vec(&self, args: Vec<i32>) -> i32 {
         args.iter().sum()
     }
@@ -842,7 +842,7 @@ fn method_with_lifetime() {
 
 #[pyclass]
 struct MethodWithPyClassArg {
-    #[pyo3(get)]
+    #[r2p(get)]
     value: i64,
 }
 
@@ -864,13 +864,13 @@ impl MethodWithPyClassArg {
     fn inplace_add_pyref(&self, mut other: PyRefMut<'_, MethodWithPyClassArg>) {
         other.value += self.value;
     }
-    #[pyo3(signature=(other = None))]
+    #[r2p(signature=(other = None))]
     fn optional_add(&self, other: Option<&MethodWithPyClassArg>) -> MethodWithPyClassArg {
         MethodWithPyClassArg {
             value: self.value + other.map(|o| o.value).unwrap_or(10),
         }
     }
-    #[pyo3(signature=(other = None))]
+    #[r2p(signature=(other = None))]
     fn optional_inplace_add(&self, other: Option<&mut MethodWithPyClassArg>) {
         if let Some(other) = other {
             other.value += self.value;
@@ -965,14 +965,14 @@ fn test_cfg_attrs() {
 #[pyclass]
 #[derive(Default)]
 struct FromSequence {
-    #[pyo3(get)]
+    #[r2p(get)]
     numbers: Vec<i64>,
 }
 
 #[pymethods]
 impl FromSequence {
     #[new]
-    #[pyo3(signature=(seq = None))]
+    #[r2p(signature=(seq = None))]
     fn new(seq: Option<&Bound<'_, PySequence>>) -> PyResult<Self> {
         if let Some(seq) = seq {
             Ok(FromSequence {
@@ -994,7 +994,7 @@ fn test_from_sequence() {
 
 #[pyclass]
 struct r#RawIdents {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     r#type: Py<PyAny>,
     r#subtype: Py<PyAny>,
     r#subsubtype: Py<PyAny>,
@@ -1064,7 +1064,7 @@ impl r#RawIdents {
     #[classattr]
     const r#CLASS_ATTR_CONST: i32 = 6;
 
-    #[pyo3(signature = (r#struct = "foo"))]
+    #[r2p(signature = (r#struct = "foo"))]
     fn method_with_keyword<'a>(&self, r#struct: &'a str) -> &'a str {
         r#struct
     }
@@ -1157,7 +1157,7 @@ macro_rules! issue_1506 {
 issue_1506!(
     #[pymethods]
     impl Issue1506 {
-        #[pyo3(signature = (_arg, _args, _kwargs=None))]
+        #[r2p(signature = (_arg, _args, _kwargs=None))]
         fn issue_1506(
             &self,
             _py: Python<'_>,
@@ -1167,7 +1167,7 @@ issue_1506!(
         ) {
         }
 
-        #[pyo3(signature = (_arg, _args, _kwargs=None))]
+        #[r2p(signature = (_arg, _args, _kwargs=None))]
         fn issue_1506_mut(
             &mut self,
             _py: Python<'_>,
@@ -1177,7 +1177,7 @@ issue_1506!(
         ) {
         }
 
-        #[pyo3(signature = (_arg, _args, _kwargs=None))]
+        #[r2p(signature = (_arg, _args, _kwargs=None))]
         fn issue_1506_custom_receiver(
             _slf: Py<Self>,
             _py: Python<'_>,
@@ -1187,7 +1187,7 @@ issue_1506!(
         ) {
         }
 
-        #[pyo3(signature = (_arg, _args, _kwargs=None))]
+        #[r2p(signature = (_arg, _args, _kwargs=None))]
         fn issue_1506_custom_receiver_explicit(
             _slf: Py<Issue1506>,
             _py: Python<'_>,
@@ -1198,7 +1198,7 @@ issue_1506!(
         }
 
         #[new]
-        #[pyo3(signature = (_arg, _args, _kwargs=None))]
+        #[r2p(signature = (_arg, _args, _kwargs=None))]
         fn issue_1506_new(
             _py: Python<'_>,
             _arg: &Bound<'_, PyAny>,
@@ -1220,7 +1220,7 @@ issue_1506!(
         fn issue_1506_deleter(&self, _py: Python<'_>) {}
 
         #[staticmethod]
-        #[pyo3(signature = (_arg, _args, _kwargs=None))]
+        #[r2p(signature = (_arg, _args, _kwargs=None))]
         fn issue_1506_static(
             _py: Python<'_>,
             _arg: &Bound<'_, PyAny>,
@@ -1230,7 +1230,7 @@ issue_1506!(
         }
 
         #[classmethod]
-        #[pyo3(signature = (_arg, _args, _kwargs=None))]
+        #[r2p(signature = (_arg, _args, _kwargs=None))]
         fn issue_1506_class(
             _cls: &Bound<'_, PyType>,
             _py: Python<'_>,
@@ -1255,7 +1255,7 @@ pymethods!(
 #[test]
 fn test_option_pyclass_arg() {
     // Option<&PyClass> argument with a default set in a signature regressed to a compile
-    // error in PyO3 0.17.0 - this test it continues to be accepted.
+    // error in r2p 0.17.0 - this test it continues to be accepted.
 
     #[pyclass]
     struct SomePyClass {}
@@ -1281,7 +1281,7 @@ fn test_option_pyclass_arg() {
 #[test]
 fn test_issue_2988() {
     #[pyfunction]
-    #[pyo3(signature = (
+    #[r2p(signature = (
         _data = vec![],
         _data2 = vec![],
     ))]
@@ -1289,7 +1289,7 @@ fn test_issue_2988() {
         _data: Vec<i32>,
         // The from_py_with here looks a little odd, we just need some way
         // to encourage the macro to expand the from_py_with default path too
-        #[pyo3(from_py_with = <Bound<'_, _> as PyAnyMethods>::extract)] _data2: Vec<i32>,
+        #[r2p(from_py_with = <Bound<'_, _> as PyAnyMethods>::extract)] _data2: Vec<i32>,
     ) {
     }
 }
@@ -1302,7 +1302,7 @@ pub struct UserDefinedWarning {}
 #[pymethods]
 impl UserDefinedWarning {
     #[new]
-    #[pyo3(signature = (*_args, **_kwargs))]
+    #[r2p(signature = (*_args, **_kwargs))]
     fn new(_args: Bound<'_, PyAny>, _kwargs: Option<Bound<'_, PyAny>>) -> Self {
         Self {}
     }
@@ -1321,58 +1321,58 @@ fn test_pymethods_warn() {
     #[pymethods]
     impl WarningMethodContainer {
         #[new]
-        #[pyo3(warn(message = "this __new__ method raises warning"))]
+        #[r2p(warn(message = "this __new__ method raises warning"))]
         fn new() -> Self {
             Self { value: 0 }
         }
 
-        #[pyo3(warn(message = "this method raises warning"))]
+        #[r2p(warn(message = "this method raises warning"))]
         fn method_with_warning(_slf: PyRef<'_, Self>) {}
 
-        #[pyo3(warn(message = "this method raises warning", category = PyFutureWarning))]
+        #[r2p(warn(message = "this method raises warning", category = PyFutureWarning))]
         fn method_with_warning_and_custom_category(_slf: PyRef<'_, Self>) {}
 
         #[cfg(any(not(Py_LIMITED_API), Py_3_12))]
-        #[pyo3(warn(message = "this method raises user-defined warning", category = UserDefinedWarning))]
+        #[r2p(warn(message = "this method raises user-defined warning", category = UserDefinedWarning))]
         fn method_with_warning_and_user_defined_category(&self) {}
 
         #[staticmethod]
-        #[pyo3(warn(message = "this static method raises warning"))]
+        #[r2p(warn(message = "this static method raises warning"))]
         fn static_method() {}
 
         #[staticmethod]
-        #[pyo3(warn(message = "this class method raises warning"))]
+        #[r2p(warn(message = "this class method raises warning"))]
         fn class_method() {}
 
         #[getter]
-        #[pyo3(warn(message = "this getter raises warning"))]
+        #[r2p(warn(message = "this getter raises warning"))]
         fn get_value(&self) -> i32 {
             self.value
         }
 
         #[setter]
-        #[pyo3(warn(message = "this setter raises warning"))]
+        #[r2p(warn(message = "this setter raises warning"))]
         fn set_value(&mut self, value: i32) {
             self.value = value;
         }
 
         #[deleter]
-        #[pyo3(warn(message = "this deleter raises warning"))]
+        #[r2p(warn(message = "this deleter raises warning"))]
         fn delete_value(&mut self) {}
 
-        #[pyo3(warn(message = "this subscript op method raises warning"))]
+        #[r2p(warn(message = "this subscript op method raises warning"))]
         fn __getitem__(&self, _key: i32) -> i32 {
             0
         }
 
-        #[pyo3(warn(message = "the + op method raises warning"))]
+        #[r2p(warn(message = "the + op method raises warning"))]
         fn __add__(&self, other: PyRef<'_, Self>) -> Self {
             Self {
                 value: self.value + other.value,
             }
         }
 
-        #[pyo3(warn(message = "this __call__ method raises warning"))]
+        #[r2p(warn(message = "this __call__ method raises warning"))]
         fn __call__(&self) -> i32 {
             self.value
         }
@@ -1498,7 +1498,7 @@ fn test_pymethods_warn() {
     impl WarningMethodContainer2 {
         #[new]
         #[classmethod]
-        #[pyo3(warn(message = "this class-method __new__ method raises warning"))]
+        #[r2p(warn(message = "this class-method __new__ method raises warning"))]
         fn new(_cls: Bound<'_, PyType>) -> Self {
             Self {}
         }
@@ -1532,13 +1532,13 @@ fn test_py_methods_multiple_warn() {
             Self {}
         }
 
-        #[pyo3(warn(message = "this method raises warning 1"))]
-        #[pyo3(warn(message = "this method raises warning 2", category = PyFutureWarning))]
+        #[r2p(warn(message = "this method raises warning 1"))]
+        #[r2p(warn(message = "this method raises warning 2", category = PyFutureWarning))]
         fn multiple_warn_method(&self) {}
 
         #[cfg(not(Py_LIMITED_API))]
-        #[pyo3(warn(message = "this method raises FutureWarning", category = PyFutureWarning))]
-        #[pyo3(warn(message = "this method raises UserDefinedWarning", category = UserDefinedWarning))]
+        #[r2p(warn(message = "this method raises FutureWarning", category = PyFutureWarning))]
+        #[r2p(warn(message = "this method raises UserDefinedWarning", category = UserDefinedWarning))]
         fn multiple_warn_custom_category_method(&self) {}
     }
 

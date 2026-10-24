@@ -22,7 +22,7 @@ mod writer;
 ///
 /// This type is immutable.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyBytes>`][crate::Py] or [`Bound<'py, PyBytes>`][Bound].
 ///
 /// For APIs available on `bytes` objects, see the [`PyBytesMethods`] trait which is implemented for
@@ -39,8 +39,8 @@ mod writer;
 /// additional overhead of a Python method call.
 ///
 /// ```rust
-/// # use pyo3::prelude::*;
-/// use pyo3::types::PyBytes;
+/// # use r2p::prelude::*;
+/// use r2p::types::PyBytes;
 ///
 /// # Python::attach(|py| {
 /// let py_bytes = PyBytes::new(py, b"foo".as_slice());
@@ -100,7 +100,7 @@ impl PyBytes {
     /// # Examples
     ///
     /// ```
-    /// use pyo3::{prelude::*, types::PyBytes};
+    /// use r2p::{prelude::*, types::PyBytes};
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -146,7 +146,7 @@ impl PyBytes {
     /// # Example
     ///
     /// ```
-    /// use pyo3::{prelude::*, types::PyBytes};
+    /// use r2p::{prelude::*, types::PyBytes};
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {

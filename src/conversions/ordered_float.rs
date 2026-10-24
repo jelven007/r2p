@@ -13,7 +13,7 @@
 //!
 //! ```toml
 //! [dependencies]
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"ordered-float\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"ordered-float\"] }")]
 //! ordered-float = "5.0.0"
 //! ```
 //!
@@ -23,7 +23,7 @@
 //!
 //! ```rust,no_run
 //! use ordered_float::{NotNan, OrderedFloat};
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! #[pyfunction]
 //! fn add_not_nans(a: NotNan<f64>, b: NotNan<f64>) -> NotNan<f64> {
@@ -36,7 +36,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_ordered_float")]
+//! # #[r2p(name = "example_ordered_float")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(add_not_nans, m)?)?;
 //!     m.add_function(wrap_pyfunction!(add_ordered_floats, m)?)?;

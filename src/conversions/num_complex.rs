@@ -3,7 +3,7 @@
 //!  Conversions to and from [num-complex](https://docs.rs/num-complex)’
 //! [`Complex`]`<`[`f32`]`>` and [`Complex`]`<`[`f64`]`>`.
 //!
-//! num-complex’ [`Complex`] supports more operations than PyO3's [`PyComplex`]
+//! num-complex’ [`Complex`] supports more operations than r2p's [`PyComplex`]
 //! and can be used with the rest of the Rust ecosystem.
 //!
 //! # Setup
@@ -14,11 +14,11 @@
 //! [dependencies]
 //! # change * to the latest versions
 //! num-complex = "*"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"num-complex\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"num-complex\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of num-complex and PyO3.
-//! The required num-complex version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of num-complex and r2p.
+//! The required num-complex version may vary based on the version of r2p.
 //!
 //! # Examples
 //!
@@ -29,7 +29,7 @@
 //! # // please file an issue if it breaks!
 //! use nalgebra::base::{dimension::Const, Matrix};
 //! use num_complex::Complex;
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! type T = Complex<f64>;
 //!
@@ -44,7 +44,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_num_complex")]
+//! # #[r2p(name = "example_num_complex")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(get_eigenvalues, m)?)?;
 //!     Ok(())
@@ -52,7 +52,7 @@
 //! # // test
 //! # use assert_approx_eq::assert_approx_eq;
 //! # use nalgebra::ComplexField;
-//! # use pyo3::types::PyComplex;
+//! # use r2p::types::PyComplex;
 //! #
 //! # fn main() -> PyResult<()> {
 //! #     Python::attach(|py| -> PyResult<()> {

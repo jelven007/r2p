@@ -1,0 +1,112 @@
+use core::{mem, ptr};
+use r2p_ffi::*;
+use std::ffi::{c_int, c_void};
+
+#[cfg(not(Py_3_15))]
+pub static mut MODULE_DEF: PyModuleDef = PyModuleDef {
+    m_base: PyModuleDef_HEAD_INIT,
+    m_name: c"sequential".as_ptr(),
+    m_doc: c"A library for generating sequential ids, written in Rust.".as_ptr(),
+    m_size: mem::size_of::<sequential_state>() as Py_ssize_t,
+    m_methods: std::ptr::null_mut(),
+    m_slots: (&raw mut SEQUENTIAL_SLOTS).cast(),
+    m_traverse: Some(sequential_traverse),
+    m_clear: Some(sequential_clear),
+    m_free: Some(sequential_free),
+};
+
+#[cfg(Py_3_15)]
+PyABIInfo_VAR!(ABI_INFO);
+
+const SEQUENTIAL_SLOTS_LEN: usize =
+    2 + cfg!(Py_3_12) as usize + cfg!(Py_GIL_DISABLED) as usize + 7 * (cfg!(Py_3_15) as usize);
+#[cfg(Py_3_15)]
+pub static mut SEQUENTIAL_SLOTS: [PySlot; SEQUENTIAL_SLOTS_LEN] = [
+    PySlot_STATIC_DATA(Py_mod_abi, (&raw mut ABI_INFO).cast()),
+    PySlot_STATIC_DATA(Py_mod_name, c"sequential".as_ptr() as *mut c_void),
+    PySlot_STATIC_DATA(
+        Py_mod_doc,
+        c"A library for generating sequential ids, written in Rust.".as_ptr() as *mut c_void,
+    ),
+    PySlot_SIZE(
+        Py_mod_state_size,
+        mem::size_of::<sequential_state>() as Py_ssize_t,
+    ),
+    // safety: all these function pointers are non-null by construction
+    unsafe { PySlot_FUNC(Py_mod_state_traverse, sequential_traverse as *mut c_void) },
+    unsafe { PySlot_FUNC(Py_mod_state_clear, sequential_clear as *mut c_void) },
+    unsafe { PySlot_FUNC(Py_mod_state_free, sequential_free as *mut c_void) },
+    unsafe { PySlot_FUNC(Py_mod_exec, sequential_exec as *mut c_void) },
+    PySlot_DATA(
+        Py_mod_multiple_interpreters,
+        Py_MOD_PER_INTERPRETER_GIL_SUPPORTED,
+    ),
+    #[cfg(Py_GIL_DISABLED)]
+    PySlot_DATA(Py_mod_gil, Py_MOD_GIL_NOT_USED),
+    PySlot_END(),
+];
+#[cfg(not(Py_3_15))]
+pub static mut SEQUENTIAL_SLOTS: [PyModuleDef_Slot; SEQUENTIAL_SLOTS_LEN] = [
+    PyModuleDef_Slot {
+        slot: Py_mod_exec,
+        value: sequential_exec as *mut c_void,
+    },
+    #[cfg(Py_3_12)]
+    PyModuleDef_Slot {
+        slot: Py_mod_multiple_interpreters,
+        value: Py_MOD_PER_INTERPRETER_GIL_SUPPORTED,
+    },
+    #[cfg(Py_GIL_DISABLED)]
+    PyModuleDef_Slot {
+        slot: Py_mod_gil,
+        value: Py_MOD_GIL_NOT_USED,
+    },
+    PyModuleDef_Slot {
+        slot: 0,
+        value: ptr::null_mut(),
+    },
+];
+
+unsafe extern "C" fn sequential_exec(module: *mut PyObject) -> c_int {
+    let state: *mut sequential_state = unsafe { PyModule_GetState(module).cast() };
+
+    let id_type =
+        unsafe { PyType_FromModuleAndSpec(module, &raw mut crate::id::ID_SPEC, ptr::null_mut()) };
+    if id_type.is_null() {
+        unsafe { PyErr_SetString(PyExc_SystemError, c"cannot locate type object".as_ptr()) };
+        return -1;
+    }
+    unsafe { (*state).id_type = id_type.cast::<PyTypeObject>() };
+
+    unsafe { PyModule_AddObjectRef(module, c"Id".as_ptr(), id_type) }
+}
+
+unsafe extern "C" fn sequential_traverse(
+    module: *mut PyObject,
+    visit: visitproc,
+    arg: *mut c_void,
+) -> c_int {
+    let state: *mut sequential_state = unsafe { PyModule_GetState(module.cast()).cast() };
+    let id_type: *mut PyObject = unsafe { (*state).id_type.cast() };
+
+    if id_type.is_null() {
+        0
+    } else {
+        unsafe { (visit)(id_type, arg) }
+    }
+}
+
+unsafe extern "C" fn sequential_clear(module: *mut PyObject) -> c_int {
+    let state: *mut sequential_state = unsafe { PyModule_GetState(module.cast()).cast() };
+    unsafe { Py_CLEAR((&raw mut (*state).id_type).cast()) };
+    0
+}
+
+unsafe extern "C" fn sequential_free(module: *mut c_void) {
+    unsafe { sequential_clear(module.cast()) };
+}
+
+#[repr(C)]
+struct sequential_state {
+    id_type: *mut PyTypeObject,
+}

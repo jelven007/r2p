@@ -10,11 +10,11 @@
 //! [dependencies]
 //! # change * to the latest versions
 //! smallvec = "*"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"smallvec\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"smallvec\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of smallvec and PyO3.
-//! The required smallvec version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of smallvec and r2p.
+//! The required smallvec version may vary based on the version of r2p.
 use crate::conversion::{FromPyObjectOwned, IntoPyObject};
 use crate::exceptions::PyTypeError;
 #[cfg(feature = "experimental-inspect")]

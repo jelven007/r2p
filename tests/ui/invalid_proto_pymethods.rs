@@ -1,10 +1,10 @@
 //! Check that some magic methods edge cases error as expected.
 //!
-//! For convenience use #[pyo3(name = "__some_dunder__")] to create the methods,
+//! For convenience use #[r2p(name = "__some_dunder__")] to create the methods,
 //! so that the function names can describe the edge case to be rejected.
 
-use pyo3::prelude::*;
-use pyo3::pyclass::CompareOp;
+use r2p::prelude::*;
+use r2p::pyclass::CompareOp;
 
 #[pyclass]
 struct MyClass {}
@@ -15,7 +15,7 @@ struct MyClass {}
 
 #[pymethods]
 impl MyClass {
-    #[pyo3(name = "__truediv__")]
+    #[r2p(name = "__truediv__")]
     fn truediv_expects_one_argument(&self) -> PyResult<()> {
 //~^ ERROR: Expected 1 arguments, got 0
         Ok(())
@@ -24,7 +24,7 @@ impl MyClass {
 
 #[pymethods]
 impl MyClass {
-    #[pyo3(name = "__truediv__")]
+    #[r2p(name = "__truediv__")]
     fn truediv_expects_one_argument_py(&self, _py: Python<'_>) -> PyResult<()> {
 //~^ ERROR: Expected 1 arguments, got 0
         Ok(())
@@ -37,7 +37,7 @@ impl MyClass {
 
 #[pymethods]
 impl MyClass {
-    #[pyo3(name = "__bool__", signature = ())]
+    #[r2p(name = "__bool__", signature = ())]
 //~^ ERROR: `signature` cannot be used with magic method `__bool__`
     fn signature_is_forbidden(&self) -> bool {
         true
@@ -46,7 +46,7 @@ impl MyClass {
 
 #[pymethods]
 impl MyClass {
-    #[pyo3(name = "__bool__", text_signature = "")]
+    #[r2p(name = "__bool__", text_signature = "")]
 //~^ ERROR: `text_signature` cannot be used with magic method `__bool__`
     fn text_signature_is_forbidden(&self) -> bool {
         true

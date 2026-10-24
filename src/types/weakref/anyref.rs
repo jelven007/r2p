@@ -68,8 +68,8 @@ pub trait PyWeakrefMethods<'py>: crate::sealed::Sealed {
     /// # Example
     #[cfg_attr(not(feature = "macros"), doc = "```rust,ignore")]
     #[cfg_attr(feature = "macros", doc = "```rust")]
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyWeakrefReference;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyWeakrefReference;
     ///
     /// #[pyclass(weakref)]
     /// struct Foo { /* fields omitted */ }
@@ -142,8 +142,8 @@ pub trait PyWeakrefMethods<'py>: crate::sealed::Sealed {
     /// # Example
     #[cfg_attr(not(feature = "macros"), doc = "```rust,ignore")]
     #[cfg_attr(feature = "macros", doc = "```rust")]
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyWeakrefReference;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyWeakrefReference;
     ///
     /// #[pyclass(weakref)]
     /// struct Foo { /* fields omitted */ }
@@ -206,8 +206,8 @@ pub trait PyWeakrefMethods<'py>: crate::sealed::Sealed {
     /// # Example
     #[cfg_attr(not(feature = "macros"), doc = "```rust,ignore")]
     #[cfg_attr(feature = "macros", doc = "```rust")]
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyWeakrefReference;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyWeakrefReference;
     ///
     /// #[pyclass(weakref)]
     /// struct Foo { /* fields omitted */ }
@@ -279,8 +279,8 @@ pub trait PyWeakrefMethods<'py>: crate::sealed::Sealed {
     /// # Example
     #[cfg_attr(not(feature = "macros"), doc = "```rust,ignore")]
     #[cfg_attr(feature = "macros", doc = "```rust")]
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyWeakrefReference;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyWeakrefReference;
     ///
     /// #[pyclass(weakref)]
     /// struct Foo { /* fields omitted */ }
@@ -525,7 +525,7 @@ mod tests {
     }
 
     #[cfg(feature = "macros")]
-    mod pyo3_pyclass {
+    mod r2p_pyclass {
         use super::*;
         use crate::{Py, pyclass};
         use core::ptr;

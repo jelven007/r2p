@@ -4,7 +4,7 @@ use crate::ffi::{PY_SSIZE_T_MAX, Py_ssize_t};
 use crate::platform::prelude::*;
 
 #[cfg(wip_feature_std)]
-macro_rules! pyo3_exception {
+macro_rules! r2p_exception {
     ($doc: expr, $name: ident, $base: ty) => {
         #[doc = $doc]
         #[repr(transparent)]
@@ -12,7 +12,7 @@ macro_rules! pyo3_exception {
 
         $crate::impl_exception_boilerplate!($name);
 
-        $crate::create_exception_type_object!(pyo3_runtime, $name, $base, Some($doc));
+        $crate::create_exception_type_object!(r2p_runtime, $name, $base, Some($doc));
     };
 }
 

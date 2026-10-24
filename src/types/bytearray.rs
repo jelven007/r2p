@@ -15,7 +15,7 @@ use core::slice;
 
 /// Represents a Python `bytearray`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyByteArray>`][crate::Py] or [`Bound<'py, PyByteArray>`][Bound].
 ///
 /// For APIs available on `bytearray` objects, see the [`PyByteArrayMethods`] trait which is implemented for
@@ -62,7 +62,7 @@ impl PyByteArray {
     /// # Examples
     ///
     /// ```
-    /// use pyo3::{prelude::*, types::PyByteArray};
+    /// use r2p::{prelude::*, types::PyByteArray};
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -140,7 +140,7 @@ pub trait PyByteArrayMethods<'py>: crate::sealed::Sealed {
     ///   invalidate the slice.
     /// - Actions like dropping objects or raising exceptions can invoke `__del__`methods or signal
     ///   handlers, which may execute arbitrary Python code. This means that if Python code has a
-    ///   reference to the `bytearray` you cannot safely use the vast majority of PyO3's API whilst
+    ///   reference to the `bytearray` you cannot safely use the vast majority of r2p's API whilst
     ///   using the slice.
     ///
     /// As a result, this slice should only be used for short-lived operations without executing any
@@ -150,16 +150,16 @@ pub trait PyByteArrayMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::exceptions::PyRuntimeError;
-    /// use pyo3::sync::critical_section::with_critical_section;
-    /// use pyo3::types::PyByteArray;
+    /// use r2p::prelude::*;
+    /// use r2p::exceptions::PyRuntimeError;
+    /// use r2p::sync::critical_section::with_critical_section;
+    /// use r2p::types::PyByteArray;
     ///
     /// #[pyfunction]
     /// fn a_valid_function(bytes: &Bound<'_, PyByteArray>) -> PyResult<()> {
     ///     let section = with_critical_section(bytes, || {
     ///         // SAFETY: We promise to not let the interpreter regain control over the bytearray
-    ///         // or invoke any PyO3 APIs while using the slice.
+    ///         // or invoke any r2p APIs while using the slice.
     ///         let slice = unsafe { bytes.as_bytes() };
     ///
     ///         // Copy only a section of `bytes` while avoiding
@@ -169,7 +169,7 @@ pub trait PyByteArrayMethods<'py>: crate::sealed::Sealed {
     ///             .ok_or_else(|| PyRuntimeError::new_err("input is not long enough"))
     ///     })?;
     ///
-    ///     // Now we can do things with `section` and call PyO3 APIs again.
+    ///     // Now we can do things with `section` and call r2p APIs again.
     ///     // ...
     ///     # assert_eq!(&section, b"world");
     ///
@@ -178,7 +178,7 @@ pub trait PyByteArrayMethods<'py>: crate::sealed::Sealed {
     /// # fn main() -> PyResult<()> {
     /// #     Python::attach(|py| -> PyResult<()> {
     /// #         let fun = wrap_pyfunction!(a_valid_function, py)?;
-    /// #         let locals = pyo3::types::PyDict::new(py);
+    /// #         let locals = r2p::types::PyDict::new(py);
     /// #         locals.set_item("a_valid_function", fun)?;
     /// #
     /// #         py.run(cr#"b = bytearray(b"hello world")
@@ -202,8 +202,8 @@ pub trait PyByteArrayMethods<'py>: crate::sealed::Sealed {
     /// The following `bug` function is unsound ⚠️
     ///
     /// ```rust,no_run
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::types::PyByteArray;
+    /// # use r2p::prelude::*;
+    /// # use r2p::types::PyByteArray;
     ///
     /// # #[allow(dead_code)]
     /// #[pyfunction]
@@ -243,8 +243,8 @@ pub trait PyByteArrayMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::types::PyByteArray;
+    /// # use r2p::prelude::*;
+    /// # use r2p::types::PyByteArray;
     /// # Python::attach(|py| {
     /// let bytearray = PyByteArray::new(py, b"Hello World.");
     /// let mut copied_message = bytearray.to_vec();
@@ -253,7 +253,7 @@ pub trait PyByteArrayMethods<'py>: crate::sealed::Sealed {
     /// copied_message[11] = b'!';
     /// assert_eq!(b"Hello World!", copied_message.as_slice());
     ///
-    /// pyo3::py_run!(py, bytearray, "assert bytearray == b'Hello World.'");
+    /// r2p::py_run!(py, bytearray, "assert bytearray == b'Hello World.'");
     /// # });
     /// ```
     fn to_vec(&self) -> Vec<u8>;

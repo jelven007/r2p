@@ -16,8 +16,8 @@ error[E0277]: `Atomic<*mut ()>` cannot be used as a Python function argument
               `(T0, T1, T2, T3, T4)` implements `FromPyObject<'a, 'py>`
               `(T0, T1, T2, T3, T4, T5)` implements `FromPyObject<'a, 'py>`
             and $N others
-    = note: required for `Atomic<*mut ()>` to implement `pyo3::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
-note: required by a bound in `pyo3::impl_::extract_argument::extract_required_argument`
+    = note: required for `Atomic<*mut ()>` to implement `r2p::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
+note: required by a bound in `r2p::impl_::extract_argument::extract_required_argument`
  --> src/impl_/extract_argument.rs
   |
   | pub fn extract_required_argument<'a, 'holder, 'py, T, const IMPLEMENTS_FROMPYOBJECT: bool>(
@@ -49,8 +49,8 @@ help: the trait `FromPyObject<'_, '_>` is not implemented for `Foo`
               `(T0, T1, T2, T3, T4)` implements `FromPyObject<'a, 'py>`
               `(T0, T1, T2, T3, T4, T5)` implements `FromPyObject<'a, 'py>`
             and $N others
-    = note: required for `Foo` to implement `pyo3::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
-note: required by a bound in `pyo3::impl_::extract_argument::extract_required_argument`
+    = note: required for `Foo` to implement `r2p::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
+note: required by a bound in `r2p::impl_::extract_argument::extract_required_argument`
  --> src/impl_/extract_argument.rs
   |
   | pub fn extract_required_argument<'a, 'holder, 'py, T, const IMPLEMENTS_FROMPYOBJECT: bool>(

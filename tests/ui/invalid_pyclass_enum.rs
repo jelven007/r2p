@@ -2,7 +2,7 @@
 //@[default] with-std
 //@[nostd] no-std
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass(subclass)]
 //~^ ERROR: enums can't be inherited by other classes
@@ -31,7 +31,7 @@ enum NoUnitVariants {
 
 #[pyclass]
 enum SimpleNoSignature {
-    #[pyo3(constructor = (a, b))]
+    #[r2p(constructor = (a, b))]
     //~^ ERROR: `constructor` can't be used on a simple enum variant
     A,
     B,
@@ -69,7 +69,7 @@ enum NoEqInt {
 
 #[pyclass(frozen, eq, eq_int, hash)]
 //~[default]^ ERROR: the trait bound `SimpleHashOptRequiresHash: Hash` is not satisfied
-//~[nostd]| ERROR: `#[pyclass(hash)]` requires PyO3's `std` feature
+//~[nostd]| ERROR: `#[pyclass(hash)]` requires r2p's `std` feature
 #[derive(PartialEq)]
 enum SimpleHashOptRequiresHash {
     A,
@@ -78,7 +78,7 @@ enum SimpleHashOptRequiresHash {
 
 #[pyclass(frozen, eq, hash)]
 //~[default]^ ERROR: the trait bound `ComplexHashOptRequiresHash: Hash` is not satisfied
-//~[nostd]| ERROR: `#[pyclass(hash)]` requires PyO3's `std` feature
+//~[nostd]| ERROR: `#[pyclass(hash)]` requires r2p's `std` feature
 #[derive(PartialEq)]
 enum ComplexHashOptRequiresHash {
     A(i32),

@@ -7,7 +7,7 @@ use core::{
     task::{Context, Poll, Waker},
 };
 
-use pyo3_macros::{pyclass, pymethods};
+use r2p_macros::{pyclass, pymethods};
 
 #[cfg(all(wip_feature_std, panic = "unwind"))]
 use crate::panic::PanicException;

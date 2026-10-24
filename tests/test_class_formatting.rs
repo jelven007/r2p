@@ -1,7 +1,7 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::py_run;
+use r2p::prelude::*;
+use r2p::py_run;
 use std::fmt::{Display, Formatter};
 
 mod test_utils;
@@ -22,7 +22,7 @@ impl Display for MyEnum2 {
 #[pyclass(eq, str)]
 #[derive(Debug, PartialEq)]
 pub enum MyEnum3 {
-    #[pyo3(name = "AwesomeVariant")]
+    #[r2p(name = "AwesomeVariant")]
     Variant,
     OtherVariant,
 }

@@ -3,11 +3,11 @@
 #![cfg(feature = "macros")]
 #![cfg(any(not(Py_LIMITED_API), Py_3_11))]
 
-use pyo3::buffer::PyBuffer;
-use pyo3::exceptions::PyBufferError;
-use pyo3::ffi;
-use pyo3::prelude::*;
-use pyo3::types::IntoPyDict;
+use r2p::buffer::PyBuffer;
+use r2p::exceptions::PyBufferError;
+use r2p::ffi;
+use r2p::prelude::*;
+use r2p::types::IntoPyDict;
 use std::ffi::CString;
 use std::ffi::{c_int, c_void};
 use std::ptr;
@@ -97,7 +97,7 @@ fn test_buffer_referenced() {
 
 #[test]
 fn test_releasebuffer_unraisable_error() {
-    use pyo3::exceptions::PyValueError;
+    use r2p::exceptions::PyValueError;
     use test_utils::UnraisableCapture;
 
     #[pyclass]

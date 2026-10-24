@@ -5,10 +5,10 @@
 //@[nostd] no-std
 #![deny(deprecated)]
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 use std::fmt::{Display, Formatter};
 
-#[pyclass(extend=pyo3::types::PyDict)]
+#[pyclass(extend=r2p::types::PyDict)]
 //~^ ERROR: expected one of: `crate`, `dict`, `eq`, `eq_int`, `extends`, `freelist`, `frozen`, `get_all`, `hash`, `immutable_type`, `mapping`, `module`, `name`, `ord`, `rename_all`, `sequence`, `set_all`, `new`, `str`, `subclass`, `unsendable`, `weakref`, `generic`, `from_py_object`, `skip_from_py_object`
 struct TypoIntheKey {}
 
@@ -66,7 +66,7 @@ impl EqOptAndManualRichCmp {
         &self,
         _py: Python,
         _other: Bound<'_, PyAny>,
-        _op: pyo3::pyclass::CompareOp,
+        _op: r2p::pyclass::CompareOp,
     ) -> PyResult<Py<PyAny>> {
         todo!()
     }
@@ -78,7 +78,7 @@ struct NoEqInt {}
 
 #[pyclass(frozen, eq, hash)]
 //~[default,inspect]^ ERROR: the trait bound `HashOptRequiresHash: Hash` is not satisfied
-//~[nostd]| ERROR: `#[pyclass(hash)]` requires PyO3's `std` feature
+//~[nostd]| ERROR: `#[pyclass(hash)]` requires r2p's `std` feature
 #[derive(PartialEq)]
 struct HashOptRequiresHash;
 
@@ -91,7 +91,7 @@ struct HashWithoutFrozenAndEq;
 #[pyclass(frozen, eq, hash)]
 //~^ ERROR: duplicate definitions with name `__pymethod___hash____`
 //~| ERROR: multiple applicable items in scope
-//~[nostd]| ERROR: `#[pyclass(hash)]` requires PyO3's `std` feature
+//~[nostd]| ERROR: `#[pyclass(hash)]` requires r2p's `std` feature
 #[derive(PartialEq, Hash)]
 struct HashOptAndManualHash {}
 
@@ -111,12 +111,12 @@ struct InvalidOrderedStruct {
 
 #[pyclass]
 struct MultipleErrors {
-    #[pyo3(foo)]
+    #[r2p(foo)]
     //~^ ERROR: expected one of: `get`, `set`, `name`
-    #[pyo3(blah)]
+    #[r2p(blah)]
     //~^ ERROR: expected one of: `get`, `set`, `name`
     x: i32,
-    #[pyo3(pop)]
+    #[r2p(pop)]
     //~^ ERROR: expected one of: `get`, `set`, `name`
     y: i32,
 }
@@ -176,7 +176,7 @@ struct Coord3(u32, u32, u32);
 #[pyclass(name = "aaa", str = "unsafe: {unsafe_variable}")]
 //~^ ERROR: The format string syntax is incompatible with any renaming via `name` or `rename_all`
 struct StructRenamingWithStrFormatter {
-    #[pyo3(name = "unsafe", get, set)]
+    #[r2p(name = "unsafe", get, set)]
     unsafe_variable: usize,
 }
 
@@ -189,7 +189,7 @@ struct StructRenamingWithStrFormatter2 {
 #[pyclass(str = "unsafe: {unsafe_variable}")]
 //~^ ERROR: The format string syntax is incompatible with any renaming via `name` or `rename_all`
 struct StructRenamingWithStrFormatter3 {
-    #[pyo3(name = "unsafe", get, set)]
+    #[r2p(name = "unsafe", get, set)]
     unsafe_variable: usize,
 }
 
@@ -246,7 +246,7 @@ struct StructFromPyObjectNoClone {
 }
 
 #[pyclass(skip_from_py_object)]
-//~^ ERROR: use of deprecated constant `pyo3::impl_::deprecated::SKIP_FROM_PY_OBJECT_DEPRECATED`: `skip_from_py_object` enabled by default. The option will be removed in the future
+//~^ ERROR: use of deprecated constant `r2p::impl_::deprecated::SKIP_FROM_PY_OBJECT_DEPRECATED`: `skip_from_py_object` enabled by default. The option will be removed in the future
 struct StructSkipFromPyObjectDeprecated {
     a: String,
     b: String,
@@ -260,7 +260,7 @@ struct NonPythonField {
 }
 
 #[pyclass(new = "from_fields")]
-//~^ ERROR: conflicting implementations of trait `pyo3::impl_::pyclass::doc::PyClassNewTextSignature` for type `NewFromFieldsWithManualNew`
+//~^ ERROR: conflicting implementations of trait `r2p::impl_::pyclass::doc::PyClassNewTextSignature` for type `NewFromFieldsWithManualNew`
 //~| ERROR: duplicate definitions with name `__pymethod___new____`
 //~| ERROR: multiple applicable items in scope
 struct NewFromFieldsWithManualNew {

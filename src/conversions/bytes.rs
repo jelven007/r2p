@@ -20,17 +20,17 @@
 //! ```toml
 //! [dependencies]
 //! bytes = "1.10"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"bytes\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"bytes\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of bytes and PyO3.
+//! Note that you must use compatible versions of bytes and r2p.
 //!
 //! # Example
 //!
 //! Rust code to create functions which return `Bytes` or take `Bytes` as arguments:
 //!
 //! ```rust,no_run
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //! use bytes::Bytes;
 //!
 //! #[pyfunction]
@@ -44,7 +44,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_bytes")]
+//! # #[r2p(name = "example_bytes")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(get_message_bytes, m)?)?;
 //!     m.add_function(wrap_pyfunction!(num_bytes, m)?)?;

@@ -2,13 +2,13 @@
 
 use std::collections::HashMap;
 
-use pyo3::exceptions::PyKeyError;
-use pyo3::prelude::*;
-use pyo3::py_run;
-use pyo3::types::IntoPyDict;
-use pyo3::types::PyList;
-use pyo3::types::PyMapping;
-use pyo3::types::PySequence;
+use r2p::exceptions::PyKeyError;
+use r2p::prelude::*;
+use r2p::py_run;
+use r2p::types::IntoPyDict;
+use r2p::types::PyList;
+use r2p::types::PyMapping;
+use r2p::types::PySequence;
 
 mod test_utils;
 
@@ -20,7 +20,7 @@ struct Mapping {
 #[pymethods]
 impl Mapping {
     #[new]
-    #[pyo3(signature=(elements=None))]
+    #[r2p(signature=(elements=None))]
     fn new(elements: Option<&Bound<'_, PyList>>) -> PyResult<Self> {
         if let Some(pylist) = elements {
             let mut elems = HashMap::with_capacity(pylist.len());
@@ -59,7 +59,7 @@ impl Mapping {
         }
     }
 
-    #[pyo3(signature=(key, default=None))]
+    #[r2p(signature=(key, default=None))]
     fn get(
         &self,
         py: Python<'_>,
@@ -74,7 +74,7 @@ impl Mapping {
 }
 
 /// Return a dict with `m = Mapping(['1', '2', '3'])`.
-fn map_dict(py: Python<'_>) -> Bound<'_, pyo3::types::PyDict> {
+fn map_dict(py: Python<'_>) -> Bound<'_, r2p::types::PyDict> {
     let d = [("Mapping", py.get_type::<Mapping>())]
         .into_py_dict(py)
         .unwrap();

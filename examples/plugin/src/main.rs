@@ -1,10 +1,10 @@
 use plugin_api::plugin_api as pylib_module;
-use pyo3::prelude::*;
-use pyo3::types::PyList;
+use r2p::prelude::*;
+use r2p::types::PyList;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     //"export" our API module to the python runtime
-    pyo3::append_to_inittab!(pylib_module);
+    r2p::append_to_inittab!(pylib_module);
     //spawn runtime
     Python::initialize();
     //import path for python

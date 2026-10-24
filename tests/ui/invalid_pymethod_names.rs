@@ -1,4 +1,4 @@
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass]
 struct TestClass {
@@ -7,7 +7,7 @@ struct TestClass {
 
 #[pymethods]
 impl TestClass {
-    #[pyo3(name = "num")]
+    #[r2p(name = "num")]
     #[getter(number)]
 //~^ ERROR: `name` may only be specified once
     fn get_num(&self) -> u32 { self.num }
@@ -15,15 +15,15 @@ impl TestClass {
 
 #[pymethods]
 impl TestClass {
-    #[pyo3(name = "foo")]
-    #[pyo3(name = "bar")]
+    #[r2p(name = "foo")]
+    #[r2p(name = "bar")]
 //~^ ERROR: `name` may only be specified once
     fn qux(&self) -> u32 { self.num }
 }
 
 #[pymethods]
 impl TestClass {
-    #[pyo3(name = "makenew")]
+    #[r2p(name = "makenew")]
 //~^ ERROR: `name` not allowed with `#[new]`
     #[new]
     fn new(&self) -> Self { Self { num: 0 } }

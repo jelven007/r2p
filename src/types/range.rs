@@ -10,7 +10,7 @@ use crate::{
 
 /// Represents a Python `range`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyRange>`][crate::Py] or [`Bound<'py, PyRange>`][Bound].
 ///
 /// For APIs available on `range` objects, see the [`PyRangeMethods`] trait which is implemented for

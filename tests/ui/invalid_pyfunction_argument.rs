@@ -2,7 +2,7 @@
 //@[default] no-experimental-inspect
 //@[inspect] with-experimental-inspect
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 use std::sync::atomic::AtomicPtr;
 
 #[pyfunction]

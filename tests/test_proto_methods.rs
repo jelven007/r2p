@@ -1,8 +1,8 @@
 #![cfg(feature = "macros")]
 
-use pyo3::exceptions::{PyAttributeError, PyIndexError, PyValueError};
-use pyo3::types::{PyDict, PyList, PyMapping, PySequence, PySlice, PyType};
-use pyo3::{prelude::*, py_run};
+use r2p::exceptions::{PyAttributeError, PyIndexError, PyValueError};
+use r2p::types::{PyDict, PyList, PyMapping, PySequence, PySlice, PyType};
+use r2p::{prelude::*, py_run};
 use std::iter;
 
 mod test_utils;
@@ -12,7 +12,7 @@ struct EmptyClass;
 
 #[pyclass]
 struct ExampleClass {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     value: i32,
     custom_attr: Option<i32>,
 }
@@ -630,7 +630,7 @@ fn test_getitem() {
 
 #[pyclass]
 struct ClassWithGetAttr {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     data: u32,
 }
 
@@ -662,7 +662,7 @@ fn getattr_doesnt_override_member() {
 
 #[pyclass]
 struct ClassWithGetAttribute {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     data: u32,
 }
 
@@ -861,7 +861,7 @@ asyncio.run(main())
 /// Increment the count when `__get__` is called.
 #[pyclass]
 struct DescrCounter {
-    #[pyo3(get)]
+    #[r2p(get)]
     count: usize,
 }
 
@@ -894,7 +894,7 @@ impl DescrCounter {
 fn descr_getset() {
     Python::attach(|py| {
         let counter = py.get_type::<DescrCounter>();
-        let source = pyo3_ffi::c_str!(
+        let source = r2p_ffi::c_str!(
             r#"
 class Class:
     counter = Counter()

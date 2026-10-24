@@ -45,6 +45,6 @@ jobs:
             codecovcli pr-base-picking \
               --base-sha "$CODECOV_BASE_SHA" \
               --pr "$CODECOV_PR" \
-              --slug PyO3/pyo3 \
+              --slug jelven007/r2p \
               --token "$CODECOV_TOKEN" \
               --service github

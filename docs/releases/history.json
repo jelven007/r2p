@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/jelven007/r2p",
+  "retention_count": 2,
+  "policy": "immutable-rollback-snapshots-with-full-ancestry",
+  "snapshots": [
+    {
+      "tag": "history/sdk-kernel-2026-10-24",
+      "revision": "f9e8d6461f51b7149b436844339dd9df7abb9e00",
+      "description": "r2p SDK 命名空间迁移与相关本地回归完成的快照",
+      "evidence": "docs/testing/reports/kernel-migration-validation.md"
+    },
+    {
+      "tag": "history/upstream-baseline-2026-10-24",
+      "revision": "424149e8a1c42128b05a090941673008fc46c478",
+      "description": "本次工程重构之前的 PyO3 上游源码基线",
+      "evidence": "docs/governance/project-assessment.md"
+    }
+  ]
+}

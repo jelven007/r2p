@@ -1,9 +1,9 @@
 #![cfg(feature = "macros")]
 
-use pyo3::exceptions::PyValueError;
-use pyo3::prelude::*;
-use pyo3::sync::PyOnceLock;
-use pyo3::types::IntoPyDict;
+use r2p::exceptions::PyValueError;
+use r2p::prelude::*;
+use r2p::sync::PyOnceLock;
+use r2p::types::IntoPyDict;
 
 #[pyclass]
 struct EmptyClassWithNew {}
@@ -144,7 +144,7 @@ fn new_with_two_args() {
 
 #[pyclass(subclass)]
 struct SuperClass {
-    #[pyo3(get)]
+    #[r2p(get)]
     from_rust: bool,
 }
 
@@ -162,7 +162,7 @@ impl SuperClass {
 fn subclass_new() {
     Python::attach(|py| {
         let super_cls = py.get_type::<SuperClass>();
-        let source = pyo3_ffi::c_str!(
+        let source = r2p_ffi::c_str!(
             r#"
 class Class(SuperClass):
     def __new__(cls):
@@ -214,19 +214,19 @@ fn new_with_custom_error() {
 
 #[pyclass]
 struct NewExisting {
-    #[pyo3(get)]
+    #[r2p(get)]
     num: usize,
 }
 
 #[pymethods]
 impl NewExisting {
     #[new]
-    fn new(py: pyo3::Python<'_>, val: usize) -> pyo3::Py<NewExisting> {
-        static PRE_BUILT: PyOnceLock<[pyo3::Py<NewExisting>; 2]> = PyOnceLock::new();
+    fn new(py: r2p::Python<'_>, val: usize) -> r2p::Py<NewExisting> {
+        static PRE_BUILT: PyOnceLock<[r2p::Py<NewExisting>; 2]> = PyOnceLock::new();
         let existing = PRE_BUILT.get_or_init(py, || {
             [
-                pyo3::Py::new(py, NewExisting { num: 0 }).unwrap(),
-                pyo3::Py::new(py, NewExisting { num: 1 }).unwrap(),
+                r2p::Py::new(py, NewExisting { num: 0 }).unwrap(),
+                r2p::Py::new(py, NewExisting { num: 1 }).unwrap(),
             ]
         });
 
@@ -234,7 +234,7 @@ impl NewExisting {
             return existing[val].clone_ref(py);
         }
 
-        pyo3::Py::new(py, NewExisting { num: val }).unwrap()
+        r2p::Py::new(py, NewExisting { num: val }).unwrap()
     }
 }
 
@@ -305,17 +305,17 @@ fn test_new_returns_bound() {
     })
 }
 
-#[pyo3::pyclass]
+#[r2p::pyclass]
 struct NewClassMethod {
-    #[pyo3(get)]
-    cls: pyo3::Py<PyAny>,
+    #[r2p(get)]
+    cls: r2p::Py<PyAny>,
 }
 
-#[pyo3::pymethods]
+#[r2p::pymethods]
 impl NewClassMethod {
     #[new]
     #[classmethod]
-    fn new(cls: &pyo3::Bound<'_, pyo3::types::PyType>) -> Self {
+    fn new(cls: &r2p::Bound<'_, r2p::types::PyType>) -> Self {
         Self {
             cls: cls.clone().into_any().unbind(),
         }
@@ -324,8 +324,8 @@ impl NewClassMethod {
 
 #[test]
 fn test_new_class_method() {
-    pyo3::Python::attach(|py| {
+    r2p::Python::attach(|py| {
         let cls = py.get_type::<NewClassMethod>();
-        pyo3::py_run!(py, cls, "assert cls().cls is cls");
+        r2p::py_run!(py, cls, "assert cls().cls is cls");
     });
 }

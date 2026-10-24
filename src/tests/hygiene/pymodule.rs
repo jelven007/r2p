@@ -1,11 +1,11 @@
 #[crate::pyfunction]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 fn do_something(x: i32) -> crate::PyResult<i32> {
     ::core::result::Result::Ok(x)
 }
 
 #[crate::pymodule]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 fn foo(
     _py: crate::Python<'_>,
     _m: &crate::Bound<'_, crate::types::PyModule>,
@@ -14,7 +14,7 @@ fn foo(
 }
 
 #[crate::pymodule]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 fn my_module(m: &crate::Bound<'_, crate::types::PyModule>) -> crate::PyResult<()> {
     <crate::Bound<'_, crate::types::PyModule> as crate::types::PyModuleMethods>::add_function(
         m,
@@ -29,7 +29,7 @@ fn my_module(m: &crate::Bound<'_, crate::types::PyModule>) -> crate::PyResult<()
 }
 
 #[crate::pymodule(submodule)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 mod my_module_declarative {
     #[pymodule_export]
     use super::{do_something, foo};

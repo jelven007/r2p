@@ -30,7 +30,7 @@ use core::ptr::{self, NonNull};
 /// > in one module available to other modules, so the regular import mechanism can
 /// > be used to access C APIs defined in dynamically loaded modules.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyCapsule>`][crate::Py] or [`Bound<'py, PyCapsule>`][Bound].
 ///
 /// For APIs available on capsule objects, see the [`PyCapsuleMethods`] trait which is implemented for
@@ -54,12 +54,12 @@ use core::ptr::{self, NonNull};
 /// by a separate compiled extension is UB.
 ///
 /// If the data opaque to Python needs to be only accessed within a single extension, it is recommended to
-/// use a `#[pyclass]` with no public getters/setters. PyO3 can guarantee the type safety of the contents
+/// use a `#[pyclass]` with no public getters/setters. r2p can guarantee the type safety of the contents
 /// and provide a safe API for accessing it (e.g. via [`Bound::borrow`] and [`Bound::get`]).
 ///
 /// # Example
 /// ```
-/// use pyo3::{prelude::*, types::PyCapsule, ffi::c_str};
+/// use r2p::{prelude::*, types::PyCapsule, ffi::c_str};
 ///
 /// #[repr(C)]
 /// struct Foo {
@@ -112,7 +112,7 @@ impl PyCapsule {
     /// # Example
     ///
     /// ```
-    /// use pyo3::{prelude::*, types::PyCapsule, ffi::c_str};
+    /// use r2p::{prelude::*, types::PyCapsule, ffi::c_str};
     /// use core::ffi::CStr;
     /// use core::ptr::NonNull;
     ///
@@ -284,7 +284,7 @@ impl PyCapsule {
     /// # Example
     ///
     /// ```
-    /// use pyo3::{prelude::*, types::PyCapsule};
+    /// use r2p::{prelude::*, types::PyCapsule};
     /// use core::ffi::c_void;
     /// use core::ptr::NonNull;
     ///
@@ -336,12 +336,12 @@ impl PyCapsule {
     /// # Example
     ///
     /// ```
-    /// use pyo3::{prelude::*, types::PyCapsule};
+    /// use r2p::{prelude::*, types::PyCapsule};
     /// use core::ffi::c_void;
     /// use core::ptr::NonNull;
     ///
-    /// unsafe extern "C" fn free_data(capsule: *mut pyo3::ffi::PyObject) {
-    ///     let ptr = unsafe { pyo3::ffi::PyCapsule_GetPointer(capsule, c"my_module.data".as_ptr()) };
+    /// unsafe extern "C" fn free_data(capsule: *mut r2p::ffi::PyObject) {
+    ///     let ptr = unsafe { r2p::ffi::PyCapsule_GetPointer(capsule, c"my_module.data".as_ptr()) };
     ///     if !ptr.is_null() {
     ///         unsafe { drop(Box::from_raw(ptr as *mut u32)) };
     ///     }
@@ -457,7 +457,7 @@ pub trait PyCapsuleMethods<'py>: crate::sealed::Sealed {
     /// ```
     /// use core::ffi::c_void;
     /// use std::sync::mpsc::{channel, Sender};
-    /// use pyo3::{prelude::*, types::PyCapsule};
+    /// use r2p::{prelude::*, types::PyCapsule};
     ///
     /// # fn main() -> PyResult<()> {
     /// let (tx, rx) = channel::<String>();

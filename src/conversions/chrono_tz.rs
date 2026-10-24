@@ -11,17 +11,17 @@
 //! ```toml
 //! [dependencies]
 //! chrono-tz = "0.8"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"chrono-tz\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"chrono-tz\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of chrono, chrono-tz and PyO3.
-//! The required chrono version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of chrono, chrono-tz and r2p.
+//! The required chrono version may vary based on the version of r2p.
 //!
 //! # Example: Convert a `zoneinfo.ZoneInfo` to chrono-tz's `Tz`
 //!
 //! ```rust,no_run
 //! use chrono_tz::Tz;
-//! use pyo3::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
+//! use r2p::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
 //!
 //! fn main() -> PyResult<()> {
 //!     Python::initialize();

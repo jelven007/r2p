@@ -9,12 +9,12 @@
 //!
 //! ```toml
 //! [dependencies]
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"bigdecimal\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"bigdecimal\"] }")]
 //! bigdecimal = "0.4"
 //! ```
 //!
-//! Note that you must use a compatible version of bigdecimal and PyO3.
-//! The required bigdecimal version may vary based on the version of PyO3.
+//! Note that you must use a compatible version of bigdecimal and r2p.
+//! The required bigdecimal version may vary based on the version of r2p.
 //!
 //! # Example
 //!
@@ -22,7 +22,7 @@
 //!
 //! ```rust
 //! use bigdecimal::BigDecimal;
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! #[pyfunction]
 //! fn add_one(d: BigDecimal) -> BigDecimal {
@@ -30,7 +30,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_bigdecimal")]
+//! # #[r2p(name = "example_bigdecimal")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(add_one, m)?)?;
 //!     Ok(())

@@ -1,6 +1,6 @@
 //@check-pass
 #![allow(dead_code)]
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass(eq)]
 #[derive(PartialEq)]

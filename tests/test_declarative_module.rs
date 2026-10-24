@@ -2,16 +2,16 @@
 
 use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 
-use pyo3::create_exception;
-use pyo3::exceptions::PyException;
-use pyo3::prelude::*;
+use r2p::create_exception;
+use r2p::exceptions::PyException;
+use r2p::prelude::*;
 
 mod test_utils;
 
 mod some_module {
-    use pyo3::create_exception;
-    use pyo3::exceptions::PyException;
-    use pyo3::prelude::*;
+    use r2p::create_exception;
+    use r2p::exceptions::PyException;
+    use r2p::prelude::*;
 
     #[pyclass]
     pub struct SomePyClass;
@@ -127,7 +127,7 @@ mod declarative_module {
     }
 
     #[pymodule]
-    #[pyo3(module = "custom_root")]
+    #[r2p(module = "custom_root")]
     mod inner_custom_root {
         use super::*;
 
@@ -135,7 +135,7 @@ mod declarative_module {
         struct Struct;
     }
 
-    #[pyo3::prelude::pymodule]
+    #[r2p::prelude::pymodule]
     mod full_path_inner {}
 
     #[pymodule_init]
@@ -162,7 +162,7 @@ mod declarative_module2 {
 }
 
 fn declarative_module(py: Python<'_>) -> Bound<'_, PyModule> {
-    pyo3::wrap_pymodule!(declarative_module)(py).into_bound(py)
+    r2p::wrap_pymodule!(declarative_module)(py).into_bound(py)
 }
 
 #[test]
@@ -230,7 +230,7 @@ mod r#type {
 #[test]
 fn test_raw_ident_module() {
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(r#type)(py).into_bound(py);
+        let m = r2p::wrap_pymodule!(r#type)(py).into_bound(py);
         py_assert!(py, m, "m.double(2) == 4");
     })
 }
@@ -272,7 +272,7 @@ static NO_ARG_INIT_RAN: AtomicBool = AtomicBool::new(false);
 #[pymodule]
 mod module_with_no_arg_init {
     use super::NO_ARG_INIT_RAN;
-    use pyo3::prelude::*;
+    use r2p::prelude::*;
     use std::sync::atomic::Ordering;
 
     #[pyfunction]
@@ -291,7 +291,7 @@ mod module_with_no_arg_init {
 #[test]
 fn test_pymodule_init_without_module() {
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(module_with_no_arg_init)(py);
+        let m = r2p::wrap_pymodule!(module_with_no_arg_init)(py);
         let m = m.bind(py);
         py_assert!(py, m, "m.triple(3) == 9");
         assert!(NO_ARG_INIT_RAN.load(Ordering::SeqCst));
@@ -303,7 +303,7 @@ static UNIT_INIT_RAN: AtomicBool = AtomicBool::new(false);
 #[pymodule]
 mod module_with_unit_init {
     use super::UNIT_INIT_RAN;
-    use pyo3::prelude::*;
+    use r2p::prelude::*;
     use std::sync::atomic::Ordering;
 
     #[pyfunction]
@@ -320,7 +320,7 @@ mod module_with_unit_init {
 #[test]
 fn test_pymodule_init_returning_unit() {
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(module_with_unit_init)(py);
+        let m = r2p::wrap_pymodule!(module_with_unit_init)(py);
         let m = m.bind(py);
         py_assert!(py, m, "m.quadruple(3) == 12");
         assert!(UNIT_INIT_RAN.load(Ordering::SeqCst));
@@ -332,7 +332,7 @@ static PY_INIT_VERSION_MAJOR: AtomicU8 = AtomicU8::new(0);
 #[pymodule]
 mod module_with_py_init {
     use super::PY_INIT_VERSION_MAJOR;
-    use pyo3::prelude::*;
+    use r2p::prelude::*;
     use std::sync::atomic::Ordering;
 
     #[pyfunction]
@@ -349,7 +349,7 @@ mod module_with_py_init {
 #[test]
 fn test_pymodule_init_with_only_python() {
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(module_with_py_init)(py);
+        let m = r2p::wrap_pymodule!(module_with_py_init)(py);
         let m = m.bind(py);
         py_assert!(py, m, "m.quintuple(3) == 15");
         assert_eq!(
@@ -361,7 +361,7 @@ fn test_pymodule_init_with_only_python() {
 
 #[pymodule]
 mod module_with_py_and_module_init {
-    use pyo3::prelude::*;
+    use r2p::prelude::*;
 
     #[pyfunction]
     fn sextuple(x: usize) -> usize {
@@ -370,14 +370,14 @@ mod module_with_py_and_module_init {
 
     #[pymodule_init]
     fn init(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
-        m.add("added_by_init", pyo3::types::PyString::new(py, "hello"))
+        m.add("added_by_init", r2p::types::PyString::new(py, "hello"))
     }
 }
 
 #[test]
 fn test_pymodule_init_with_python_and_module() {
     Python::attach(|py| {
-        let m = pyo3::wrap_pymodule!(module_with_py_and_module_init)(py);
+        let m = r2p::wrap_pymodule!(module_with_py_and_module_init)(py);
         let m = m.bind(py);
         py_assert!(py, m, "m.sextuple(3) == 18");
         py_assert!(py, m, "m.added_by_init == 'hello'");

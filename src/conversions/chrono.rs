@@ -10,17 +10,17 @@
 //! ```toml
 //! [dependencies]
 //! chrono = "0.4"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"chrono\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"chrono\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of chrono and PyO3.
-//! The required chrono version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of chrono and r2p.
+//! The required chrono version may vary based on the version of r2p.
 //!
 //! # Example: Convert a `datetime.datetime` to chrono's `DateTime<Utc>`
 //!
 //! ```rust
 //! use chrono::{DateTime, Duration, TimeZone, Utc};
-//! use pyo3::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
+//! use r2p::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
 //!
 //! fn main() -> PyResult<()> {
 //!     Python::initialize();
@@ -771,7 +771,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_timedelta_into_pyobject() {
+    fn test_r2p_timedelta_into_pyobject() {
         // Utility function used to check different durations.
         // The `name` parameter is used to identify the check in case of a failure.
         let check = |name: &'static str, delta: Duration, py_days, py_seconds, py_ms| {
@@ -809,7 +809,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_timedelta_frompyobject() {
+    fn test_r2p_timedelta_frompyobject() {
         // Utility function used to check different durations.
         // The `name` parameter is used to identify the check in case of a failure.
         let check = |name: &'static str, delta: Duration, py_days, py_seconds, py_ms| {
@@ -872,7 +872,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_date_into_pyobject() {
+    fn test_r2p_date_into_pyobject() {
         let eq_ymd = |name: &'static str, year, month, day| {
             Python::attach(|py| {
                 let date = NaiveDate::from_ymd_opt(year, month, day)
@@ -895,7 +895,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_date_frompyobject() {
+    fn test_r2p_date_frompyobject() {
         let eq_ymd = |name: &'static str, year, month, day| {
             Python::attach(|py| {
                 let py_date = new_py_datetime_ob(py, "date", (year, month, day));
@@ -912,7 +912,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_into_pyobject_utc() {
+    fn test_r2p_datetime_into_pyobject_utc() {
         Python::attach(|py| {
             let check_utc =
                 |name: &'static str, year, month, day, hour, minute, second, ms, py_ms| {
@@ -957,7 +957,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_into_pyobject_fixed_offset() {
+    fn test_r2p_datetime_into_pyobject_fixed_offset() {
         Python::attach(|py| {
             let check_fixed_offset =
                 |name: &'static str, year, month, day, hour, minute, second, ms, py_ms| {
@@ -997,7 +997,7 @@ mod tests {
 
     #[test]
     #[cfg(all(feature = "chrono-tz", not(windows)))]
-    fn test_pyo3_datetime_into_pyobject_tz() {
+    fn test_r2p_datetime_into_pyobject_tz() {
         Python::attach(|py| {
             let datetime = NaiveDate::from_ymd_opt(2024, 12, 11)
                 .unwrap()
@@ -1025,7 +1025,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_frompyobject_utc() {
+    fn test_r2p_datetime_frompyobject_utc() {
         Python::attach(|py| {
             let year = 2014;
             let month = 5;
@@ -1052,7 +1052,7 @@ mod tests {
 
     #[test]
     #[cfg(feature = "chrono-local")]
-    fn test_pyo3_naive_datetime_frompyobject_local() {
+    fn test_r2p_naive_datetime_frompyobject_local() {
         Python::attach(|py| {
             let year = 2014;
             let month = 5;
@@ -1078,7 +1078,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_datetime_frompyobject_fixed_offset() {
+    fn test_r2p_datetime_frompyobject_fixed_offset() {
         Python::attach(|py| {
             let year = 2014;
             let month = 5;
@@ -1121,7 +1121,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_fixed_into_pyobject() {
+    fn test_r2p_offset_fixed_into_pyobject() {
         Python::attach(|py| {
             // Chrono offset
             let offset = FixedOffset::east_opt(3600)
@@ -1146,7 +1146,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_fixed_frompyobject() {
+    fn test_r2p_offset_fixed_frompyobject() {
         Python::attach(|py| {
             let py_timedelta = new_py_datetime_ob(py, "timedelta", (0, 3600, 0));
             let py_tzinfo = new_py_datetime_ob(py, "timezone", (py_timedelta,));
@@ -1156,7 +1156,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_utc_into_pyobject() {
+    fn test_r2p_offset_utc_into_pyobject() {
         Python::attach(|py| {
             let utc = Utc.into_pyobject(py).unwrap();
             let py_utc = python_utc(py);
@@ -1165,7 +1165,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_offset_utc_frompyobject() {
+    fn test_r2p_offset_utc_frompyobject() {
         Python::attach(|py| {
             let py_utc = python_utc(py);
             let py_utc: Utc = py_utc.extract().unwrap();
@@ -1183,7 +1183,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_time_into_pyobject() {
+    fn test_r2p_time_into_pyobject() {
         Python::attach(|py| {
             let check_time = |name: &'static str, hour, minute, second, ms, py_ms| {
                 let time = NaiveTime::from_hms_micro_opt(hour, minute, second, ms)
@@ -1208,7 +1208,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pyo3_time_frompyobject() {
+    fn test_r2p_time_frompyobject() {
         let hour = 3;
         let minute = 5;
         let second = 7;
@@ -1269,7 +1269,7 @@ mod tests {
 
             // Range is limited to 1970 to 2038 due to windows limitations
             #[test]
-            fn test_pyo3_offset_fixed_frompyobject_created_in_python(timestamp in 0..(i32::MAX as i64), timedelta in -86399i32..=86399i32) {
+            fn test_r2p_offset_fixed_frompyobject_created_in_python(timestamp in 0..(i32::MAX as i64), timedelta in -86399i32..=86399i32) {
                 Python::attach(|py| {
 
                     let globals = [("datetime", py.import("datetime").unwrap())].into_py_dict(py).unwrap();

@@ -15,7 +15,7 @@ use core::ffi::CStr;
 
 /// Represents a Python code object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyCode>`][crate::Py] or [`Bound<'py, PyCode>`][crate::Bound].
 #[repr(transparent)]
 pub struct PyCode(PyAny);

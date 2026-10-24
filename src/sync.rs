@@ -40,8 +40,8 @@ pub(crate) struct GILOnceCell<T> {
     ///
     /// ```compile_error,E0597
     /// #![allow(deprecated)]
-    /// use pyo3::Python;
-    /// use pyo3::sync::GILOnceCell;
+    /// use r2p::Python;
+    /// use r2p::sync::GILOnceCell;
     ///
     /// struct A<'a>(#[allow(dead_code)] &'a str);
     ///
@@ -184,8 +184,8 @@ impl<T> Drop for GILOnceCell<T> {
 /// # Example: Using `intern!` to avoid needlessly recreating the same Python string
 ///
 /// ```
-/// use pyo3::intern;
-/// # use pyo3::{prelude::*, types::PyDict};
+/// use r2p::intern;
+/// # use r2p::{prelude::*, types::PyDict};
 ///
 /// #[pyfunction]
 /// fn create_dict(py: Python<'_>) -> PyResult<Bound<'_, PyDict>> {
@@ -797,12 +797,12 @@ mod mutex_trait_sealed {
 #[cfg(all(not(Py_LIMITED_API), Py_3_13))]
 pub trait PyMutexTrait<'a, T: ?Sized + 'a>: mutex_trait_sealed::Sealed<'a, T> {
     /// # Safety
-    /// This function may not be called from outside of PyO3
+    /// This function may not be called from outside of r2p
     #[doc(hidden)]
     unsafe fn data(&'a self) -> &'a UnsafeCell<T>;
 
     /// # Safety
-    /// This function may not be called from outside of PyO3
+    /// This function may not be called from outside of r2p
     #[doc(hidden)]
     unsafe fn inner(&'a self) -> &'a UnsafeCell<crate::ffi::PyMutex>;
 }

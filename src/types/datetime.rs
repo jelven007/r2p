@@ -34,12 +34,12 @@ use core::ffi::c_int;
 
 #[cfg(not(Py_LIMITED_API))]
 fn ensure_datetime_api(py: Python<'_>) -> PyResult<&'static PyDateTime_CAPI> {
-    if let Some(api) = unsafe { pyo3_ffi::PyDateTimeAPI().as_ref() } {
+    if let Some(api) = unsafe { r2p_ffi::PyDateTimeAPI().as_ref() } {
         Ok(api)
     } else {
         unsafe {
             PyDateTime_IMPORT();
-            pyo3_ffi::PyDateTimeAPI().as_ref()
+            r2p_ffi::PyDateTimeAPI().as_ref()
         }
         .ok_or_else(|| PyErr::fetch(py))
     }
@@ -204,7 +204,7 @@ pub trait PyTzInfoAccess<'py> {
 
 /// Bindings around `datetime.date`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyDate>`][crate::Py] or [`Bound<'py, PyDate>`][Bound].
 #[repr(transparent)]
 pub struct PyDate(PyAny);
@@ -313,7 +313,7 @@ impl PyDateAccess for Bound<'_, PyDate> {
 
 /// Bindings for `datetime.datetime`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyDateTime>`][crate::Py] or [`Bound<'py, PyDateTime>`][Bound].
 #[repr(transparent)]
 pub struct PyDateTime(PyAny);
@@ -604,7 +604,7 @@ impl<'py> PyTzInfoAccess<'py> for Bound<'py, PyDateTime> {
 
 /// Bindings for `datetime.time`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyTime>`][crate::Py] or [`Bound<'py, PyTime>`][Bound].
 #[repr(transparent)]
 pub struct PyTime(PyAny);
@@ -807,7 +807,7 @@ impl<'py> PyTzInfoAccess<'py> for Bound<'py, PyTime> {
 
 /// Bindings for `datetime.tzinfo`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyTzInfo>`][crate::Py] or [`Bound<'py, PyTzInfo>`][Bound].
 ///
 /// This is an abstract base class, the primary implementations are
@@ -913,7 +913,7 @@ impl PyTzInfo {
 
 /// Bindings for `datetime.timedelta`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyDelta>`][crate::Py] or [`Bound<'py, PyDelta>`][Bound].
 #[repr(transparent)]
 pub struct PyDelta(PyAny);

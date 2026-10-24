@@ -1,4 +1,4 @@
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pymodule]
 mod module {

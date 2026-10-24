@@ -1,11 +1,11 @@
-//! PyO3's prelude.
+//! r2p's prelude.
 //!
-//! The purpose of this module is to alleviate imports of many commonly used items of the PyO3 crate
-//! by adding a glob import to the top of pyo3 heavy modules:
+//! The purpose of this module is to alleviate imports of many commonly used items of the r2p crate
+//! by adding a glob import to the top of r2p heavy modules:
 //!
 //! ```
 //! # #![allow(unused_imports)]
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //! ```
 
 pub use crate::conversion::{FromPyObject, FromPyObjectOwned, IntoPyObject};
@@ -18,7 +18,7 @@ pub use crate::types::{PyAny, PyModule};
 pub use crate::{PyClassGuard, PyClassGuardMut};
 
 #[cfg(feature = "macros")]
-pub use pyo3_macros::{
+pub use r2p_macros::{
     FromPyObject, IntoPyObject, IntoPyObjectRef, pyclass, pyfunction, pymethods, pymodule,
 };
 

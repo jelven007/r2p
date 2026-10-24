@@ -8,8 +8,8 @@ use core::fmt::{self, Display, Write};
 /// Builds a type hint from a module name and a member name in the module
 ///
 /// ```
-/// use pyo3::type_hint_identifier;
-/// use pyo3::inspect::PyStaticExpr;
+/// use r2p::type_hint_identifier;
+/// use r2p::inspect::PyStaticExpr;
 ///
 /// const T: PyStaticExpr = type_hint_identifier!("datetime", "date");
 /// assert_eq!(T.to_string(), "datetime.date");
@@ -34,8 +34,8 @@ pub(crate) use type_hint_identifier;
 /// Builds the union of multiple type hints
 ///
 /// ```
-/// use pyo3::{type_hint_identifier, type_hint_union};
-/// use pyo3::inspect::PyStaticExpr;
+/// use r2p::{type_hint_identifier, type_hint_union};
+/// use r2p::inspect::PyStaticExpr;
 ///
 /// const T: PyStaticExpr = type_hint_union!(type_hint_identifier!("builtins", "int"), type_hint_identifier!("builtins", "float"));
 /// assert_eq!(T.to_string(), "int | float");
@@ -54,8 +54,8 @@ pub(crate) use type_hint_union;
 /// Builds a subscribed type hint
 ///
 /// ```
-/// use pyo3::{type_hint_identifier, type_hint_subscript};
-/// use pyo3::inspect::PyStaticExpr;
+/// use r2p::{type_hint_identifier, type_hint_subscript};
+/// use r2p::inspect::PyStaticExpr;
 ///
 /// const T: PyStaticExpr = type_hint_subscript!(type_hint_identifier!("collections.abc", "Sequence"), type_hint_identifier!("builtins", "float"));
 /// assert_eq!(T.to_string(), "collections.abc.Sequence[float]");
@@ -334,7 +334,7 @@ impl fmt::Display for PyStaticExpr {
     }
 }
 
-/// A PyO3 extension to the Python AST to know more about [`PyStaticExpr::Constant`].
+/// A r2p extension to the Python AST to know more about [`PyStaticExpr::Constant`].
 ///
 /// This enables advanced features like escaping.
 #[derive(Clone, Copy)]

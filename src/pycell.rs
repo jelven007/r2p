@@ -1,20 +1,20 @@
 // TODO https://github.com/PyO3/pyo3/issues/5487
 #![allow(clippy::undocumented_unsafe_blocks)]
 
-//! PyO3's interior mutability primitive.
+//! r2p's interior mutability primitive.
 //!
 //! Rust has strict aliasing rules - you can either have any number of immutable (shared) references or one mutable
 //! reference. Python's ownership model is the complete opposite of that - any Python object
 //! can be referenced any number of times, and mutation is allowed from any reference.
 //!
-//! PyO3 deals with these differences by employing the [Interior Mutability]
-//! pattern. This requires that PyO3 enforces the borrowing rules and it has two mechanisms for
+//! r2p deals with these differences by employing the [Interior Mutability]
+//! pattern. This requires that r2p enforces the borrowing rules and it has two mechanisms for
 //! doing so:
 //! - Statically it can enforce thread-safe access with the [`Python<'py>`](crate::Python) token.
 //!   All Rust code holding that token, or anything derived from it, can assume that they have
 //!   safe access to the Python interpreter's state. For this reason all the native Python objects
 //!   can be mutated through shared references.
-//! - However, methods and functions in Rust usually *do* need `&mut` references. While PyO3 can
+//! - However, methods and functions in Rust usually *do* need `&mut` references. While r2p can
 //!   use the [`Python<'py>`](crate::Python) token to guarantee thread-safe access to them, it cannot
 //!   statically guarantee uniqueness of `&mut` references. As such those references have to be tracked
 //!   dynamically at runtime, using `PyCell` and the other types defined in this module. This works
@@ -26,7 +26,7 @@
 //! won't need to use `PyCell` directly:
 //!
 //! ```rust,no_run
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! #[pyclass]
 //! struct Number {
@@ -45,7 +45,7 @@
 //! using `PyCell` under the hood:
 //!
 //! ```rust,ignore
-//! # use pyo3::prelude::*;
+//! # use r2p::prelude::*;
 //! # #[pyclass]
 //! # struct Number {
 //! #    inner: u32,
@@ -60,18 +60,18 @@
 //! #
 //! // The function which is exported to Python looks roughly like the following
 //! unsafe extern "C" fn __pymethod_increment__(
-//!     _slf: *mut pyo3::ffi::PyObject,
-//!     _args: *mut pyo3::ffi::PyObject,
-//! ) -> *mut pyo3::ffi::PyObject {
-//!     use :: pyo3 as _pyo3;
-//!     _pyo3::impl_::trampoline::noargs(_slf, _args, |py, _slf| {
+//!     _slf: *mut r2p::ffi::PyObject,
+//!     _args: *mut r2p::ffi::PyObject,
+//! ) -> *mut r2p::ffi::PyObject {
+//!     use :: r2p as _r2p;
+//!     _r2p::impl_::trampoline::noargs(_slf, _args, |py, _slf| {
 //! #       #[allow(deprecated)]
 //!         let _cell = py
-//!             .from_borrowed_ptr::<_pyo3::PyAny>(_slf)
-//!             .cast::<_pyo3::PyCell<Number>>()?;
+//!             .from_borrowed_ptr::<_r2p::PyAny>(_slf)
+//!             .cast::<_r2p::PyCell<Number>>()?;
 //!         let mut _ref = _cell.try_borrow_mut()?;
 //!         let _slf: &mut Number = &mut *_ref;
-//!         _pyo3::impl_::callback::convert(py, Number::increment(_slf))
+//!         _r2p::impl_::callback::convert(py, Number::increment(_slf))
 //!     })
 //! }
 //! ```
@@ -81,7 +81,7 @@
 //!
 //! However, we *do* need `PyCell` if we want to call its methods from Rust:
 //! ```rust
-//! # use pyo3::prelude::*;
+//! # use r2p::prelude::*;
 //! #
 //! # #[pyclass]
 //! # struct Number {
@@ -121,7 +121,7 @@
 //! It is also necessary to use `PyCell` if you can receive mutable arguments that may overlap.
 //! Suppose the following function that swaps the values of two `Number`s:
 //! ```
-//! # use pyo3::prelude::*;
+//! # use r2p::prelude::*;
 //! # #[pyclass]
 //! # pub struct Number {
 //! #     inner: u32,
@@ -135,7 +135,7 @@
 //! #         let n = Py::new(py, Number{inner: 35}).unwrap();
 //! #         let n2 = n.clone_ref(py);
 //! #         assert!(n.is(&n2));
-//! #         let fun = pyo3::wrap_pyfunction!(swap_numbers, py).unwrap();
+//! #         let fun = r2p::wrap_pyfunction!(swap_numbers, py).unwrap();
 //! #         fun.call1((n, n2)).expect_err("Managed to create overlapping mutable references. Note: this is undefined behaviour.");
 //! #     });
 //! # }
@@ -153,7 +153,7 @@
 //! It is better to write that function like this:
 //! ```rust,ignore
 //! # #![allow(deprecated)]
-//! # use pyo3::prelude::*;
+//! # use r2p::prelude::*;
 //! # #[pyclass]
 //! # pub struct Number {
 //! #     inner: u32,
@@ -173,7 +173,7 @@
 //! #         let n = Py::new(py, Number{inner: 35}).unwrap();
 //! #         let n2 = n.clone_ref(py);
 //! #         assert!(n.is(&n2));
-//! #         let fun = pyo3::wrap_pyfunction!(swap_numbers, py).unwrap();
+//! #         let fun = r2p::wrap_pyfunction!(swap_numbers, py).unwrap();
 //! #         fun.call1((n, n2)).unwrap();
 //! #     });
 //! #
@@ -182,7 +182,7 @@
 //! #         let n = Py::new(py, Number{inner: 35}).unwrap();
 //! #         let n2 = Py::new(py, Number{inner: 42}).unwrap();
 //! #         assert!(!n.is(&n2));
-//! #         let fun = pyo3::wrap_pyfunction!(swap_numbers, py).unwrap();
+//! #         let fun = r2p::wrap_pyfunction!(swap_numbers, py).unwrap();
 //! #         fun.call1((&n, &n2)).unwrap();
 //! #         let n: u32 = n.borrow(py).inner;
 //! #         let n2: u32 = n2.borrow(py).inner;
@@ -223,7 +223,7 @@ use impl_::{PyClassBorrowChecker, PyClassObjectBaseLayout, PyClassObjectLayout};
 /// - you need to access the pointer of the [`Bound`], or
 /// - you want to get a super class.
 /// ```
-/// # use pyo3::prelude::*;
+/// # use r2p::prelude::*;
 /// #[pyclass(subclass)]
 /// struct Parent {
 ///     basename: &'static str,
@@ -244,7 +244,7 @@ use impl_::{PyClassBorrowChecker, PyClassObjectBaseLayout, PyClassObjectLayout};
 ///
 ///     fn format(slf: PyRef<'_, Self>) -> String {
 ///         // We can get *mut ffi::PyObject from PyRef
-///         let refcnt = unsafe { pyo3::ffi::Py_REFCNT(slf.as_ptr()) };
+///         let refcnt = unsafe { r2p::ffi::Py_REFCNT(slf.as_ptr()) };
 ///         // We can get &Self::BaseType by as_ref
 ///         let basename = slf.as_ref().basename;
 ///         format!("{}(base: {}, cnt: {})", slf.name, basename, refcnt)
@@ -252,7 +252,7 @@ use impl_::{PyClassBorrowChecker, PyClassObjectBaseLayout, PyClassObjectLayout};
 /// }
 /// # Python::attach(|py| {
 /// #     let sub = Py::new(py, Child::new()).unwrap();
-/// #     pyo3::py_run!(py, sub, "assert sub.format() == 'Caterpillar(base: Butterfly, cnt: 4)', sub.format()");
+/// #     r2p::py_run!(py, sub, "assert sub.format() == 'Caterpillar(base: Butterfly, cnt: 4)', sub.format()");
 /// # });
 /// ```
 ///
@@ -300,7 +300,7 @@ impl<'py, T: PyClass> PyRef<'py, T> {
     /// # Safety
     ///
     /// The reference is owned; when finished the caller should either transfer ownership
-    /// of the pointer or decrease the reference count (e.g. with [`pyo3::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
+    /// of the pointer or decrease the reference count (e.g. with [`r2p::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
     #[inline]
     pub fn into_ptr(self) -> *mut ffi::PyObject {
         self.inner.clone().into_ptr()
@@ -335,7 +335,7 @@ where
     ///
     /// # Examples
     /// ```
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     /// #[pyclass(subclass)]
     /// struct Base1 {
     ///     name1: &'static str,
@@ -367,7 +367,7 @@ where
     /// }
     /// # Python::attach(|py| {
     /// #     let sub = Py::new(py, Sub::new()).unwrap();
-    /// #     pyo3::py_run!(py, sub, "assert sub.name() == 'base1 base2 sub'")
+    /// #     r2p::py_run!(py, sub, "assert sub.name() == 'base1 base2 sub'")
     /// # });
     /// ```
     pub fn into_super(self) -> PyRef<'p, T::BaseType> {
@@ -415,7 +415,7 @@ where
     ///
     /// # Examples
     /// ```
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     /// #[pyclass(subclass)]
     /// struct Base {
     ///     base_name: &'static str,
@@ -448,7 +448,7 @@ where
     /// }
     /// # Python::attach(|py| {
     /// #     let sub = Py::new(py, Sub::new()).unwrap();
-    /// #     pyo3::py_run!(py, sub, "assert sub.format_name_lengths() == '9 8'")
+    /// #     r2p::py_run!(py, sub, "assert sub.format_name_lengths() == '9 8'")
     /// # });
     /// ```
     pub fn as_super(&self) -> &PyRef<'p, T::BaseType> {
@@ -576,7 +576,7 @@ impl<'py, T: PyClass<Frozen = False>> PyRefMut<'py, T> {
     /// # Safety
     ///
     /// The reference is owned; when finished the caller should either transfer ownership
-    /// of the pointer or decrease the reference count (e.g. with [`pyo3::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
+    /// of the pointer or decrease the reference count (e.g. with [`r2p::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
     #[inline]
     pub fn into_ptr(self) -> *mut ffi::PyObject {
         self.inner.clone().into_ptr()
@@ -776,7 +776,7 @@ mod tests {
     use super::*;
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate")]
+    #[r2p(crate = "crate")]
     #[derive(Copy, Clone, PartialEq, Eq, Debug)]
     struct SomeClass(i32);
 
@@ -806,25 +806,25 @@ mod tests {
     }
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate", subclass)]
+    #[r2p(crate = "crate", subclass)]
     struct BaseClass {
         val1: usize,
     }
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate", extends=BaseClass, subclass)]
+    #[r2p(crate = "crate", extends=BaseClass, subclass)]
     struct SubClass {
         val2: usize,
     }
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate", extends=SubClass)]
+    #[r2p(crate = "crate", extends=SubClass)]
     struct SubSubClass {
         val3: usize,
     }
 
     #[crate::pymethods]
-    #[pyo3(crate = "crate")]
+    #[r2p(crate = "crate")]
     impl SubSubClass {
         #[new]
         fn new(py: Python<'_>) -> crate::Py<SubSubClass> {
@@ -892,15 +892,15 @@ mod tests {
     #[test]
     fn test_into_frozen_super_released_borrow() {
         #[crate::pyclass]
-        #[pyo3(crate = "crate", subclass, frozen)]
+        #[r2p(crate = "crate", subclass, frozen)]
         struct BaseClass {}
 
         #[crate::pyclass]
-        #[pyo3(crate = "crate", extends=BaseClass, subclass)]
+        #[r2p(crate = "crate", extends=BaseClass, subclass)]
         struct SubClass {}
 
         #[crate::pymethods]
-        #[pyo3(crate = "crate")]
+        #[r2p(crate = "crate")]
         impl SubClass {
             #[new]
             fn new(py: Python<'_>) -> Bound<'_, SubClass> {
@@ -919,19 +919,19 @@ mod tests {
     #[test]
     fn test_into_frozen_super_mutable_base_holds_borrow() {
         #[crate::pyclass]
-        #[pyo3(crate = "crate", subclass)]
+        #[r2p(crate = "crate", subclass)]
         struct BaseClass {}
 
         #[crate::pyclass]
-        #[pyo3(crate = "crate", extends=BaseClass, subclass, frozen)]
+        #[r2p(crate = "crate", extends=BaseClass, subclass, frozen)]
         struct SubClass {}
 
         #[crate::pyclass]
-        #[pyo3(crate = "crate", extends=SubClass, subclass)]
+        #[r2p(crate = "crate", extends=SubClass, subclass)]
         struct SubSubClass {}
 
         #[crate::pymethods]
-        #[pyo3(crate = "crate")]
+        #[r2p(crate = "crate")]
         impl SubSubClass {
             #[new]
             fn new(py: Python<'_>) -> Bound<'_, SubSubClass> {

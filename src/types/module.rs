@@ -23,7 +23,7 @@ use core::str;
 
 /// Represents a Python [`module`][1] object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyModule>`][crate::Py] or [`Bound<'py, PyModule>`][Bound].
 ///
 /// For APIs available on `module` objects, see the [`PyModuleMethods`] trait which is implemented for
@@ -59,7 +59,7 @@ impl PyModule {
     /// # Examples
     ///
     /// ``` rust
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -78,7 +78,7 @@ impl PyModule {
                 .cast_into_unchecked()
         };
 
-        // By default, PyO3 assumes modules do not use the GIL for thread safety.
+        // By default, r2p assumes modules do not use the GIL for thread safety.
         module.gil_used(false)?;
 
         Ok(module)
@@ -90,7 +90,7 @@ impl PyModule {
     ///
     /// ```no_run
     /// # fn main() {
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// Python::attach(|py| {
     ///     let module = PyModule::import(py, "antigravity").expect("No flying for you.");
@@ -142,8 +142,8 @@ impl PyModule {
     /// file, not the workspace root, when merged doctests are being compiled. -->
     ///
     /// ```rust,standalone_crate
-    /// use pyo3::prelude::*;
-    /// use pyo3::ffi::c_str;
+    /// use r2p::prelude::*;
+    /// use r2p::ffi::c_str;
     ///
     /// # fn main() -> PyResult<()> {
     /// // This path is resolved relative to this file.
@@ -160,7 +160,7 @@ impl PyModule {
     /// # Example: Load a file at runtime with [`std::fs::read_to_string`].
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     /// use std::ffi::CString;
     ///
     /// # #[cfg(not(wip_feature_std))]
@@ -240,10 +240,10 @@ pub trait PyModuleMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pymodule]
-    /// # #[pyo3(name = "example_module_add_constant")]
+    /// # #[r2p(name = "example_module_add_constant")]
     /// fn my_module(module: &Bound<'_, PyModule>) -> PyResult<()> {
     ///     module.add("c", 299_792_458)?;
     ///     Ok(())
@@ -277,13 +277,13 @@ pub trait PyModuleMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass]
     /// struct Foo { /* fields omitted */ }
     ///
     /// #[pymodule]
-    /// # #[pyo3(name = "example_module_add_class")]
+    /// # #[r2p(name = "example_module_add_class")]
     /// fn my_module(module: &Bound<'_, PyModule>) -> PyResult<()> {
     ///     module.add_class::<Foo>()?;
     ///     Ok(())
@@ -331,10 +331,10 @@ pub trait PyModuleMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pymodule]
-    /// # #[pyo3(name = "example_module_add_submodule")]
+    /// # #[r2p(name = "example_module_add_submodule")]
     /// fn my_module(py: Python<'_>, module: &Bound<'_, PyModule>) -> PyResult<()> {
     ///     let submodule = PyModule::new(py, "submodule")?;
     ///     submodule.add("super_useful_constant", "important")?;
@@ -368,14 +368,14 @@ pub trait PyModuleMethods<'py>: crate::sealed::Sealed {
     /// to wrap a function annotated with [`#[pyfunction]`][1].
     ///
     /// ```rust,no_run
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyfunction]
     /// fn say_hello() {
     ///     println!("Hello world!")
     /// }
     /// #[pymodule]
-    /// # #[pyo3(name = "example_module_add_function")]
+    /// # #[r2p(name = "example_module_add_function")]
     /// fn my_module(module: &Bound<'_, PyModule>) -> PyResult<()> {
     ///     module.add_function(wrap_pyfunction!(say_hello, module)?)
     /// }
@@ -401,7 +401,7 @@ pub trait PyModuleMethods<'py>: crate::sealed::Sealed {
 
     /// Declare whether or not this module supports running with the GIL disabled
     ///
-    /// Since PyO3 0.28, PyO3 defaults to assuming that modules do not require the
+    /// Since r2p 0.28, r2p defaults to assuming that modules do not require the
     /// GIL for thread safety. Call this function with `true` to opt-out of supporting
     /// free-threaded Python.
     ///
@@ -412,10 +412,10 @@ pub trait PyModuleMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pymodule]
-    /// # #[pyo3(name = "example_module_gil_used")]
+    /// # #[r2p(name = "example_module_gil_used")]
     /// fn my_module(py: Python<'_>, module: &Bound<'_, PyModule>) -> PyResult<()> {
     ///     let submodule = PyModule::new(py, "submodule")?;
     ///     submodule.gil_used(true)?;

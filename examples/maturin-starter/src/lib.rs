@@ -1,12 +1,12 @@
-use pyo3::prelude::*;
-use pyo3::types::PyDict;
-use pyo3::wrap_pymodule;
+use r2p::prelude::*;
+use r2p::types::PyDict;
+use r2p::wrap_pymodule;
 
 mod submodule;
 
 #[pyclass]
 struct ExampleClass {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     value: i32,
 }
 
@@ -18,7 +18,7 @@ impl ExampleClass {
     }
 }
 
-/// An example module implemented in Rust using PyO3.
+/// An example module implemented in Rust using r2p.
 #[pymodule]
 fn maturin_starter(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<ExampleClass>()?;

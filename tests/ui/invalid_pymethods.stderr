@@ -1,4 +1,4 @@
-error: #[classattr] can only have one argument (of type pyo3::Python)
+error: #[classattr] can only have one argument (of type r2p::Python)
  --> tests/ui/invalid_pymethods.rs:9:35
   |
 9 |     fn class_attr_with_args(_foo: i32) {}
@@ -53,52 +53,52 @@ error: static method needs #[staticmethod] attribute
    |     ^^
 
 error: `text_signature` not allowed with `getter`
-  --> tests/ui/invalid_pymethods.rs:66:12
+  --> tests/ui/invalid_pymethods.rs:66:11
    |
-66 |     #[pyo3(text_signature = "()")]
-   |            ^^^^^^^^^^^^^^
+66 |     #[r2p(text_signature = "()")]
+   |           ^^^^^^^^^^^^^^
 
 error: `text_signature` not allowed with `setter`
-  --> tests/ui/invalid_pymethods.rs:71:12
+  --> tests/ui/invalid_pymethods.rs:71:11
    |
-71 |     #[pyo3(text_signature = "()")]
-   |            ^^^^^^^^^^^^^^
+71 |     #[r2p(text_signature = "()")]
+   |           ^^^^^^^^^^^^^^
 
 error: `text_signature` not allowed with `classattr`
-  --> tests/ui/invalid_pymethods.rs:76:12
+  --> tests/ui/invalid_pymethods.rs:76:11
    |
-76 |     #[pyo3(text_signature = "()")]
-   |            ^^^^^^^^^^^^^^
+76 |     #[r2p(text_signature = "()")]
+   |           ^^^^^^^^^^^^^^
 
 error: expected a string literal or `None`
-  --> tests/ui/invalid_pymethods.rs:80:30
+  --> tests/ui/invalid_pymethods.rs:80:29
    |
-80 |     #[pyo3(text_signature = 1)]
-   |                              ^
+80 |     #[r2p(text_signature = 1)]
+   |                             ^
 
 error: `text_signature` may only be specified once
-  --> tests/ui/invalid_pymethods.rs:85:12
+  --> tests/ui/invalid_pymethods.rs:85:11
    |
-85 |     #[pyo3(text_signature = None)]
-   |            ^^^^^^^^^^^^^^
+85 |     #[r2p(text_signature = None)]
+   |           ^^^^^^^^^^^^^^
 
 error: `signature` not allowed with `getter`
-  --> tests/ui/invalid_pymethods.rs:93:12
+  --> tests/ui/invalid_pymethods.rs:93:11
    |
-93 |     #[pyo3(signature = ())]
-   |            ^^^^^^^^^
+93 |     #[r2p(signature = ())]
+   |           ^^^^^^^^^
 
 error: `signature` not allowed with `setter`
-  --> tests/ui/invalid_pymethods.rs:98:12
+  --> tests/ui/invalid_pymethods.rs:98:11
    |
-98 |     #[pyo3(signature = ())]
-   |            ^^^^^^^^^
+98 |     #[r2p(signature = ())]
+   |           ^^^^^^^^^
 
 error: `signature` not allowed with `classattr`
-   --> tests/ui/invalid_pymethods.rs:103:12
+   --> tests/ui/invalid_pymethods.rs:103:11
     |
-103 |     #[pyo3(signature = ())]
-    |            ^^^^^^^^^
+103 |     #[r2p(signature = ())]
+    |           ^^^^^^^^^
 
 error: `#[new]` may not be combined with `#[classmethod]` `#[staticmethod]`, `#[classattr]`, `#[getter]`, and `#[setter]`
    --> tests/ui/invalid_pymethods.rs:110:7
@@ -107,7 +107,7 @@ error: `#[new]` may not be combined with `#[classmethod]` `#[staticmethod]`, `#[
     |       ^^^
 
 error: `#[new]` does not take any arguments
-       = help: did you mean `#[new] #[pyo3(signature = ())]`?
+       = help: did you mean `#[new] #[r2p(signature = ())]`?
    --> tests/ui/invalid_pymethods.rs:122:7
     |
 122 |     #[new(signature = ())]
@@ -117,25 +117,25 @@ error: `#[new]` does not take any arguments
        = note: this was previously accepted and ignored
    --> tests/ui/invalid_pymethods.rs:129:11
     |
-129 |     #[new = ()] // in this form there's no suggestion to move arguments to `#[pyo3()]` attribute
+129 |     #[new = ()] // in this form there's no suggestion to move arguments to `#[r2p()]` attribute
     |           ^
 
 error: `#[classmethod]` does not take any arguments
-       = help: did you mean `#[classmethod] #[pyo3(signature = ())]`?
+       = help: did you mean `#[classmethod] #[r2p(signature = ())]`?
    --> tests/ui/invalid_pymethods.rs:136:7
     |
 136 |     #[classmethod(signature = ())]
     |       ^^^^^^^^^^^
 
 error: `#[staticmethod]` does not take any arguments
-       = help: did you mean `#[staticmethod] #[pyo3(signature = ())]`?
+       = help: did you mean `#[staticmethod] #[r2p(signature = ())]`?
    --> tests/ui/invalid_pymethods.rs:143:7
     |
 143 |     #[staticmethod(signature = ())]
     |       ^^^^^^^^^^^^
 
 error: `#[classattr]` does not take any arguments
-       = help: did you mean `#[classattr] #[pyo3(signature = ())]`?
+       = help: did you mean `#[classattr] #[r2p(signature = ())]`?
    --> tests/ui/invalid_pymethods.rs:150:7
     |
 150 |     #[classattr(signature = ())]
@@ -160,10 +160,10 @@ error: Python functions cannot have `impl Trait` arguments
     |                                                         ^^^^
 
 error: `pass_module` cannot be used on Python methods
-   --> tests/ui/invalid_pymethods.rs:172:12
+   --> tests/ui/invalid_pymethods.rs:172:11
     |
-172 |     #[pyo3(pass_module)]
-    |            ^^^^^^^^^^^
+172 |     #[r2p(pass_module)]
+    |           ^^^^^^^^^^^
 
 error: Python objects are shared, so 'self' cannot be moved out of the Python interpreter.
        Try `&self`, `&mut self, `slf: PyClassGuard<'_, Self>` or `slf: PyClassGuardMut<'_, Self>`.
@@ -197,18 +197,18 @@ error: Expected `&Bound<PyType>` or `Py<PyType>` as the first argument to `#[cla
 205 |     fn multiple_errors_classmethod_with_receiver(&self) {}
     |                                                 ^^^^^^^
 
-error[E0277]: the trait bound `NotATypeObject: From<&pyo3::Bound<'_, PyType>>` is not satisfied
+error[E0277]: the trait bound `NotATypeObject: From<&r2p::Bound<'_, PyType>>` is not satisfied
   --> tests/ui/invalid_pymethods.rs:39:45
    |
 39 |     fn classmethod_wrong_first_argument(_t: NotATypeObject) -> Self {
    |                                             ^^^^^^^^^^^^^^ unsatisfied trait bound
    |
-help: the trait `From<&pyo3::Bound<'_, PyType>>` is not implemented for `NotATypeObject`
+help: the trait `From<&r2p::Bound<'_, PyType>>` is not implemented for `NotATypeObject`
   --> tests/ui/invalid_pymethods.rs:34:1
    |
 34 | struct NotATypeObject;
    | ^^^^^^^^^^^^^^^^^^^^^
-   = note: required for `&pyo3::Bound<'_, PyType>` to implement `Into<NotATypeObject>`
+   = note: required for `&r2p::Bound<'_, PyType>` to implement `Into<NotATypeObject>`
 
 error: aborting due to 33 previous errors
 

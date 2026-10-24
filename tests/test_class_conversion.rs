@@ -1,6 +1,6 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[macro_use]
 mod test_utils;
@@ -55,7 +55,7 @@ impl SubClass {
 
 #[pyclass]
 struct PolymorphicContainer {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     inner: Py<BaseClass>,
 }
 

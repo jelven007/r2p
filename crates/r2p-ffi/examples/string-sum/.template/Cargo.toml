@@ -1,0 +1,13 @@
+[package]
+authors = ["{{authors}}"]
+name = "{{project-name}}"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "string_sum"
+crate-type = ["cdylib"]
+
+[dependencies]
+r2p-maturin-bridge = { package = "pyo3-ffi", path = "maturin-bridge" }
+r2p-ffi = { version = "{{R2P_VERSION}}" }
