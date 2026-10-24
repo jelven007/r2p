@@ -28,6 +28,9 @@ on:
       verbose:
         type: boolean
         default: false
+      ffi-check:
+        type: boolean
+        default: true
 
 env:
   UV_LOCKED: 1
@@ -38,7 +41,6 @@ jobs:
   build:
     permissions:
       contents: read
-      pull-requests: read # dorny/paths-filter lists changed files.
     continue-on-error: ${{ endsWith(inputs.python-version, '-dev') || contains(fromJSON('["beta", "nightly"]'), inputs.rust) }}
     runs-on: ${{ inputs.os }}
     steps:
@@ -90,48 +92,48 @@ jobs:
         name: Prepare LD_LIBRARY_PATH (Ubuntu only)
         run: echo LD_LIBRARY_PATH=${pythonLocation}/lib >> $GITHUB_ENV
 
-      - if: inputs.rust == inputs.MSRV
-        name: Prepare MSRV package versions
-        run: uv run --isolated --only-group nox nox -s set-msrv-package-versions
-
       - if: inputs.rust != 'stable'
         name: Ignore changed error messages for ui tests (still run for coverage)
         run: echo "UI_TEST=ignore" >> "$GITHUB_ENV"
 
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        if: ${{ inputs.rust == 'stable' && !startsWith(inputs.python-version, 'graalpy') }}
-        id: ffi-changes
-        with:
-          base: ${{ github.event.merge_group.base_ref }}
-          ref: ${{ github.event.merge_group.head_ref }}
-          filters: |
-            changed:
-              - 'crates/r2p-ffi/**'
-              - 'tools/ffi-check/**'
-              - 'crates/r2p-build-config/**'
-              - 'noxfile.py'
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/build.yml'
-
       - name: Run r2p-ffi-check
         # TODO: investigate graalpy failures
-        if: ${{ endsWith(inputs.python-version, '-dev') || (steps.ffi-changes.outputs.changed == 'true' && inputs.rust == 'stable' && !startsWith(inputs.python-version, 'graalpy')) }}
+        if: ${{ endsWith(inputs.python-version, '-dev') || (inputs.ffi-check && inputs.rust == 'stable' && !startsWith(inputs.python-version, 'graalpy')) }}
         run: uv run --isolated --only-group nox nox -s ffi-check
 
       - uses: $/.github/actions/prepare-coverage
         if: ${{ inputs.os != 'windows-11-arm' }} # https://github.com/rust-lang/rust/issues/150123
 
       - name: Build docs
+        if: inputs.rust != inputs.MSRV
         run: uv run --isolated --only-group nox nox -s docs
 
       - name: Run Rust tests
+        if: inputs.rust != inputs.MSRV
         run: uv run --isolated --only-group nox nox -s test-rust
 
       - name: Test python examples and tests
+        if: inputs.rust != inputs.MSRV
         shell: bash
         run: uv run --isolated --only-group nox nox -s test-py
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target
+
+      - name: Run MSRV docs and tests in the isolated dependency snapshot
+        if: inputs.rust == inputs.MSRV
+        run: uv run --isolated --only-group nox nox -s set-msrv-package-versions -- docs test-rust test-py
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target
+
+      - name: Preserve MSRV source and dependency evidence
+        if: always() && inputs.rust == inputs.MSRV
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: msrv-${{ inputs.os }}-${{ inputs.python-version }}
+          path: |
+            target/msrv/**/msrv-evidence.json
+            target/msrv/**/Cargo.lock
+          if-no-files-found: error
 
       - uses: $/.github/actions/report-coverage
         if: ${{ inputs.sha && inputs.os != 'windows-11-arm' }} # https://github.com/rust-lang/rust/issues/150123

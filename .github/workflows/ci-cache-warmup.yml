@@ -1,10 +1,13 @@
 name: CI Cache Warmup
 
 on:
-  push:
-    branches:
-      - main
+  # Normal/full CI saves caches. Keep an explicit recovery entry, without
+  # duplicating every main push or the weekly complete compatibility run.
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
 
 env:
   UV_LOCKED: 1
@@ -84,7 +87,6 @@ jobs:
   build-full:
     permissions:
       contents: read
-      pull-requests: read # dorny/paths-filter lists changed files in the reusable workflow.
     needs:
       - resolve
     uses: $/.github/workflows/build.yml

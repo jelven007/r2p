@@ -7,6 +7,8 @@
 | `dev.py` | 指定受测 Python 启动 Nox；记录环境和命令结果 | 工具 Python 3.14+、uv、Rust；目标 Python 须已安装 |
 | `new_project.py` | 生成独立项目；SDK 与适配器统一 Git SHA/path/已验证注册表来源 | Python 3.11+、Git；不覆盖已有目录 |
 | `consumer_smoke.py` | 九个模板依赖图、sdist 重建、普通/abi3 wheel 隔离安装和嵌入异常验证 | `python -m tools.consumer_smoke --output target/consumer-check`；Python 3.14、uv、Rust |
+| `ci_policy.py` | 根据真实变更/事件选择检查，汇总阻断异常跳过和遗漏 | `python -m tools.ci_policy check`；CI select/conclude 使用事件与 needs JSON |
+| `engineering/ci_matrix.py` | PR 10 / 完整 45 个构建组合的统一定义 | Python 3.11+；矩阵修改进入完整验证 |
 | `engineering/`、`tests/` | 无副作用的特性矩阵、参数契约、环境快照和 MSRV 隔离；标准库回归 | `python -m unittest discover -s tools/tests` |
 | `ffi-check/` | 对照 Python 头文件生成的 bindgen 定义与手写 FFI | 独立 workspace；Python 头文件、libclang 和可链接库 |
 | `maturin-bridge/` | 为 Maturin 提供固定协议包名；转发 r2p FFI 与 ABI 特性 | 私有、禁止发布；仅打包示例和测试依赖 |

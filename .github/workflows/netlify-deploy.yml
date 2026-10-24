@@ -16,13 +16,32 @@ on:
 permissions:
   actions: read
   contents: read
-  statuses: write
 
 jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && vars.R2P_ENABLE_NETLIFY == 'true'
+    outputs:
+      site: ${{ steps.artifacts.outputs.site }}
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        id: artifacts
+        with:
+          script: |
+            const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
+              ...context.repo, run_id: context.payload.workflow_run.id
+            });
+            core.setOutput('site', artifacts.some(a => a.name === 'site' && !a.expired));
+
   deploy:
+    permissions:
+      actions: read
+      contents: read
+      statuses: write
+    needs: [inspect]
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: github.event.workflow_run.conclusion == 'success' && vars.R2P_ENABLE_NETLIFY == 'true'
+    if: needs.inspect.outputs.site == 'true'
     environment: netlify
 
     steps:

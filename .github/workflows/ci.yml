@@ -2,11 +2,12 @@ name: CI
 
 on:
   pull_request:
-    paths-ignore:
-      - "newsfragments/*.md"
+    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
   merge_group:
     types: [checks_requested]
   workflow_dispatch:
+  schedule:
+    - cron: "23 3 * * 1"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
@@ -22,7 +23,30 @@ permissions:
   contents: read
 
 jobs:
+  engineering:
+    needs: [resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['engineering'].status != 'not-applicable' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - name: Validate engineering content and CI contract
+        run: |
+          uv run --isolated --only-group nox nox -s ruff rumdl repository-check typos
+          uv run --isolated --only-group nox python -m tools.ci_policy check
+      - uses: taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27
+        if: contains(fromJSON(needs.resolve.outputs.plan).categories, 'tooling')
+        with:
+          tool: actionlint
+      - name: Validate workflow syntax
+        if: contains(fromJSON(needs.resolve.outputs.plan).categories, 'tooling')
+        run: uv run --isolated --only-group nox python tools/check_workflows.py
+
   zizmor:
+    needs: [resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['zizmor'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -37,6 +61,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
   fmt:
+    needs: [resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['fmt'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -53,11 +79,12 @@ jobs:
           rustup toolchain install stable --profile minimal --no-self-update --component rustfmt
           rustup default stable
       - name: Check formatting and lints
-        run: uv run --isolated --only-group nox nox -s fmt
+        run: uv run --isolated --only-group nox nox -s rustfmt check-test-features
 
   resolve:
     runs-on: ubuntu-latest
     outputs:
+      plan: ${{ steps.selection.outputs.plan }}
       MSRV: ${{ steps.resolve-msrv.outputs.MSRV }}
       verbose: ${{ runner.debug == '1' }}
       save-cache: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
@@ -73,16 +100,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14"
       - name: resolve MSRV
         id: resolve-msrv
         run: echo MSRV=`python -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["workspace"]["package"]["rust-version"])'` >> $GITHUB_OUTPUT
+      - name: Select checks with explicit applicability
+        id: selection
+        run: python -m tools.ci_policy select
 
   semver-checks:
-    if: github.event_name == 'pull_request'
-    needs: [fmt]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['semver-checks'].status != 'not-applicable' }}
+    needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -127,6 +158,7 @@ jobs:
 
   check-msrv:
     needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['check-msrv'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -164,7 +196,8 @@ jobs:
       CARGO_BUILD_TARGET: x86_64-unknown-linux-gnu
 
   clippy:
-    needs: [fmt]
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['clippy'].status != 'not-applicable' }}
     runs-on: ubuntu-24.04-arm
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
@@ -208,7 +241,8 @@ jobs:
       CARGO_BUILD_TARGET: ${{ matrix.target }}
 
   check-nightly:
-    needs: [fmt]
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['check-nightly'].status != 'not-applicable' }}
     runs-on: ubuntu-24.04-arm
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
@@ -237,8 +271,7 @@ jobs:
   build-pr:
     permissions:
       contents: read
-      pull-requests: read # dorny/paths-filter lists changed files in the reusable workflow.
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-build-full') && github.event_name == 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['build-pr'].status != 'not-applicable' }}
     name: python${{ matrix.python-version }}-${{ matrix.platform.python-architecture }} ${{ matrix.platform.os }} rust-${{ matrix.rust }}
     needs: [fmt, resolve]
     uses: $/.github/workflows/build.yml
@@ -251,92 +284,18 @@ jobs:
       rust-target: ${{ matrix.platform.rust-target }}
       MSRV: ${{ needs.resolve.outputs.MSRV }}
       verbose: ${{ needs.resolve.outputs.verbose == 'true' }}
+      ffi-check: ${{ fromJSON(needs.resolve.outputs.plan).ffi }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
       fail-fast: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast') }}
-      matrix:
-        rust: [stable]
-        python-version: ["3.14"]
-        platform:
-          [
-            {
-              os: "macos-latest",
-              python-architecture: "arm64",
-              rust-target: "aarch64-apple-darwin",
-            },
-            {
-              os: "ubuntu-latest",
-              python-architecture: "x64",
-              rust-target: "x86_64-unknown-linux-gnu",
-            },
-            {
-              os: "ubuntu-24.04-arm",
-              python-architecture: "arm64",
-              rust-target: "aarch64-unknown-linux-gnu",
-            },
-            {
-              os: "windows-latest",
-              python-architecture: "x64",
-              rust-target: "x86_64-pc-windows-msvc",
-            },
-            {
-              os: "windows-latest",
-              python-architecture: "x86",
-              rust-target: "i686-pc-windows-msvc",
-            },
-            {
-              os: "windows-11-arm",
-              python-architecture: "arm64",
-              rust-target: "aarch64-pc-windows-msvc",
-            },
-          ]
-        include:
-          # Test nightly Rust on PRs so that PR authors have a chance to fix nightly
-          # failures, as nightly does not block merge.
-          - rust: nightly
-            python-version: "3.14"
-            platform:
-              {
-                os: "ubuntu-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-unknown-linux-gnu",
-              }
-          # Also test free-threaded Python just for latest Python version, on ubuntu
-          # (run for all OSes on build-full)
-          - rust: stable
-            python-version: "3.14t"
-            platform:
-              {
-                os: "ubuntu-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-unknown-linux-gnu",
-              }
-          # Also test Python 3.15 and 3.15t, on ubuntu
-          # (run for all OSes on build-full)
-          - rust: stable
-            python-version: "3.15"
-            platform:
-              {
-                os: "ubuntu-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-unknown-linux-gnu",
-              }
-          - rust: stable
-            python-version: "3.15t"
-            platform:
-              {
-                os: "ubuntu-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-unknown-linux-gnu",
-              }
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.pr }}
 
   build-full:
     permissions:
       contents: read
-      pull-requests: read # dorny/paths-filter lists changed files in the reusable workflow.
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['build-full'].status != 'not-applicable' }}
     name: python${{ matrix.python-version }}-${{ matrix.platform.python-architecture }} ${{ matrix.platform.os }} rust-${{ matrix.rust }}
     needs: [fmt, resolve]
     uses: $/.github/workflows/build.yml
@@ -349,151 +308,17 @@ jobs:
       rust-target: ${{ matrix.platform.rust-target }}
       MSRV: ${{ needs.resolve.outputs.MSRV }}
       verbose: ${{ needs.resolve.outputs.verbose == 'true' }}
+      ffi-check: ${{ fromJSON(needs.resolve.outputs.plan).ffi }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
       fail-fast: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast') }}
-      matrix:
-        rust: [stable]
-        python-version:
-          [
-            "3.9",
-            "3.10",
-            "3.11",
-            "3.12",
-            "3.13",
-            "3.14",
-            "3.14t",
-            "3.15",
-            "3.15t",
-            "pypy3.11",
-            "pypy3.12",
-            "graalpy25.4", # 3.13
-          ]
-        platform:
-          [
-            {
-              os: "macos-latest",
-              python-architecture: "arm64",
-              rust-target: "aarch64-apple-darwin",
-            },
-            {
-              os: "ubuntu-latest",
-              python-architecture: "x64",
-              rust-target: "x86_64-unknown-linux-gnu",
-            },
-            {
-              os: "windows-latest",
-              python-architecture: "x64",
-              rust-target: "x86_64-pc-windows-msvc",
-            },
-          ]
-        include:
-          # Test minimal supported Rust version
-          - rust: ${{ needs.resolve.outputs.MSRV }}
-            python-version: "3.14"
-            platform:
-              {
-                os: "ubuntu-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-unknown-linux-gnu",
-              }
-
-          # Test the `nightly` feature
-          - rust: nightly
-            python-version: "3.14"
-            platform:
-              {
-                os: "ubuntu-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-unknown-linux-gnu",
-              }
-
-          # Run rust beta to help catch toolchain regressions
-          - rust: beta
-            python-version: "3.14"
-            platform:
-              {
-                os: "ubuntu-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-unknown-linux-gnu",
-              }
-
-          # Test 32-bit Windows and x64 macOS only with the latest Python version
-          - rust: stable
-            python-version: "3.14"
-            platform:
-              {
-                os: "windows-latest",
-                python-architecture: "x86",
-                rust-target: "i686-pc-windows-msvc",
-              }
-          - rust: stable
-            python-version: "3.14"
-            platform:
-              {
-                os: "macos-latest",
-                python-architecture: "x64",
-                rust-target: "x86_64-apple-darwin",
-              }
-
-          # arm64 macOS Python not available on GitHub Actions until 3.10, test older versions on x64
-          - rust: stable
-            python-version: "3.9"
-            platform:
-              {
-                os: "macos-15-intel",
-                python-architecture: "x64",
-                rust-target: "x86_64-apple-darwin",
-              }
-          # test latest Python on arm64 linux & windows runners
-          - rust: stable
-            python-version: "3.14"
-            platform:
-              {
-                os: "ubuntu-24.04-arm",
-                python-architecture: "arm64",
-                rust-target: "aarch64-unknown-linux-gnu",
-              }
-          - rust: stable
-            python-version: "3.14t"
-            platform:
-              {
-                os: "ubuntu-24.04-arm",
-                python-architecture: "arm64",
-                rust-target: "aarch64-unknown-linux-gnu",
-              }
-          - rust: stable
-            python-version: "3.14"
-            platform:
-              {
-                os: "windows-11-arm",
-                python-architecture: "arm64",
-                rust-target: "aarch64-pc-windows-msvc",
-              }
-          - rust: stable
-            python-version: "3.14t"
-            platform:
-              {
-                os: "windows-11-arm",
-                python-architecture: "arm64",
-                rust-target: "aarch64-pc-windows-msvc",
-              }
-        exclude:
-          # arm64 macOS Python not available on GitHub Actions until 3.10
-          - rust: stable
-            python-version: "3.9"
-            platform:
-              {
-                os: "macos-latest",
-                python-architecture: "arm64",
-                rust-target: "aarch64-apple-darwin",
-              }
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.full }}
 
   valgrind:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
-    needs: [fmt]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['valgrind'].status != 'not-applicable' }}
+    needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -522,8 +347,8 @@ jobs:
       UI_TEST: skip
 
   careful:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
-    needs: [fmt]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['careful'].status != 'not-applicable' }}
+    needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -553,8 +378,8 @@ jobs:
       UI_TEST: skip
 
   docsrs:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
-    needs: [fmt]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['docsrs'].status != 'not-applicable' }}
+    needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -574,7 +399,7 @@ jobs:
 
   emscripten:
     name: emscripten
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['emscripten'].status != 'not-applicable' }}
     needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
@@ -589,7 +414,7 @@ jobs:
 
   wasm32-wasip1:
     name: wasm32-wasip1
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['wasm32-wasip1'].status != 'not-applicable' }}
     needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
@@ -604,6 +429,7 @@ jobs:
 
   no_std:
     needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['no_std'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -629,8 +455,8 @@ jobs:
         run: uv run --isolated --only-group nox nox -s ${{ matrix.session }}
 
   test-debug:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
-    needs: [fmt]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-debug'].status != 'not-applicable' }}
+    needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -651,8 +477,8 @@ jobs:
       - run: uv run --isolated --only-group nox nox -s test
 
   test-debug-min-version:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
-    needs: [fmt]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-debug-min-version'].status != 'not-applicable' }}
+    needs: [fmt, resolve]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -674,7 +500,7 @@ jobs:
 
   test-version-limits:
     needs: [fmt, resolve]
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-version-limits'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -700,7 +526,7 @@ jobs:
 
   check-feature-powerset:
     needs: [fmt, resolve]
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['check-feature-powerset'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     env:
       RUSTUP_TOOLCHAIN: ${{ matrix.rust }}
@@ -737,7 +563,7 @@ jobs:
 
   test-cross-compilation:
     needs: [fmt, resolve]
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-cross-compilation'].status != 'not-applicable' }}
     runs-on: ${{ matrix.os }}
     name: test-cross-compilation ${{ matrix.os }} -> ${{ matrix.target }}
     strategy:
@@ -821,7 +647,7 @@ jobs:
 
   test-cross-compilation-windows:
     needs: [fmt, resolve]
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-cross-compilation-windows'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -853,8 +679,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-introspection:
-    needs: [fmt]
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-test-introspection') || contains(github.event.pull_request.labels.*.name, 'CI-build-full') || github.event_name != 'pull_request' }}
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-introspection'].status != 'not-applicable' }}
     strategy:
       matrix:
         platform:
@@ -907,8 +733,8 @@ jobs:
       CARGO_BUILD_TARGET: ${{ matrix.platform.rust-target }}
 
   test-introspection-pr:
-    needs: [fmt]
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-build-full') && github.event_name == 'pull_request' }}
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-introspection-pr'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -927,7 +753,8 @@ jobs:
       - run: uv run --isolated --only-group nox nox -s test-introspection
 
   pytests-type-checking:
-    needs: [fmt]
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['pytests-type-checking'].status != 'not-applicable' }}
     runs-on: ubuntu-latest
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
@@ -950,6 +777,55 @@ jobs:
           save-cache: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
       - run: uv run --project ../.. --isolated --only-group nox nox -s ${{matrix.checker}}
         working-directory: tests/python
+
+  sdk-docs:
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['sdk-docs'].status != 'not-applicable' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - run: rustup toolchain install stable --profile minimal --no-self-update
+      - uses: taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27
+        with:
+          tool: mdbook@0.5, mdbook-tabs@0.3
+      - name: Compile documentation examples and guide
+        run: |
+          cargo +stable test --doc --features full
+          uv run --isolated --only-group nox nox -s docs build-guide
+        env:
+          RUSTDOCFLAGS: "-D warnings"
+
+  consumer-smoke:
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['consumer-smoke'].status != 'not-applicable' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - run: rustup toolchain install stable --profile minimal --no-self-update
+      - name: Test generated consumers from the reviewed SDK revision
+        run: python -m tools.consumer_smoke --revision "$SDK_REVISION" --output target/consumer-check
+        env:
+          SDK_REVISION: ${{ needs.resolve.outputs.coverage-sha }}
+          LD_LIBRARY_PATH: ${{ env.pythonLocation }}/lib
+      - name: Preserve consumer evidence and artifacts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: consumer-check
+          path: target/consumer-check
+          if-no-files-found: error
 
   conclusion:
     needs:
@@ -977,13 +853,16 @@ jobs:
       - test-introspection
       - test-introspection-pr
       - pytests-type-checking
+      - engineering
+      - sdk-docs
+      - consumer-smoke
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Result
-        run: |
-          jq -C <<< "${needs}"
-          # Check if all needs were successful or skipped.
-          "$(jq -r 'all(.result as $result | (["success", "skipped"] | contains([$result])))' <<< "${needs}")"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Enforce required results and justified skips
+        run: python3 -m tools.ci_policy conclude
         env:
-          needs: ${{ toJson(needs) }}
+          CI_NEEDS: ${{ toJSON(needs) }}

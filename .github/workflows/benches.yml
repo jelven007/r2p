@@ -5,9 +5,10 @@ on:
     branches:
       - "main"
   pull_request:
+  workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}-benches
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -19,7 +20,22 @@ permissions:
   contents: read
 
 jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      plan: ${{ steps.selection.outputs.plan }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Select benchmarks by change impact
+        id: selection
+        run: python3 -m tools.ci_policy select
+
   benchmarks:
+    needs: [resolve]
+    if: fromJSON(needs.resolve.outputs.plan).benchmarks
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
