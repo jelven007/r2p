@@ -57,8 +57,7 @@ mod mymodule {
 
 ## Raising an exception
 
-As described in the [function error handling](./function/error-handling.md) chapter, to raise an exception from a `#[pyfunction]` or `#[pymethods]`, return an `Err(PyErr)`.
-r2p will automatically raise this exception for you when returning the result to Python.
+As described in the [function error handling](./function/error-handling.md) chapter, to raise an exception from a `#[pyfunction]` or `#[pymethods]`, return an `Err(PyErr)`. r2p will automatically raise this exception for you when returning the result to Python.
 
 You can also manually write and fetch errors in the Python interpreter's global state:
 

@@ -13,7 +13,7 @@
 | `conclusion` 未汇总四项检查 | 补齐 `semver-checks`、`test-debug-min-version`、`test-introspection-pr`、`pytests-type-checking` |
 | `resolve` 仅通过其他任务间接进入结果链路 | 显式纳入汇总，当前 25 个 job 中的 24 个前置任务全部覆盖 |
 
-改动位于[ci.yml](../../.github/workflows/ci.yml)。
+改动位于[ci.yml](../../../.github/workflows/ci.yml)。
 保留 stable 与 MSRV 的矩阵、MSRV 项的 `minimal-versions` 参数、原测试会话与事件条件。
 汇总继续允许成功和条件跳过，失败与取消返回非零状态。
 
@@ -58,14 +58,15 @@ RUSTUP_TOOLCHAIN=1.85 PYO3_PYTHON=python3.14 cargo check -p pyo3 --features full
 
 actionlint 1.7.12 对基础提交和当前文件各产生 13 条相同诊断，本次新增诊断为 0。
 其中 11 条是该工具尚不识别 GitHub 当前支持的 `$/` 自仓库引用。
-源码保持该引用形式；适用性背景见[优化评估](../governance/optimization-assessment.md)。
+本报告保留当时的诊断解释；后续生产工程整理已改用 `./.github/` 标准相对引用，并修正下列两项表达式。
+当前完整 lint 结果以[生产工程验证](production-baseline-validation.md)为准；此前评估见[优化评估](../../governance/optimization-assessment.md)。
 
 另外两条基线表达式告警为：
 
 - `check-nightly` 的 job 名引用未定义的 `matrix.rust`；
 - `no_std` 的缓存配置引用 `needs.resolve`，该 job 的 needs 只有 `fmt`。
 
-这两项保留为后续配置清理，不将完整 lint 结果表述为通过。
+这两项在本报告对应阶段保留为后续配置清理，不将当时完整 lint 结果表述为通过。
 对比证据为 `.tools/actionlint-ci-comparison.log`、`.tools/actionlint-baseline.log`、`.tools/actionlint-current.log`。
 
 ## 5. 尚未执行的验证

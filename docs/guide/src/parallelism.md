@@ -10,7 +10,7 @@ To enable full parallelism in your application, consider also using [free-thread
 
 ## Parallelism under the Python GIL
 
-Let's take a look at our [word-count](https://github.com/jelven007/p2r/blob/main/examples/word-count/src/lib.rs) example, where we have a `search` function that utilizes the [`rayon`] crate to count words in parallel.
+Let's take a look at our [word-count](https://github.com/jelven007/r2p/blob/main/examples/word-count/src/lib.rs) example, where we have a `search` function that utilizes the [`rayon`] crate to count words in parallel.
 
 ```rust,no_run
 # #![allow(dead_code)]
@@ -111,7 +111,7 @@ We are using `pytest-benchmark` to benchmark four word count functions:
 3. Rust sequential version
 4. Rust sequential version executed twice with two Python threads
 
-The benchmark script can be found [in the r2p GitHub repository](https://github.com/jelven007/p2r/blob/main/examples/word-count/tests/test_word_count.py), and we can run `nox` in the `word-count` folder to benchmark these functions.
+The benchmark script can be found [in the r2p GitHub repository](https://github.com/jelven007/r2p/blob/main/examples/word-count/tests/test_word_count.py), and we can run `nox` in the `word-count` folder to benchmark these functions.
 
 While the results of the benchmark of course depend on your machine, the relative results should be similar to this (mid 2020):
 

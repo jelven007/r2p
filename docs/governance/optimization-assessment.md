@@ -1,6 +1,6 @@
 # 全面优化评估与建议
 
-日期：2026-10-24；状态：分析与建议，OPT-02/03 已完成本地配置修正与验证。
+日期：2026-10-24；状态：历史分析与持续优化清单；最新落地状态以[当前交付计划](delivery-plan.md)为准。
 基线：`424149e8a1c42128b05a090941673008fc46c478` 加当前本地目录、配置和文档变更。
 范围：产品定位、架构、目录、工具、CI、兼容、测试、性能、交付、运营与治理。
 产品名称 `r2p` 已确认，元数据见 [product.toml](../../product.toml)；业务范围与发行制品配置仍按后续决策落实。
@@ -14,7 +14,7 @@ r2p 的源码能力和上游工程体系较完整，本仓库已经建立职责�
 现状应表述为“可继续研发的 SDK 工程基线”，不能据此宣称已具备业务生产系统。
 
 分析发现的 MSRV 特性任务与结果汇总问题继承自拉取基线，并非目录移动导致。
-两项配置已本地修正，实际工具链选择、MSRV 编译和汇总回归结果见[CI 修正验证](../testing/ci-fixes-validation.md)。
+两项配置已本地修正，实际工具链选择、MSRV 编译和汇总回归结果见[CI 修正验证](../testing/reports/ci-fixes-validation.md)。
 其他条目仍为建议；没有执行远端 CI、性能测量或完整代码安全审计。
 
 ## 2. 已有基础与实际缺口
@@ -30,7 +30,7 @@ r2p 的源码能力和上游工程体系较完整，本仓库已经建立职责�
 | 文档 | 16 条需求追踪和生命周期文档已建立 | 明确真实负责人，连接可执行用例和真实结果 |
 | 运营/运维 | 支持、发行、回退和事故流程已有拟定规范 | 本仓库渠道、消费方、指标数据及恢复演练 |
 
-运行事实以[验证报告](../testing/validation-report.md)为准。
+原阶段运行事实以[历史验证报告](../testing/reports/validation-report.md)为准；最新结果见[生产工程验证](../testing/reports/production-baseline-validation.md)。
 “存在 CI 配置”和“该 SHA 在目标平台通过”是两种证据。
 
 ## 3. 优先级清单
@@ -102,7 +102,7 @@ MSRV 项只追加 `minimal-versions`；[Nox](../../noxfile.py) 的 `check_featur
 
 当前[ci.yml](../../.github/workflows/ci.yml) 通过 job 级 `RUSTUP_TOOLCHAIN` 绑定 `matrix.rust`，先安装/输出版本，再恢复缓存。
 本机执行该安装步骤时分别得到 Rust 1.99.1 和 1.85.1，兼容依赖解析后的 MSRV full/all-targets 编译通过。
-完整 CI powerset、最低依赖与 Python 3.15 组合仍需远端运行，见[验证范围](../testing/ci-fixes-validation.md)。
+完整 CI powerset、最低依赖与 Python 3.15 组合仍需远端运行，见[验证范围](../testing/reports/ci-fixes-validation.md)。
 
 ### OPT-03：原汇总遗漏与当前门禁
 
@@ -212,18 +212,20 @@ Rust 开发复现保存已验证工具链，同时继续周期检查最新 stabl
 
 Actions SHA 固定、OIDC、Dependabot 和 zizmor 已有，继续使用。
 发行保存 Rust 依赖解析快照、工具版本和来源；库的 Cargo.lock 策略与应用/发行锁定策略分别决定。
-现有根 Cargo.lock 忽略策略可以保留，但每次发行应能恢复当时的解析。
+事实更正：根 Cargo.lock 已跟踪；仅新增子工作区锁文件按忽略规则处理。
+每次发行保存实际依赖解析，MSRV 兼容解析在隔离副本执行。
 
 本仓库缺少 `SECURITY.md` 和 `.github/CODEOWNERS`。
 有实际人员和响应渠道后配置职责与问题报告政策，并核验远端环境、分支/标签规则、注册表身份和支持周期。
 这不是发现了可利用漏洞，而是独立维护所需的责任和证据工作。
 
-GitHub 当前支持源码里的 `$/` 自仓库引用，不能按旧语法规则误判为路径错误。
+后续生产工程整理采用 `./.github/` 相对引用，以保持现有工作流检查工具和运行配置一致。
 面向旧 runner 或 GitHub Enterprise Server 时另外核验适用性，参考[GitHub 官方文档](https://docs.github.com/en/enterprise-cloud@latest/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions)。
 
 ### OPT-11：让支持与恢复流程有真实归属
 
-现有 Issue 联系方式仍指向上游 PyO3 Discussions/Discord，需按支持责任另行配置。
+该历史缺口已在生产工程整理中修正为本仓库文档与支持政策。
+目标 fork 仓库 Issues 关闭，当前授权不能改设置；使用复现/修复 PR 反馈，不称上游社区为本仓库支持。
 站点构建已使用 r2p 路由，可通过 `R2P_GUIDE_ARCHIVE` 显式纳入产品版本指南，`R2P_SITE_URL` 配置 canonical 地址。
 选择独立产品路线后，应区分本仓库支持入口、源码问题和上游参考资料。
 不能把官方社区和站点作为已经由 r2p 承担的服务资产。

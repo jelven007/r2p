@@ -1,6 +1,6 @@
 # 开发指南
 
-日期：2026-10-24；状态：当前目录适用的工程流程。
+版本：2.0；日期：2026-10-24；状态：当前源码研发流程。
 关联：FR-001–FR-008、NFR-001、NFR-003–NFR-006。
 
 ## 1. 环境要求
@@ -20,18 +20,19 @@
 ## 2. 获取与同步
 
 ```bash
-git clone https://github.com/jelven007/p2r.git r2p
+git clone https://github.com/jelven007/r2p.git r2p
 cd r2p
 git status --short --branch
 git fetch origin
 git log -1 --format=fuller origin/main
 ```
 
-`r2p` 是产品名称和新克隆目录名；源仓库地址以已核验的实际链接为准。
+`r2p` 是产品、SDK 和交付仓库名称。
 在干净分支同步；已有工作先保留。
 维护分支可按团队约定 merge/rebase；目录结构已调整后，未来同步上游需要处理映射冲突并验证，不能认为普通 `git pull` 自动保证所有路径有效。
 
-本次本地工作分支为 `refactor/production-layout-docs`；基础提交记录在项目分析中。
+日常从 `main` 创建需求/缺陷分支，通过 PR 和相关检查合并；上游同步单独处理。
+本次分支与恢复点见[交付记录](../releases/records/2026-10-24-production-baseline.md)。
 
 ## 3. 快速检查
 
@@ -39,8 +40,8 @@ git log -1 --format=fuller origin/main
 
 ```bash
 cargo metadata --no-deps --format-version 1
-cargo check -p r2p
-cargo test -p r2p --lib
+cargo check -p r2p --locked
+cargo test -p r2p --lib --locked
 uv run --isolated --only-group nox nox -s repository-check
 uv run --isolated --only-group nox nox -s fmt
 ```
@@ -53,6 +54,7 @@ R2P_PYTHON=python3.14 cargo test -p r2p --lib
 
 `R2P_PYTHON` 需指向实际安装的解释器。
 多解释器开发记录完整命令和环境；不要长期保留无意的扩展构建变量导致嵌入测试链接失败。
+新旧构建变量的优先级、空值和扩展/嵌入条件见[配置注册表](configuration-reference.md)。
 
 ## 4. 验证入口
 
@@ -97,6 +99,9 @@ R2P_PYTHON=python3.14 cargo test -p r2p --lib
 - MSRV、解释器范围或 ABI 变化同步清单、构建配置、Nox、CI、模板和文档。
 
 上游风格与贡献要求保留在[上游贡献原文](../reference/upstream-contributing.md)，本仓库路径以[目录规范](repository-layout.md)为准。
+根 Cargo.lock/uv.lock 已纳入 Git，日常检查使用锁定依赖。
+MSRV 1.85 可能不能使用 stable 解析的全部最新开发依赖，在隔离副本执行 `nox -s set-msrv-package-versions check-all`；不得将兼容锁覆盖主工作区后未经说明提交。
+Meson 示例打包后端另要求 Rust 1.87+，不改变 SDK 本体的 1.85 MSRV。
 
 ## 7. 编译诊断与 stub 更新
 
@@ -123,4 +128,6 @@ UI 测试使用 `ui_test`，快照受 Rust 版本、特性和 rust-src 影响。
 
 变更说明包含问题/行为、需求编号、接口/兼容影响、验证结果、未覆盖项、文档和回退方式。
 模板见[变更记录](../governance/change-record-template.md)。
+测试摘要保存到 `docs/testing/reports/`，发行/源码交付记录保存到 `docs/releases/records/`。
+推送与合并固定最终 SHA 和两个历史引用，遵循[版本政策](../releases/version-policy.md)。
 涉及上游协作时遵循上游的版权、行为规范和 AI 辅助贡献责任。

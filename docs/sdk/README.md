@@ -1,12 +1,11 @@
 # r2p SDK
 
-r2p provides Rust bindings to Python. The SDK crate family is `r2p`,
-`r2p-ffi`, `r2p-build-config`, `r2p-macros`, `r2p-macros-backend`, and
-`r2p-introspection`. It is derived from PyO3; upstream copyrights, licenses,
-and historical records remain available in this repository.
+r2p provides Rust bindings to Python.
+The SDK crate family is `r2p`, `r2p-ffi`, `r2p-build-config`, `r2p-macros`, `r2p-macros-backend`, and `r2p-introspection`.
+It is derived from PyO3; upstream copyrights, licenses, and historical records remain available in this repository.
 
-Requires Rust 1.85 or later and CPython 3.9 or later. PyPy, GraalPy, stable
-ABI, and free-threaded support depend on the selected interpreter and features.
+Requires Rust 1.85 or later and CPython 3.9 or later.
+PyPy, GraalPy, stable ABI, and free-threaded support depend on the selected interpreter and features.
 
 ## Calling Python from Rust
 
@@ -54,15 +53,12 @@ fn string_sum(m: &Bound<'_, PyModule>) -> PyResult<()> {
 }
 ```
 
-The SDK uses `#[r2p(...)]`, `r2p_build_config::use_r2p_cfgs()`, and
-`R2P_*` build variables. Python API names such as `Python`, `Py<T>`, and
-`PyResult` retain their meaning.
+The SDK uses `#[r2p(...)]`, `r2p_build_config::use_r2p_cfgs()`, and `R2P_*` build variables.
+Python API names such as `Python`, `Py<T>`, and `PyResult` retain their meaning.
 
 Current Maturin releases detect the fixed package names `pyo3` and `pyo3-ffi`.
-The runnable examples include the private `tools/maturin-bridge` adapter
-under the dependency alias `r2p-maturin-bridge`. Include this local adapter
-when packaging r2p extensions with Maturin, and forward stable ABI features
-to it as demonstrated by `examples/maturin-starter/Cargo.toml`.
+The runnable examples include the private `tools/maturin-bridge` adapter under the dependency alias `r2p-maturin-bridge`.
+Include this local adapter when packaging r2p extensions with Maturin, and forward stable ABI features to it as demonstrated by `examples/maturin-starter/Cargo.toml`.
 The adapter is excluded from the SDK dependency graph and registry publication.
 
 See `docs/guide/` for the full guide and `docs/development/` for repository workflows.

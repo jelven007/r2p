@@ -549,8 +549,7 @@ As a second step the `from_py_object` option was introduced.
 This option also opts-out of the blanket implementation and instead generates a custom `FromPyObject` implementation for the pyclass which is functionally equivalent to the blanket.
 
 As of r2p 0.30.0 `skip_from_py_object` is the new default behavior.
-Setting the option is now deprecated and can be safely removed without changes in behavior.
-r2p will remove this option entirely in a future release.
+Setting the option is now deprecated and can be safely removed without changes in behavior. r2p will remove this option entirely in a future release.
 
 ## `IntoPyObject`
 

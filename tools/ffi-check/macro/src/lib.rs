@@ -6,8 +6,8 @@ use std::{
 };
 
 use proc_macro2::{Ident, Span, TokenStream, TokenTree};
-use r2p_build_config::{PythonImplementation, PythonVersion};
 use quote::quote;
+use r2p_build_config::{PythonImplementation, PythonVersion};
 
 const PY_3_15: PythonVersion = PythonVersion {
     major: 3,
@@ -264,8 +264,7 @@ pub fn for_all_fields(input: proc_macro::TokenStream) -> proc_macro::TokenStream
     if struct_name == "PyMemberDef" {
         // bindgen picked `type_` as the field name to avoid the `type` keyword, but r2p uses `type_code`
         all_fields.remove("type_");
-    } else if struct_name == "PyObject"
-        && r2p_build_config::get().target_abi().version() >= PY_3_12
+    } else if struct_name == "PyObject" && r2p_build_config::get().target_abi().version() >= PY_3_12
     {
         // bindgen picked `__bindgen_anon_1` as the field name for the anonymous union containing ob_refcnt,
         // r2p uses ob_refcnt directly
@@ -275,8 +274,7 @@ pub fn for_all_fields(input: proc_macro::TokenStream) -> proc_macro::TokenStream
     {
         // ob_size not present in GraalPy
         all_fields.remove("ob_size");
-    } else if r2p_build_config::get().target_abi().implementation()
-        == PythonImplementation::GraalPy
+    } else if r2p_build_config::get().target_abi().implementation() == PythonImplementation::GraalPy
         && (struct_name == "PyFunctionObject" || struct_name == "PySliceObject")
     {
         // GraalPy wants these types to be opaque, we skip them

@@ -10,7 +10,7 @@ This method's signature must look like `__call__(<self>, ...) -> object` - here,
 The following pyclass is a basic decorator - its constructor takes a Python object as argument and calls that object when called.
 An equivalent Python implementation is linked at the end.
 
-An example crate containing this pyclass can be found [in the r2p GitHub repository](https://github.com/jelven007/p2r/tree/main/examples/decorator)
+An example crate containing this pyclass can be found [in the r2p GitHub repository](https://github.com/jelven007/r2p/tree/main/examples/decorator)
 
 ```rust,ignore
 {{#include ../../../../examples/decorator/src/lib.rs}}

@@ -19,11 +19,11 @@ dynamic = [
 ]
 
 [project.urls]
-Changelog = "https://github.com/jelven007/p2r/blob/main/CHANGELOG.md"
-Documentation = "https://github.com/jelven007/p2r/tree/main/docs/guide"
-Homepage = "https://github.com/jelven007/p2r/tree/main/docs/guide"
-Source = "https://github.com/jelven007/p2r/tree/main/crates/r2p-introspection"
-Tracker = "https://github.com/jelven007/p2r/issues"
+Changelog = "https://github.com/jelven007/r2p/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/jelven007/r2p/tree/main/docs/guide"
+Homepage = "https://github.com/jelven007/r2p"
+Source = "https://github.com/jelven007/r2p/tree/main/crates/r2p-introspection"
+Tracker = "https://github.com/jelven007/r2p/issues"
 
 [build-system]
 requires = ["maturin>=1,<2"]

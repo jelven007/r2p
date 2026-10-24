@@ -6,4 +6,4 @@
 新 Python 产品按包划分目录，维护构建配置、测试、依赖、README 和发行身份。
 不要将虚拟环境、wheel 或缓存放入源码。
 
-入口：[运行时包说明](r2p-runtime/README.md)、[开发指南](../docs/development/developer-guide.md)、[发行方案](../docs/maintenance/release-and-rollback.md)。
+入口：[运行时包说明](r2p-runtime/README.md)、[开发指南](../docs/development/developer-guide.md)、[发行方案](../docs/releases/release-and-rollback.md)。

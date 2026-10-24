@@ -19,7 +19,7 @@ R2P_VERSION_TAG = os.environ.get("R2P_VERSION_TAG", "main")
 if R2P_VERSION_TAG == "main":
     R2P_DOCS_URL = os.environ.get("R2P_DOCS_URL", "/main/doc")
     R2P_DOCS_VERSION = "latest"
-    R2P_CRATE_VERSION = 'git = "https://github.com/jelven007/p2r"'
+    R2P_CRATE_VERSION = 'git = "https://github.com/jelven007/r2p"'
 else:
     # v0.13.2 -> 0.13.2
     version = R2P_VERSION_TAG.lstrip("v")

@@ -1,8 +1,7 @@
 # Sharing `#[pyclass]` types between multiple r2p extension modules
 
 > [!WARNING]
-> This is an advanced topic which requires reaching deeply into `unsafe` code.
-> r2p does not have a stable API for doing this, and the approach documented here may break when updating to newer versions of r2p.
+> This is an advanced topic which requires reaching deeply into `unsafe` code. r2p does not have a stable API for doing this, and the approach documented here may break when updating to newer versions of r2p.
 > See [issue #1444](https://github.com/pyo3/pyo3/issues/1444) for ongoing discussion about this topic.
 
 Some Python extension modules such as NumPy expose a C API which can be consumed by other extension modules to build functionality which directly exchanges native data without needing to go via Python objects.
@@ -70,15 +69,13 @@ Practically speaking, this introduces the following limitations on extension mod
 
 - r2p currently stores `#[pyclass]` types as global variables in static storage in each `cdylib` crate which compiles them.
   This means that directly sharing a `#[pyclass]` type across multiple `cdylib` crates will currently silently create multiple distinct Python types.
-  To avoid this, the shared types cannot be `#[pyclass]`, instead the package exporting the type to Python needs to make private `#[pyclass]` which wraps the shared type.
-  r2p may remove this limitation in future.
+  To avoid this, the shared types cannot be `#[pyclass]`, instead the package exporting the type to Python needs to make private `#[pyclass]` which wraps the shared type. r2p may remove this limitation in future.
 
 ## Using a capsule to create a shared API { #capsules }
 
 Let's start with the example of NumPy as an extension which wants to offer a C API for other native extensions to consume.
 The section above already established that Python native extensions can reuse data using the Python `capsule` type.
-It is an opaque wrapper which can be used to exchange arbitrary native data between Python extension modules.
-r2p provides the [`PyCapsule` type]({{#R2P_DOCS_URL}}/r2p/types/struct.PyCapsule.html) to create and consume capsules from Rust code.
+It is an opaque wrapper which can be used to exchange arbitrary native data between Python extension modules. r2p provides the [`PyCapsule` type]({{#R2P_DOCS_URL}}/r2p/types/struct.PyCapsule.html) to create and consume capsules from Rust code.
 
 NumPy creates a `capsule` which contains a pointer to the structure mapping the implementation of the ["NumPy C API"](https://numpy.org/doc/stable/reference/c-api/index.html).
 While the [exact contents of this structure are generated](https://github.com/numpy/numpy/blob/40a1b0283beacb0d723f51e2046c8dc049da6eee/numpy/_core/code_generators/generate_numpy_api.py#L202-L210), the resulting API structure looks something like the following C code:
@@ -443,8 +440,7 @@ Outside of the Rust project itself, [`abi_stable`] crate is the most complete so
 However, `abi_stable` also appears to be largely unmaintained, so users wanting to depend on its functionality may need to consider reviving or forking it.
 
 Furthermore, r2p currently doesn't implement `FromPyObject` or `IntoPyObject` conversions for `abi_stable` types.
-This makes working with these types somewhat awkward / inefficient at the Python boundary.
-r2p _could_ add an optional feature for this, however given the API surface involved it would be better to resolve the question of maintenance of `abi_stable` before adding such functionality to r2p.
+This makes working with these types somewhat awkward / inefficient at the Python boundary. r2p _could_ add an optional feature for this, however given the API surface involved it would be better to resolve the question of maintenance of `abi_stable` before adding such functionality to r2p.
 
 [global allocator]: https://doc.rust-lang.org/stable/std/alloc/trait.GlobalAlloc.html
 [panic hook]: https://doc.rust-lang.org/stable/std/panic/fn.set_hook.html

@@ -1,6 +1,6 @@
 # 参与 r2p 开发
 
-r2p 以 r2p 源码为基础建立研发工程。
+r2p 源自 PyO3，SDK 名称、宏属性、构建配置和 Python 辅助模块已迁移为 r2p。
 参与者遵循[行为规范](Code-of-Conduct.md)，保留作者、许可和来源，并对提交内容及验证结果负责。
 
 ## 开始工作
@@ -23,4 +23,5 @@ AI 辅助生成内容仍由贡献者核验源码、正确性和测试，不将�
 从根目录运行 `uv run --isolated --only-group nox nox -s fmt` 和受影响测试；完整命令、工具依赖和限制见开发指南。
 PR 描述包含问题、最终行为、需求编号、兼容影响、验证及回退方式。
 
-协作分支、审阅和远端门禁按实际团队配置；独立发行身份和授权依[发行方案](docs/maintenance/release-and-rollback.md)确认。
+贡献与复现/修复反馈通过 [r2p PR](https://github.com/jelven007/r2p/pulls) 提交；Issues 当前关闭，启用后使用仓库问题模板。
+源码交付与两个历史版本依[发行方案](docs/releases/release-and-rollback.md)和[版本政策](docs/releases/version-policy.md)执行。

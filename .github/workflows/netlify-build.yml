@@ -78,7 +78,7 @@ jobs:
       # We store the versioned guides on GitHub's gh-pages branch for convenience
       # (the full gh-pages branch is pulled in the build-netlify-site step)
       - name: Deploy the guide
-        if: ${{ github.event_name == 'release' }}
+        if: ${{ github.event_name == 'release' && vars.R2P_ENABLE_NETLIFY == 'true' }}
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

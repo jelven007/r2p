@@ -12,8 +12,7 @@ Extensions built for this "version-specific" ABI can only be imported by Python 
 Python also supports a [limited API](https://docs.python.org/3/c-api/stable.html#limited-c-api) and [stable ABI](https://docs.python.org/3/c-api/stable.html#stable-abi).
 Extensions targeting the stable ABI defined by Python 3.X can be imported by any subsequent Python version newer than Python 3.X, but not older versions.
 
-There are two "flavors" of stable ABI: `abi3`, supported on Python 3.2 and newer but *not* the free-threaded builds and `abi3t`, supported on Python 3.15 and newer for both the GIL-enabled and free-threaded builds of Python.
-r2p supports building extensions targeting both flavors of stable ABI.
+There are two "flavors" of stable ABI: `abi3`, supported on Python 3.2 and newer but *not* the free-threaded builds and `abi3t`, supported on Python 3.15 and newer for both the GIL-enabled and free-threaded builds of Python. r2p supports building extensions targeting both flavors of stable ABI.
 
 When r2p finds a "host" python interpreter and no `abi3` or `abi3t` feature is active, it will generate extensions targeting the version-specific ABI for the host Python version.
 For example, when ``pip`` or ``uv`` installs a Python package that includes Rust dependencies that depend on r2p, the host interpreter is the interpreter running ``pip`` or the interpreter from the activated ``uv`` environment.

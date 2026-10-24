@@ -12,4 +12,4 @@
 从根执行 `uv run --isolated --only-group nox nox -s test-rust test-py`。
 UI 严格测试需要匹配 Rust 工具链和 rust-src；ignore/skip 模式需明确报告。
 
-入口：[测试策略](../docs/testing/test-strategy.md)、[实际验证](../docs/testing/validation-report.md)、[开发命令](../docs/development/developer-guide.md)。
+入口：[测试策略](../docs/testing/test-strategy.md)、[实际验证](../docs/testing/reports/production-baseline-validation.md)、[开发命令](../docs/development/developer-guide.md)。

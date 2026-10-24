@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import csv
+import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -214,11 +216,61 @@ def check_product_identity() -> list[str]:
         errors.append(
             "product.toml: Rust implementation package differs from Cargo.toml"
         )
+    repository = data.get("source", {}).get("repository")
+    if repository != cargo["workspace"]["package"]["repository"]:
+        errors.append("product.toml: repository differs from Cargo.toml")
     runtime = tomllib.loads((ROOT / "python/r2p-runtime/pyproject.toml").read_text())
     if implementation.get("python_runtime_package") != runtime["project"]["name"]:
         errors.append(
             "product.toml: Python runtime package differs from pyproject.toml"
         )
+    return errors
+
+
+def check_history() -> list[str]:
+    product = tomllib.loads((ROOT / "product.toml").read_text())
+    delivery = product.get("delivery", {})
+    path = ROOT / delivery.get("history_manifest", "docs/releases/history.json")
+    if not path.is_file():
+        return ["product.toml: missing history manifest"]
+    data = json.loads(path.read_text())
+    snapshots = data.get("snapshots", [])
+    errors = []
+    if (
+        data.get("schema_version") != 1
+        or data.get("retention_count") != 2
+        or delivery.get("history_count") != 2
+        or len(snapshots) != 2
+        or data.get("repository") != product["source"]["repository"]
+    ):
+        errors.append("history.json: expected two snapshots and matching identity")
+    seen = set()
+    for snapshot in snapshots:
+        tag = snapshot.get("tag", "")
+        revision = snapshot.get("revision", "")
+        if (
+            not tag.startswith("history/")
+            or tag in seen
+            or not re.fullmatch(r"[0-9a-f]{40}", revision)
+        ):
+            errors.append(f"history.json: invalid or duplicate snapshot {tag}")
+            continue
+        seen.add(tag)
+        evidence = ROOT / snapshot.get("evidence", "")
+        if not evidence.is_file():
+            errors.append(f"history.json: missing evidence for {tag}")
+        # Shallow CI checkouts may omit both history tags. Validate available
+        # refs; fetch --tags before running this check to audit a full checkout.
+        ref = f"refs/tags/{tag}"
+        available = subprocess.run(
+            ["git", "show-ref", "--verify", "--quiet", ref], cwd=ROOT, check=False
+        )
+        if available.returncode == 0:
+            actual = subprocess.check_output(
+                ["git", "rev-parse", f"{ref}^{{commit}}"], cwd=ROOT, text=True
+            ).strip()
+            if actual != revision:
+                errors.append(f"history.json: tag {tag} differs from recorded SHA")
     return errors
 
 
@@ -307,12 +359,13 @@ def main() -> int:
     errors.extend(check_traceability())
     errors.extend(check_symlinks())
     errors.extend(check_product_identity())
+    errors.extend(check_history())
     errors.extend(check_sdk_identity())
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
     print(
-        f"Repository paths OK: {len(cargo_paths)} Cargo manifests, {len(doc_paths)} engineering documents, guide includes, doctest inputs, requirement traceability, symbolic links, product/SDK identity and Maturin ABI metadata."
+        f"Repository paths OK: {len(cargo_paths)} Cargo manifests, {len(doc_paths)} engineering documents, guide includes, doctest inputs, requirement traceability, symbolic links, product/SDK identity, two history snapshots and Maturin ABI metadata."
     )
     return 0
 

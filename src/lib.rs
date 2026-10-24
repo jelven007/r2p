@@ -273,7 +273,7 @@
 //!
 //! # Other Examples
 //!
-//! The r2p [README](https://github.com/jelven007/p2r/blob/main/docs/sdk/README.md) contains quick-start examples for both
+//! The r2p [README](https://github.com/jelven007/r2p/blob/main/docs/sdk/README.md) contains quick-start examples for both
 //! using [Rust from Python] and [Python from Rust].
 //!
 //! The r2p repository's [examples subdirectory]
@@ -319,7 +319,7 @@
 //! [`Decimal`]: https://docs.rs/rust_decimal/latest/rust_decimal/struct.Decimal.html
 //! [`serde`]: <./serde/index.html> "Documentation about the `serde` feature."
 #![doc = concat!("[calling_rust]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/python-from-rust.html \"Calling Python from Rust - r2p user guide\"")]
-//! [examples subdirectory]: https://github.com/jelven007/p2r/tree/main/examples
+//! [examples subdirectory]: https://github.com/jelven007/r2p/tree/main/examples
 //! [feature flags]: https://doc.rust-lang.org/cargo/reference/features.html "Features - The Cargo Book"
 //! [global interpreter lock]: https://docs.python.org/3/glossary.html#term-global-interpreter-lock
 //! [hashbrown]: https://docs.rs/hashbrown
@@ -333,7 +333,7 @@
 //! [ordered-float]: https://docs.rs/ordered-float
 //! [serde]: https://docs.rs/serde
 //! [setuptools-rust]: https://github.com/PyO3/setuptools-rust "Setuptools plugin for Rust extensions"
-//! [the guide]: https://github.com/jelven007/p2r/tree/main/docs/guide "r2p user guide"
+//! [the guide]: https://github.com/jelven007/r2p/tree/main/docs/guide "r2p user guide"
 #![doc = concat!("[types]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/types.html \"GIL lifetimes, mutability and Python object types\"")]
 //! [PEP 384]: https://www.python.org/dev/peps/pep-0384 "PEP 384 -- Defining a Stable ABI"
 //! [Python from Rust]: https://github.com/PyO3/pyo3#using-python-from-rust

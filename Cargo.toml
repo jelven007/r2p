@@ -3,7 +3,7 @@ name = "r2p"
 version = "0.30.0"
 description = "Bindings to Python interpreter"
 readme = "docs/sdk/README.md"
-documentation = "https://github.com/jelven007/p2r/tree/main/docs/guide"
+documentation = "https://github.com/jelven007/r2p/tree/main/docs/guide"
 authors.workspace = true
 keywords.workspace = true
 homepage.workspace = true
@@ -28,7 +28,8 @@ exclude = [
     "/docs/development",
     "/docs/testing",
     "/docs/operations",
-    "/docs/maintenance",
+    "/docs/runbooks",
+    "/docs/releases",
     "/docs/governance",
     "/infrastructure",
     "/tools",
@@ -219,8 +220,8 @@ exclude = ["benchmarks/r2p-benches", "tools/ffi-check"]
 [workspace.package]
 authors = ["PyO3 Project and Contributors <https://github.com/PyO3>"]
 keywords = ["r2p", "python", "cpython", "ffi"]
-homepage = "https://github.com/jelven007/p2r"
-repository = "https://github.com/jelven007/p2r"
+homepage = "https://github.com/jelven007/r2p"
+repository = "https://github.com/jelven007/r2p"
 categories = ["api-bindings", "development-tools::ffi"]
 license = "MIT OR Apache-2.0"
 edition = "2024"

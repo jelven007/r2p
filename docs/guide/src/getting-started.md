@@ -10,8 +10,7 @@ We'll cover each of these below.
 ## Rust
 
 First, make sure you have Rust installed on your system.
-If you haven't already done so, try following the instructions [on the Rust website](https://www.rust-lang.org/tools/install).
-r2p runs on both the `stable` and `nightly` versions so you can choose whichever one fits you best.
+If you haven't already done so, try following the instructions [on the Rust website](https://www.rust-lang.org/tools/install). r2p runs on both the `stable` and `nightly` versions so you can choose whichever one fits you best.
 The minimum required Rust version is 1.85.
 
 If you can run `rustc --version` and the version is new enough you're good to go!

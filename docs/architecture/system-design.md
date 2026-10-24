@@ -1,6 +1,6 @@
 # r2p 总体技术方案
 
-日期：2026-10-24；状态：当前架构分析和生产研发方案。
+版本：2.0；日期：2026-10-24；状态：当前 SDK 生产研发方案。
 产品名称为 `r2p`，实现包与来源记录在 [product.toml](../../product.toml)。
 范围：[FR-001–FR-008](../requirements/system-requirements.md)。
 技术负责人角色待分配。
@@ -10,7 +10,7 @@
 保持 r2p 现有 Rust/Python 语义，通过目录分工、契约管理、可执行检查和交付记录降低持续开发成本。
 采用单仓库、多组件工作区；核心库保留 Cargo 标准根包结构，工具和性能基准保持隔离依赖。
 
-本次变化集中于工程组织、路径与文档。
+SDK 内核身份已经迁移为 r2p；本次进一步落实工程组织、依赖复现、源码交付和生命周期文档。
 未来业务系统可依赖该 SDK，但必须另行定义接口、业务数据和运行服务边界。
 
 ## 2. 逻辑架构
@@ -48,6 +48,7 @@ Python 运行时辅助包位于 `python/`，是否需要它取决于具体功能
 | 编译配置 | `crates/r2p-build-config/`、根 `build.rs` | 解释器/目标环境可解释，交叉编译不能误用宿主配置 |
 | 宏 | `crates/r2p-macros*` | 解析→校验→生成；编译诊断纳入回归 |
 | 内省 | `crates/r2p-introspection/` | 格式版本校验，兼容剥离/多架构二进制时需要实测 |
+| 打包适配 | `tools/maturin-bridge/` | 私有 `pyo3-ffi` 协议入口，将元数据/ABI 特性转发到 r2p，禁止独立发行 |
 | 工程验证 | `tests/`、`tools/`、`benchmarks/` | 测试行为、FFI 对照、基准各有职责 |
 
 ## 4. 关键流程
@@ -86,8 +87,9 @@ flowchart LR
     SUPPORT --> REQ
 ```
 
-`release.yml`、`python-wheel.yml`、Netlify 工作流提供已有自动化，但注册表和站点配置不属于源码可证实的能力。
-生产发布必须验证环境、身份和准入记录。
+当前交付链路为已验证代码通过 PR 合并、固定 SHA 和历史快照；后续复现/修复反馈使用 PR，Issues 尚未启用。
+`release.yml`、`python-wheel.yml`、Netlify 工作流的发布 job 默认关闭，需对应仓库变量显式启用。
+注册表/站点发布另验收环境、身份、矩阵、制品和恢复，见[ADR-0003](adr/0003-delivery-and-history.md)。
 
 ## 5. 目录和依赖方案
 
@@ -112,12 +114,14 @@ flowchart LR
 
 ## 7. 配置、制品和工程数据
 
-编译配置使用现有 `R2P_PYTHON`、`R2P_CONFIG_FILE`、交叉编译和扩展构建变量；工具链、依赖锁和特性写入发行记录。
-配置示例见开发指南；不得把个人绝对路径或凭证提交成工程默认值。
+编译配置使用 `R2P_*`；读取边界在新变量未设置时兼容 `PYO3_*`。
+空值新变量仍优先，错误配置不静默回退；详见[配置注册表](../development/configuration-reference.md)。
+根 Cargo.lock/uv.lock 已跟踪，MSRV 在隔离副本解析兼容依赖；工具链、锁和特性写入交付/发行记录。
 
 SDK 源 crate、Python wheel/sdist、内省工具、文档站点是不同制品。
 每项应标明来源 SHA、版本、兼容标签、依赖、许可证和哈希。
-仓库声明的包名保留上游身份；独立发行见 [ADR-0002](adr/0002-product-and-release-boundaries.md)。
+SDK 包名为 `r2p` / `r2p-*`，Python 包为 `r2p-runtime`；版权、许可和原始上游资料保持来源。
+源码渠道和独立发行边界见 [ADR-0002](adr/0002-product-and-release-boundaries.md)。
 
 ## 8. 风险与处理
 

@@ -12,8 +12,8 @@ command = "python3 glossary_linker.py"
 [preprocessor.tabs]
 
 [output.html]
-git-repository-url = "https://github.com/jelven007/p2r/tree/main/docs/guide"
-edit-url-template = "https://github.com/jelven007/p2r/edit/main/docs/guide/{path}"
+git-repository-url = "https://github.com/jelven007/r2p/tree/main/docs/guide"
+edit-url-template = "https://github.com/jelven007/r2p/edit/main/docs/guide/{path}"
 playground.runnable = false
 additional-css = ["theme/tabs.css"]
 additional-js = ["theme/tabs.js"]

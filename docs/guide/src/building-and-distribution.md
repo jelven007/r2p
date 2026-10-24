@@ -402,8 +402,7 @@ To get started, you'll need a few pieces of software:
 - A Python interpreter that's already been compiled for your target (optional when building "abi3" extension modules).
 - A Python interpreter that is built for your host and available through the `PATH` or setting the [`R2P_PYTHON`](#configuring-the-python-version) variable (optional when building "abi3" extension modules).
 
-After you've obtained the above, you can build a cross-compiled r2p module by using Cargo's `--target` flag.
-r2p's build script will detect that you are attempting a cross-compile based on your host machine and the desired target.
+After you've obtained the above, you can build a cross-compiled r2p module by using Cargo's `--target` flag. r2p's build script will detect that you are attempting a cross-compile based on your host machine and the desired target.
 
 When cross-compiling, r2p's build script cannot execute the target Python interpreter to query the configuration, so there are a few additional environment variables you may need to set:
 
@@ -441,9 +440,9 @@ The following resources may also be useful for cross-compiling:
 - [github.com/japaric/rust-cross](https://github.com/japaric/rust-cross) is a primer on cross compiling Rust.
 - [github.com/rust-embedded/cross](https://github.com/rust-embedded/cross) uses Docker to make Rust cross-compilation easier.
 
-[`r2p-build-config`]: https://github.com/jelven007/p2r/tree/main/crates/r2p-build-config
-[`maturin-starter`]: https://github.com/jelven007/p2r/tree/main/examples/maturin-starter
-[`setuptools-rust-starter`]: https://github.com/jelven007/p2r/tree/main/examples/setuptools-rust-starter
+[`r2p-build-config`]: https://github.com/jelven007/r2p/tree/main/crates/r2p-build-config
+[`maturin-starter`]: https://github.com/jelven007/r2p/tree/main/examples/maturin-starter
+[`setuptools-rust-starter`]: https://github.com/jelven007/r2p/tree/main/examples/setuptools-rust-starter
 [`maturin`]: https://github.com/PyO3/maturin
 [`setuptools-rust`]: https://github.com/PyO3/setuptools-rust
 [PyOxidizer]: https://github.com/indygreg/PyOxidizer

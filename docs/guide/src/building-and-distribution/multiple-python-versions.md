@@ -12,8 +12,7 @@ This can be useful when building for multiple versions with the `abi3` feature, 
 
 ## Conditional compilation for different Python versions
 
-The `r2p-build-config` exposes multiple [`#[cfg]` flags](https://doc.rust-lang.org/rust-by-example/attribute/cfg.html) which can be used to conditionally compile code for a given Python version.
-r2p itself depends on this crate, so by using it you can be sure that you are configured correctly for the Python version r2p is building against.
+The `r2p-build-config` exposes multiple [`#[cfg]` flags](https://doc.rust-lang.org/rust-by-example/attribute/cfg.html) which can be used to conditionally compile code for a given Python version. r2p itself depends on this crate, so by using it you can be sure that you are configured correctly for the Python version r2p is building against.
 
 This allows us to write code like the following
 

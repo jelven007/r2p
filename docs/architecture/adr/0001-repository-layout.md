@@ -40,5 +40,7 @@
 ## 验证
 
 检查主/隔离 workspace、Python 扩展、doctest、指南 include、CI 工作目录、过滤器/缓存、Dependabot 和制品内容。
-实际结果见[验证报告](../../testing/validation-report.md)。
-本地目录实施不等于远端合并或已上线。
+实际结果见[当前验证](../../testing/reports/production-baseline-validation.md)，历史阶段结果保存在 `testing/reports/`。
+进一步将操作手册分入 `runbooks/`、版本/发行/快照分入 `releases/`，不改变标准工具发现入口。
+根 Cargo.lock 已跟踪，与 uv.lock 一起维护工程依赖；MSRV 兼容解析在隔离副本执行。
+远端交付以[交付记录](../../releases/records/2026-10-24-production-baseline.md)为准。

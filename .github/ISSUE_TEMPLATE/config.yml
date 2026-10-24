@@ -1,11 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: ❓ Question
-    url: https://github.com/PyO3/pyo3/discussions
-    about: Ask and answer questions about r2p on Discussions
-  - name: 🔧 Troubleshooting
-    url: https://github.com/PyO3/pyo3/discussions
-    about: For troubleshooting help, see the Discussions
-  - name: 👋 Chat
-    url: https://discord.gg/33kcChzH7f
-    about: Engage with r2p's users and developers on Discord
+  - name: r2p documentation
+    url: https://github.com/jelven007/r2p/tree/main/docs
+    about: Development, configuration, compatibility, support and recovery
+  - name: r2p support policy
+    url: https://github.com/jelven007/r2p/blob/main/docs/operations/support-policy.md
+    about: Reproduction and fix PRs are available while this fork's Issues are disabled

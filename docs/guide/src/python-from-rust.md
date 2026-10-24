@@ -13,8 +13,7 @@ The subchapters also cover the following topics:
 
 ## The `'py` lifetime
 
-To safely interact with the Python interpreter a Rust thread must be [attached] to the Python interpreter.
-r2p has a `Python<'py>` token that is used to prove that these conditions are met.
+To safely interact with the Python interpreter a Rust thread must be [attached] to the Python interpreter. r2p has a `Python<'py>` token that is used to prove that these conditions are met.
 Its lifetime `'py` is a central part of r2p's API.
 
 The `Python<'py>` token serves three purposes:

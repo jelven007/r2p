@@ -8,8 +8,9 @@
 
 根 Nox 和 Actions 引用此目录。
 Netlify 站点构建仍包含上游域名/版本内容，独立部署前须完成身份、目标和权限调整；保留资源不代表本仓库已有线上环境。
+站点部署由 `R2P_ENABLE_NETLIFY` 显式控制，当前默认关闭。
 
 WebAssembly 使用对应 Nox 会话和工具链，不能以 macOS 原生回归代替平台验证。
 当前没有定义业务服务容器、数据库或 Kubernetes 资源。
 
-入口：[目录映射](../docs/development/repository-layout.md)、[运维手册](../docs/maintenance/runbook.md)、[发行与回退](../docs/maintenance/release-and-rollback.md)。
+入口：[目录映射](../docs/development/repository-layout.md)、[运维手册](../docs/runbooks/incident-response.md)、[发行与回退](../docs/releases/release-and-rollback.md)。

@@ -24,6 +24,10 @@ requires-python = ">=3.9"
 
 # Some ruff lints our auto-generated stub fails
 [tool.ruff.lint.per-file-ignores]
+# These tests intentionally compare naive Python dates/timestamps with the
+# matching Rust bindings; adding a timezone would change the tested contract.
+"tests/test_datetime.py" = ["DTZ"]
+"tests/test_datetime_hypothesis.py" = ["DTZ"]
 "stubs/*.pyi" = [
     "I001",   # unsorted imports
     "PYI020", # quoted annotations

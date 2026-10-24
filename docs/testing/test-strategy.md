@@ -1,8 +1,9 @@
 # 测试策略与质量准入
 
-日期：2026-10-24；状态：生产验收拟定基线。
+版本：2.0；日期：2026-10-24；状态：当前工程质量规范及外部发行准入。
 关联：FR-001–FR-008、NFR-001–NFR-007。
-实际执行结果见[验证报告](validation-report.md)，需求和门禁见[需求规格](../requirements/system-requirements.md)。
+实际执行结果见[当前报告](reports/production-baseline-validation.md)，历史报告保存在 `reports/`。
+需求和门禁见[需求规格](../requirements/system-requirements.md)，已测范围见[支持矩阵](support-matrix.md)。
 
 ## 1. 目标与边界
 
@@ -27,7 +28,7 @@
 | 消费方示例 | maturin、setuptools-rust、Meson、嵌入、FFI 示例 | `nox -s test-py`、`examples/` | G3 |
 | 底层对照 | FFI 签名、常量、布局与对应 Python 头文件一致 | `nox -s ffi-check` | G4 |
 | 性能 | 同条件基准比较、退化归因 | `benchmarks/r2p-benches/` | G4 |
-| 制品和恢复 | 内容、哈希、隔离安装、固定旧版本恢复 | 发行记录和回退演练 | G5/G6 |
+| 制品和恢复 | 源码 SHA/历史标签/快照检出；制品内容、哈希、隔离安装与旧版恢复 | 发行记录和回退演练 | G5/G6 |
 
 Nox 是完整矩阵的统一入口，单独 Cargo 命令用于有明确范围的回归。
 命令及依赖见[开发指南](../development/developer-guide.md)。
@@ -62,7 +63,7 @@ Nox 是完整矩阵的统一入口，单独 Cargo 命令用于有明确范围的
 | 平台扩展 | WASI/Emscripten、交叉编译和 WIP no_std 有专门构建与执行条件 |
 
 矩阵行至少包含 SHA、OS/架构、Rust、解释器、GIL、ABI、features、命令、结果、日志和例外。
-实际声明范围见[接口与兼容性](../architecture/interfaces-and-compatibility.md)；未执行的行标为“未验证”，不能填“通过”。
+实际声明范围见[接口与兼容性](../architecture/interfaces-and-compatibility.md)；已测行维护在[支持矩阵](support-matrix.md)，未执行不能填“通过”。
 
 `UI_TEST=ignore` 仅覆盖编译执行，不能证明诊断快照通过；`UI_TEST=skip` 完全跳过。
 stable 的正式 G2 需要默认严格诊断模式。
@@ -90,8 +91,12 @@ Python 可选依赖没有可用 wheel 时，相关跳过项随报告列出。
 
 ## 7. 退出与交付
 
-G1–G3 的所有必需项成功且阻断缺陷清零后，进入兼容与发行验收。
-G4–G6 还需完整支持矩阵、性能决策、来源与制品验证、责任分配及恢复演练。
+本期源码交付要求 G1、受影响 G2/G3、本地 MSRV、Git 权限/合并/两个快照和支持入口验证。
+首次 PyO3→r2p 命名迁移没有同名 crate 基线，semver job 记录包名不一致而不执行错误的自动比较；后续同名变更恢复检查。
+完整工作流 lint、任务汇总依赖和失败/取消阻断逻辑都属于 G1/G2。
+外部制品发行还需完整目标矩阵、适用性能决策、制品隔离验证、实际支持责任及恢复演练。
 
 报告分别给出已通过、已失败、跳过、未执行和待确认，不用总分掩盖 P0 失败。
 批准记录应引用具体 SHA 和报告；批准失效条件为源码、依赖、构建配置或目标平台发生变化。
+目录/文档调整不新增镜像式测试；运行已有路径检查、metadata、工作流 lint、文档构建及受影响打包即可。
+核心逻辑没有继续修改时沿用有 SHA 的 SDK 回归证据，只有新失败/配置影响才扩大测试。

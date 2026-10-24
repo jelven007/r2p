@@ -763,8 +763,7 @@ In this case, the property `number` is defined and available from Python code as
 
 ## Instance methods
 
-To define a Python compatible method, an `impl` block for your struct has to be annotated with the `#[pymethods]` attribute.
-r2p generates Python compatible wrappers for all functions in this block with some variations, like descriptors, class method static methods, etc.
+To define a Python compatible method, an `impl` block for your struct has to be annotated with the `#[pymethods]` attribute. r2p generates Python compatible wrappers for all functions in this block with some variations, like descriptors, class method static methods, etc.
 
 Since Rust allows any number of `impl` blocks, you can easily split methods between those accessible to Python (and Rust) and those accessible only to Rust.
 However to have multiple `#[pymethods]`-annotated `impl` blocks for the same struct you must enable the [`multiple-pymethods`] feature of r2p.
@@ -1205,8 +1204,7 @@ Enum support in r2p comes in two flavors, depending on what kind of variants the
 A simple enum (a.k.a.
 C-like enum) has only unit variants.
 
-r2p adds a class attribute for each variant, so you can access them in Python without defining `#[new]`.
-r2p also provides default implementations of `__richcmp__` and `__int__`, so they can be compared using `==`:
+r2p adds a class attribute for each variant, so you can access them in Python without defining `#[new]`. r2p also provides default implementations of `__richcmp__` and `__int__`, so they can be compared using `==`:
 
 ```rust
 # use r2p::prelude::*;
@@ -1375,8 +1373,7 @@ An enum is complex if it has any non-unit (struct or tuple) variants.
 r2p supports only struct and tuple variants in a complex enum.
 Unit variants aren't supported at present (the recommendation is to use an empty tuple enum instead).
 
-r2p adds a class attribute for each variant, which may be used to construct values and in match patterns.
-r2p also provides getter methods for all fields of each variant.
+r2p adds a class attribute for each variant, which may be used to construct values and in match patterns. r2p also provides getter methods for all fields of each variant.
 
 ```rust
 # use r2p::prelude::*;

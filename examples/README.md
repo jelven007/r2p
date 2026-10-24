@@ -22,9 +22,10 @@ cargo generate --path /path/to/r2p examples/<example>
 ```
 
 `<example>` 替换为具体模板目录。
-本仓库尚未提交的目录迁移不能通过远端生成命令获取；修改本地模板时按 cargo-generate 的本地路径方式验证。
+模板包含 r2p 发行依赖和必要私有适配器；注册表版本未启用时先使用本地路径/固定 Git SHA 验证。
+本期没有实测远端 cargo-generate，不能把结构检查视为远端生成成功。
 
 从根运行 `uv run --isolated --only-group nox nox -s test-py`，包含跨语言测试和各示例 Nox 会话。
-部分示例依赖额外原生工具或 Python 包，实际验证范围见[验证报告](../docs/testing/validation-report.md)。
+部分示例依赖额外原生工具或 Python 包，实际验证范围见[SDK 验证](../docs/testing/reports/kernel-migration-validation.md)和[当前验证](../docs/testing/reports/production-baseline-validation.md)。
 
 学习入口：[用户指南](../docs/guide/src/SUMMARY.md)；贡献和环境：[开发指南](../docs/development/developer-guide.md)。

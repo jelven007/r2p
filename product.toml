@@ -2,13 +2,20 @@ schema_version = 1
 
 [product]
 name = "r2p"
-description = "基于 PyO3 的 Rust/Python 互操作 SDK 工程"
+description = "源自 PyO3、内核身份统一为 r2p 的 Rust/Python 互操作 SDK"
 
 [implementation]
 rust_package = "r2p"
 python_runtime_package = "r2p-runtime"
 
 [source]
-repository = "https://github.com/jelven007/p2r"
+repository = "https://github.com/jelven007/r2p"
 upstream_repository = "https://github.com/PyO3/pyo3"
 baseline_revision = "424149e8a1c42128b05a090941673008fc46c478"
+
+[delivery]
+channel = "git-revision"
+default_branch = "main"
+history_manifest = "docs/releases/history.json"
+history_count = 2
+registry_publication = "not-enabled"

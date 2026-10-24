@@ -26,7 +26,7 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/jelven007/p2r"
+Homepage = "https://github.com/jelven007/r2p"
 
 [tool.hatch.version]
 path = "src/r2p_runtime/__init__.py"

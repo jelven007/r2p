@@ -22,7 +22,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: github.event.workflow_run.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success' && vars.R2P_ENABLE_NETLIFY == 'true'
     environment: netlify
 
     steps:
@@ -51,7 +51,7 @@ jobs:
           .github/tools/netlify/node_modules/.bin/netlify deploy --no-build \
               --dir "$RUNNER_TEMP/netlify-site" \
               --site "$NETLIFY_SITE_ID" \
-              ${{ ((github.event.workflow_run.event == 'push') && (github.event.workflow_run.head_repository.full_name == 'jelven007/p2r') && (github.event.workflow_run.head_branch == 'main') && '--prod') || '' }} \
+              ${{ ((github.event.workflow_run.event == 'push') && (github.event.workflow_run.head_repository.full_name == 'jelven007/r2p') && (github.event.workflow_run.head_branch == 'main') && '--prod') || '' }} \
               --json > deploy_output.json
 
       # credit: https://www.raulmelo.me/en/blog/deploying-netlify-github-actions-guide

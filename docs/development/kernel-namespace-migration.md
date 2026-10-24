@@ -1,6 +1,7 @@
 # SDK 内核命名空间迁移
 
-日期：2026-10-24。产品与 SDK 内核标识统一为 `r2p`，源码版本保留 `0.30.0`。
+日期：2026-10-24。
+产品与 SDK 内核标识统一为 `r2p`，源码版本保留 `0.30.0`。
 这是源码与模块名称的不兼容变更；注册表发布、仓库改名与站点部署不属于本次迁移。
 
 ## 使用方修改
@@ -18,8 +19,7 @@
 | `pyo3_pytests` 测试模块 | `r2p_pytests` 测试模块 |
 | `PYO3_INTROSPECTION_1_*` | `R2P_INTROSPECTION_1_*` |
 
-`Python`、`Py<T>`、`Bound`、`PyErr`、`PyResult`、`#[pyclass]`、
-`#[pyfunction]`、`#[pymodule]` 与 CPython 的 `Py_*` 标识维持原有语义。
+`Python`、`Py<T>`、`Bound`、`PyErr`、`PyResult`、`#[pyclass]`、`#[pyfunction]`、`#[pymodule]` 与 CPython 的 `Py_*` 标识维持原有语义。
 内省 CLI 和二进制应来自同一 SDK 版本，迁移后重新编译扩展。
 
 ## 构建与打包
@@ -45,12 +45,11 @@ abi3 = ["r2p/abi3-py39", "r2p-maturin-bridge/abi3-py39"]
 
 稳定 ABI 特性必须同时传给适配器，保证 wheel 标签与实际 ABI 一致。
 生成模板自带私有适配器；模板的注册表依赖需待 r2p 正式发布后使用，当前消费源码使用 path 依赖。
-setuptools-rust 示例使用 `binding = "NoBinding"` 与显式 `features = ["r2p/extension-module"]`，
-避免其默认绑定自动传入 `pyo3/extension-module`；应用 Rust 代码使用 `r2p`。
+setuptools-rust 示例使用 `binding = "NoBinding"` 与显式 `features = ["r2p/extension-module"]`，避免其默认绑定自动传入 `pyo3/extension-module`；应用 Rust 代码使用 `r2p`。
 
 构建配置优先读取 `R2P_*`，值为空时也视为明确设置；未设置时才回退到外部打包工具传入的 `PYO3_*`。
-两种变量变化均触发 Cargo 重建。Cargo 元数据改为 `R2P_CONFIG`，
-FFI 的 `links` 为 `r2p-ffi-python`，主包为 `r2p-python`。
+两种变量变化均触发 Cargo 重建。
+Cargo 元数据改为 `R2P_CONFIG`，FFI 的 `links` 为 `r2p-ffi-python`，主包为 `r2p-python`。
 Maturin 自动传入的 `PYO3_BUILD_EXTENSION_MODULE` 仍可正确启用扩展链接模式。
 
 ## 来源保留
@@ -60,4 +59,4 @@ Maturin 自动传入的 `PYO3_BUILD_EXTENSION_MODULE` 仍可正确启用扩展�
 上游品牌素材保留在 `assets/branding/`，用于来源追溯。
 依赖 PyO3 类型的第三方生态 crate 需要独立适配；不能仅修改其依赖名便视为兼容 r2p。
 
-验证记录见[内核迁移验证](../testing/kernel-migration-validation.md)，产品边界见[ADR-0002](../architecture/adr/0002-product-and-release-boundaries.md)。
+验证记录见[内核迁移验证](../testing/reports/kernel-migration-validation.md)，产品边界见[ADR-0002](../architecture/adr/0002-product-and-release-boundaries.md)。

@@ -36,7 +36,7 @@ export UV_PYTHON_INSTALL_DIR="$PWD/.tools/python"
 export PYO3_PYTHON="$PWD/.tools/python/cpython-3.14.9-macos-aarch64-none/bin/python3.14"
 ```
 
-团队可用已有工具，正常入口见[开发指南](../development/developer-guide.md)。
+团队可用已有工具，正常入口见[开发指南](../../development/developer-guide.md)。
 实际 Python/Nox 命令由 `uv run --python "$PYO3_PYTHON" --isolated --only-group nox nox` 启动，以确保 Nox 本身运行于对应解释器。
 
 ## 3. 执行结果
@@ -77,7 +77,7 @@ uv run --python "$PYO3_PYTHON" --isolated --only-group nox nox --default-venv-ba
 ## 4. 文件保全与迁移修复
 
 基线有 854 个 Git 跟踪文件。
-按[迁移映射](../development/repository-layout.md)逐项检查：354 个文件迁移，缺失 0 个；13 个原目录均已移除。
+按[迁移映射](../../development/repository-layout.md)逐项检查：354 个文件迁移，缺失 0 个；13 个原目录均已移除。
 30 个既有普通文件因入口文档、清单、工具/CI 路径、指南 include 和测试提示产生修改，其余普通文件与基线 blob 一致。
 保全证据为 `.tools/migration-integrity.log`。
 

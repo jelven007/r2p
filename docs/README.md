@@ -1,6 +1,7 @@
 # r2p 工程文档中心
 
-文档基线：2026-10-24；源码基线：`424149e8a1c42128b05a090941673008fc46c478`。
+文档版本：2.0；日期：2026-10-24；技术来源基线：`424149e8a1c42128b05a090941673008fc46c478`。
+当前源码交付仓库为 [jelven007/r2p](https://github.com/jelven007/r2p)，固定版本见[交付记录](releases/records/2026-10-24-production-baseline.md)。
 产品名称为 `r2p`，统一元数据见 [product.toml](../product.toml)。
 适用范围为当前 Rust/Python 互操作 SDK，以及在其基础上建立的生产研发和交付流程。
 
@@ -14,20 +15,25 @@
 | 分析 | [项目分析与现状](governance/project-assessment.md) | 现有代码是什么、证据在哪里、缺口是什么 |
 | 优化 | [全面优化评估与建议](governance/optimization-assessment.md) | 下一步优先改什么、收益与完成条件是什么 |
 | 需求 | [系统需求规格](requirements/system-requirements.md) | 服务谁、实现什么、如何验收 |
+| 用户场景 | [采用与升级旅程](requirements/user-journeys.md) | 每条链路的输入、成功条件和失败处理 |
 | 需求追踪 | [追踪矩阵 CSV](requirements/traceability.csv) | 需求对应哪段实现、哪个测试、哪个准入条件 |
 | 方案 | [总体技术方案](architecture/system-design.md) | 组件如何协作、关键边界及风险是什么 |
 | 接口 | [接口与兼容性](architecture/interfaces-and-compatibility.md) | API、ABI、错误、并发和版本如何约束 |
 | 决策 | [ADR-0001：目录与工作区](architecture/adr/0001-repository-layout.md) | 为什么采用当前结构 |
 | 决策 | [ADR-0002：产品与发布边界](architecture/adr/0002-product-and-release-boundaries.md) | 上游代码与本仓库产品如何区分 |
+| 决策 | [ADR-0003：交付与历史](architecture/adr/0003-delivery-and-history.md) | 怎样合并、固定 SHA 和保留两个恢复点 |
 | 开发 | [开发指南](development/developer-guide.md) | 环境、命令、编码、变更流程 |
 | 目录 | [目录规范与迁移映射](development/repository-layout.md) | 文件放在哪里、移动后有哪些依赖 |
+| 配置 | [构建配置注册表](development/configuration-reference.md) | 配置优先级、扩展/嵌入与跨编译条件 |
 | 测试 | [测试策略](testing/test-strategy.md) | 分层、用例、矩阵、缺陷及准入 |
-| 验证 | [本次验证报告](testing/validation-report.md) | 本次实际执行了什么、结果和限制是什么 |
-| CI 修正 | [MSRV 与汇总验证](testing/ci-fixes-validation.md) | 工具链和门禁修正了什么、有哪些运行证据 |
-| SDK 内核迁移 | [迁移规则](development/kernel-namespace-migration.md)、[验证报告](testing/kernel-migration-validation.md) | crate、宏、构建变量、Python 模块与打包如何迁移到 r2p |
+| 支持矩阵 | [兼容性证据与状态](testing/support-matrix.md) | 已配置、已编译、已运行和支持等级 |
+| 当前验证 | [生产工程验证](testing/reports/production-baseline-validation.md) | 当前提交执行了什么、结果和限制是什么 |
+| 历史验证 | [原目录基线](testing/reports/validation-report.md)、[MSRV/汇总修正](testing/reports/ci-fixes-validation.md) | 保留各阶段的原始命令与结果 |
+| SDK 内核迁移 | [迁移规则](development/kernel-namespace-migration.md)、[验证报告](testing/reports/kernel-migration-validation.md) | crate、宏、构建变量、Python 模块与打包如何迁移到 r2p |
 | 运营 | [运营计划](operations/operating-plan.md) | 采用、反馈、支持、指标如何形成闭环 |
-| 运维 | [运维操作手册](maintenance/runbook.md) | 构建、监控、告警、故障和恢复 |
-| 发布 | [发布与回退](maintenance/release-and-rollback.md) | 怎样交付、验证、停止、恢复 |
+| 支持 | [支持政策](operations/support-policy.md) | 问题入口、维护边界和版本支持 |
+| 运维 | [故障操作手册](runbooks/incident-response.md)、[环境与资产](runbooks/environments-and-assets.md) | 构建、监控、告警、故障和恢复 |
+| 发布 | [发布与回退](releases/release-and-rollback.md)、[版本政策](releases/version-policy.md)、[两个历史版本](releases/history.json) | 怎样交付、固定版本、停止和恢复 |
 | 计划 | [交付计划和风险](governance/delivery-plan.md) | 任务、依赖、责任、完成条件 |
 | 治理 | [文档治理](governance/document-management.md) | 状态、审批、更新、证据与唯一来源 |
 | 模板 | [变更与发布记录](governance/change-record-template.md) | 如何记录下一次变更和验收 |
@@ -39,18 +45,19 @@
 所有工程文档遵循同一套状态语言：
 
 - **已实现**：能在当前源码定位对应能力，仍需关注测试覆盖和平台条件。
-- **本次已落地**：本地已有目录、配置、脚本或文档变更；不代表已提交、远端合并或部署。
-- **拟定要求**：生产开发和验收的目标，尚未证明全部满足。
+- **已落地**：代码/流程已纳入本次工程基线；远端交付以交付记录为准。
+- **工程规范**：本仓库采用的研发和交付要求；具体执行仍需测试/发行证据。
+- **发行准入要求**：外部制品发行前应满足的目标，尚未证明全部满足。
 - **待确认**：需要产品或负责人确认的范围、权限、预算或指标。
-- **已验证**：有[验证报告](testing/validation-report.md)中的命令和结果支持；不得用静态检查替代运行验证。
+- **已验证**：有[当前报告](testing/reports/production-baseline-validation.md)或其引用的历史报告支持，限定 SHA、环境和范围。
 
 文档里的责任人为角色，实际人员尚未分配。
 SLO、支持期限和性能门槛是拟定目标，确定后才构成外部承诺。
-官方 r2p 的发行、包索引、社区和站点是参考来源。
+上游 PyO3 的发行、包索引、社区和站点保留真实身份；它们不是 r2p 的运营证据。
 
 ## 维护原则
 
-产品名称以 [product.toml](../product.toml) 为准；需求编号以[需求规格](requirements/system-requirements.md)为准；路径以[目录规范](development/repository-layout.md)为准；测试执行结果以[验证报告](testing/validation-report.md)为准；发布决策以发布记录为准。
+产品名称以 [product.toml](../product.toml) 为准；需求编号以[需求规格](requirements/system-requirements.md)为准；路径以[目录规范](development/repository-layout.md)为准；测试执行结果以 `testing/reports/` 报告为准；交付决策以 `releases/records/` 记录为准。
 同一变更应在代码、方案、测试和运营/运维说明中同步体现。
 
 文档和 Cargo 路径检查：

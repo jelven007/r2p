@@ -67,7 +67,7 @@ fn register_child_module(parent_module: &Bound<'_, PyModule>) -> PyResult<()> {
 
 ```
 
-See the [`string-sum`](https://github.com/jelven007/p2r/tree/main/crates/r2p-ffi/examples/string-sum) example for how to declare free-threaded support using raw FFI calls for modules using single-phase initialization and the [`sequential`](https://github.com/jelven007/p2r/tree/main/crates/r2p-ffi/examples/sequential) example for modules using multi-phase initialization.
+See the [`string-sum`](https://github.com/jelven007/r2p/tree/main/crates/r2p-ffi/examples/string-sum) example for how to declare free-threaded support using raw FFI calls for modules using single-phase initialization and the [`sequential`](https://github.com/jelven007/r2p/tree/main/crates/r2p-ffi/examples/sequential) example for modules using multi-phase initialization.
 
 If you would like to use conditional compilation to trigger different code paths under the free-threaded build, you can use the `Py_GIL_DISABLED` attribute once you have configured your crate to generate the necessary build configuration data.
 See [the guide section](./building-and-distribution/multiple-python-versions.md) for more details about supporting multiple different Python versions, including the free-threaded build.

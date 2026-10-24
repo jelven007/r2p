@@ -1,6 +1,6 @@
 # 文件目录规范与迁移映射
 
-日期：2026-10-24；状态：本地已实施。
+版本：2.0；日期：2026-10-24；状态：当前生产研发结构。
 关联：FR-008、NFR-006；决策见 [ADR-0001](../architecture/adr/0001-repository-layout.md)。
 
 ## 1. 目录职责
@@ -43,6 +43,9 @@
 | `branding/` | `assets/branding/` | 素材组织，内容保留 |
 | `wasm/` | `infrastructure/wasm/` | Nox 平台路径、Actions 缓存键 |
 | `.netlify/` | `infrastructure/netlify/` | Rustdoc 横幅路径、部署资源组织 |
+| `docs/maintenance/runbook.md` | `docs/runbooks/incident-response.md` | 运维操作与环境资产独立组织 |
+| `docs/maintenance/release-and-rollback.md` | `docs/releases/release-and-rollback.md` | 发行政策、两个快照、交付记录聚合 |
+| `docs/testing/*validation*.md` | `docs/testing/reports/` | 策略/支持矩阵与各阶段不可混淆的证据分开 |
 | 根介绍/架构/贡献/发行文档 | 根入口更新，原文保留 `docs/reference/` | crate README、指南首页/贡献 include 和使用方导航 |
 
 Rust 集成测试仍处于 `tests/`；FFI 示例随 crate 移动，因此其 crate 内相对路径保持有效。
@@ -57,9 +60,10 @@ docs/
 ├── requirements/       # 需求规格、追踪矩阵
 ├── architecture/       # 总体方案、接口与兼容、adr/
 ├── development/        # 环境、流程、目录规范
-├── testing/            # 策略、验证证据
+├── testing/            # 策略、支持矩阵、reports/ 验证证据
 ├── operations/         # 采用、支持、反馈和指标
-├── maintenance/        # 运维、发行、回退与事故
+├── runbooks/           # 环境资产、故障与恢复操作
+├── releases/           # 版本政策、history.json、records/ 交付记录
 ├── governance/         # 分析、计划、文档管理和记录模板
 ├── guide/              # 保留 r2p mdBook 用户指南
 └── reference/          # 本次拉取版本的上游原文
@@ -77,6 +81,7 @@ docs/
 - 工作流中的包名仍为 `r2p-*`，只有文件路径迁移；路径和包名不能机械地同时替换。
 - 生成模板中的版本依赖保留，不替换为开发树绝对路径。
 - Rust 组件共享许可证的符号链接随目录深度调整为 `../../LICENSE-*`；Python 运行时包保存与根许可证逐字节一致的普通文件，避免 sdist 包含越出包根的链接，校验脚本检查副本内容一致。
+- `meson/meson.build` 保留根级工具发现入口；Meson cargo workspace 通过包子项目查询 FFI，不按文档分类移动发现路径。
 
 ## 5. 提交内容和忽略内容
 
@@ -84,7 +89,9 @@ docs/
 构建输出、wheel、缓存、虚拟环境、机器本地工具和系统杂项由 `.gitignore` 管理。
 
 本次验证工具位于 `.tools/`、`.venv/`，不属于交付源码。
-`Cargo.lock` 继承上游库工程的忽略策略；正式发行需额外保存实际依赖解析快照，是否将根锁文件纳入 Git 另作决策。
+根 `Cargo.lock` 已跟踪；`.gitignore` 只忽略子目录新生成的锁文件，并显式保留 `/Cargo.lock`。
+根锁和 `uv.lock` 用于工程复现；MSRV 依赖兼容解析在隔离副本执行。
+正式制品仍保存实际构建使用的解析快照和工具链，消费方管理自己的锁文件。
 
 ## 6. 后续迁移规则
 
@@ -100,4 +107,4 @@ cargo metadata --manifest-path tools/ffi-check/Cargo.toml --no-deps --format-ver
 python tools/check_repository.py
 ```
 
-完整验证范围和本次结果分别见[测试策略](../testing/test-strategy.md)、[验证报告](../testing/validation-report.md)。
+完整验证范围和本次结果分别见[测试策略](../testing/test-strategy.md)、[当前验证](../testing/reports/production-baseline-validation.md)。

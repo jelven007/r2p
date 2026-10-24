@@ -130,8 +130,7 @@ num=44
 
 ## Making the function signature available to Python
 
-The function signature is exposed to Python via the `__text_signature__` attribute.
-r2p automatically generates this for every `#[pyfunction]` and all `#[pymethods]` directly from the Rust function, taking into account any override done with the `#[r2p(signature = (...))]` option.
+The function signature is exposed to Python via the `__text_signature__` attribute. r2p automatically generates this for every `#[pyfunction]` and all `#[pymethods]` directly from the Rust function, taking into account any override done with the `#[r2p(signature = (...))]` option.
 
 This automatic generation can only display the value of default arguments for strings, integers, boolean types, and `None`.
 Any other default arguments will be displayed as `...`. (`.pyi` type stub files commonly also use `...` for default arguments in the same way.)
