@@ -55,7 +55,15 @@ jobs:
 
       - name: Run the benchmarks
         uses: CodSpeedHQ/action@f842b9a3ffe213dbb81768fd7f7eeb4dfcf1c369 # v5.4.2
+        env:
+          # Runner v5.4.2 supports this flag; keep collecting measurements when
+          # the fork has not been registered with CodSpeed.
+          CODSPEED_SKIP_UPLOAD: ${{ vars.R2P_ENABLE_CODSPEED != 'true' }}
         with:
           run: uv run --isolated --only-group nox nox -s codspeed
           token: ${{ secrets.CODSPEED_TOKEN }}
           mode: simulation
+
+      - name: Record benchmark delivery scope
+        if: ${{ vars.R2P_ENABLE_CODSPEED != 'true' }}
+        run: echo "Rust and Python benchmarks ran with simulation measurements; CodSpeed upload is disabled until R2P_ENABLE_CODSPEED=true and the repository is registered." >> "$GITHUB_STEP_SUMMARY"

@@ -63,16 +63,23 @@ no_std UI 的 enum constructor 快照仍保留旧包名列号，按实际诊断�
 | CPython 3.14 / nightly | Linux x64 build 通过；该任务使用 `UI_TEST=ignore`，不作为严格诊断证据 |
 | MSRV、静态与实验检查 | MSRV、九个 stable Clippy 目标、beta Clippy、nightly check、格式、zizmor、mypy/pyrefly、内省、no_std Python/clippy 均通过 |
 | 指南、变更记录、覆盖率基线 | 指南及链接检查、changelog 和 coverage-pr-base 通过；覆盖率任务成功不证明已启用第三方服务 |
-| 条件跳过与未收齐 | PR 未启用完整矩阵，13 个任务跳过；benches 运行已启动，最终结果未核验 |
+| 条件跳过 | PR 未启用完整矩阵，13 个任务跳过 |
+| 基准运行与上传 | [benches 运行](https://github.com/jelven007/r2p/actions/runs/40110047774)执行成功；上传 CodSpeed 返回 401，任务最终失败 |
 
 Linux x64 和 macOS arm64 的 Python 行为均为 197 passed，远端各示例测试通过。
 build 任务包括对应 FFI 检查、文档、Rust 回归和 Python 示例；实际 ignored/filtered 项保留在任务日志，不按“所有用例运行”解释。
 本会话后续 GitHub CLI 凭据不可用；重新授权成功，但授权工具要求新会话后才能使用，最终修正尚未推送或合并。
 完整源码历史保留，Git 标签不匹配 `v*`；外部发布/部署需要对应 `R2P_ENABLE_*` 为 `true`。
 
+2026-10-25 继续交付时认证已恢复，取回基准最终日志 `.tools/production-ci-bench-fcc.log`。
+21 个 Rust 基准套件运行完成，31 个 Python 基准通过、2 skipped、174 deselected；Rust 一项 custom iterations 不受 CodSpeed 支持而跳过。
+任务失败发生在后续上传：目标仓库未注册或无权限，CodSpeed 返回 401。
+固定 runner v5.4.2 的 `CODSPEED_SKIP_UPLOAD` 已由其源码核实，基准继续 simulation 测量；仅 `R2P_ENABLE_CODSPEED=true` 时上传。
+该配置修正须按新提交远端复验；未采用 `continue-on-error` 或跳过基准执行来关闭失败。
+
 ## 4. 限制
 
-注册表获取/验证、站点部署/恢复、完整 Python/ABI/平台矩阵和性能基准不属于本期已执行结论。
+注册表获取/验证、站点部署/恢复、完整 Python/ABI/平台矩阵和性能退化比较验收不属于本期已执行结论。
 FFI 对照本地补验只覆盖 CPython 3.14.9/macOS arm64，不能替代其他目标。
 历史上游快照使用旧名称，恢复它须配套恢复消费方。
 源码交付闭环不等于外部制品发行完成；支持使用本仓库 PR 尽力维护。

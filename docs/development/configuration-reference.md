@@ -43,5 +43,8 @@ setuptools-rust 示例采用 `NoBinding` 和显式 r2p 扩展特性；Meson 使�
 GitHub 仓库变量 `R2P_ENABLE_CRATES_IO`、`R2P_ENABLE_PYPI`、`R2P_ENABLE_NETLIFY` 仅在相应值为 `true` 时允许发布/部署 job。
 未设置时默认关闭；Git 推送和 `history/*` 标签不等于外部发行。
 这些是发行控制变量，与 SDK 编译变量无关。
+基准任务始终执行 Rust/Python 的 CodSpeed simulation 测量；仓库变量 `R2P_ENABLE_CODSPEED=true` 才允许上传结果。
+未接入该服务时，固定 v5.4.2 runner 通过 `CODSPEED_SKIP_UPLOAD=true` 保留测量并关闭上传；启用前需注册目标仓库及核验认证。
+该 runner 标志属于固定版本的内部接口，升级 CodSpeed action 时复核其支持及远端运行结果；不以测量成功声称性能比较验收。
 文档流水线使用 `R2P_SOURCE_REV` 将本仓库 main 链接校验到实际测试的源码 SHA，避免新目录在 PR 合并前被错误判为失效。
 启用时引用[发行准入记录](../releases/release-and-rollback.md)，核对具体平台环境/OIDC 及已验收制品。

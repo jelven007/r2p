@@ -11,6 +11,7 @@
 | 根 Cargo.lock / uv.lock | 已跟踪 | Cargo/uv / 构建角色 | 记录解析变化；MSRV 在隔离副本准备依赖 |
 | 本地 macOS arm64 验证 | stable 1.99.1 / 1.85.1，CPython 3.14.9 | testing/reports / 测试角色 | .tools、target、.nox 是本机缓存，不作为正式制品存储 |
 | GitHub Actions | 工作流源码存在 | .github/workflows / 构建角色 | 运行和平台结果分别记录；临时失败与源码失败区分 |
+| CodSpeed | 基准可运行，目标仓库未接入上传服务，首次上传 401 | benchmarks 工作流 / 性能角色 | simulation 继续执行；注册及认证核验后设 R2P_ENABLE_CODSPEED=true |
 | crates.io / PyPI | 未启用独立发行 | 仓库变量/平台环境 / 发行角色 | 对应启用变量为 true 且 G1–G6 通过才发布 |
 | Netlify / gh-pages 文档站点 | 构建资源存在，部署默认关闭 | infrastructure/netlify / 运维角色 | 域名、站点和旧制品恢复在启用时验收 |
 | 支持反馈 | fork 仓库 Issues 关闭，复现/修复通过 PR | operations/support-policy / 支持角色 | 当前授权无法改设置，记录版本/环境/复现，不承诺时限 |
