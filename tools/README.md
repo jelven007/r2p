@@ -3,6 +3,7 @@
 | 工具 | 作用 | 运行条件 |
 | --- | --- | --- |
 | `check_repository.py` | 产品身份一致性、Cargo 本地路径、工程文档链接、指南 include、doctest 输入和需求追踪检查 | Python 3.11+；从任意目录可运行 |
+| `check_workflows.py` | actionlint 工作流结构/表达式检查；临时副本兼容当前 GitHub `$/` 语法 | Python 3.11+、actionlint；源码仍使用 `$/` |
 | `ffi-check/` | 对照 Python 头文件生成的 bindgen 定义与手写 FFI | 独立 workspace；Python 头文件、libclang 和可链接库 |
 | `maturin-bridge/` | 为 Maturin 提供固定协议包名；转发 r2p FFI 与 ABI 特性 | 私有、禁止发布；仅打包示例和测试依赖 |
 

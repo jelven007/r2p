@@ -65,6 +65,7 @@ jobs:
         run: uv run --isolated --only-group nox nox -s ${{ github.event_name == 'release' && 'build-guide' || 'check-guide' }}
         env:
           R2P_VERSION_TAG: ${{ github.event_name == 'release' && steps.prepare_tag.outputs.tag_name || 'main' }}
+          R2P_SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
           # allows lychee to get better rate limits from github
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

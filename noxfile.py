@@ -944,6 +944,15 @@ def check_guide(session: nox.Session):
         "(https://docs.rs/[^#]+)#[a-zA-Z0-9._-]*": "$1",
     }
 
+    # New repository paths need not exist on main before a migration PR merges.
+    # Validate those GitHub links against the actual tested source revision.
+    source_revision = os.environ.get("R2P_SOURCE_REV")
+    if source_revision:
+        for kind in ("tree", "blob"):
+            remaps[f"https://github.com/jelven007/r2p/{kind}/main/"] = (
+                f"https://github.com/jelven007/r2p/{kind}/{source_revision}/"
+            )
+
     excludes = [
         # The current release tag may not exist yet (e.g. on the release PR itself).
         rf"^https://github\.com/pyo3/pyo3/compare/[^/]+\.{{3}}v{re.escape(r2p_version)}$",

@@ -58,7 +58,8 @@ RUSTUP_TOOLCHAIN=1.85 PYO3_PYTHON=python3.14 cargo check -p pyo3 --features full
 
 actionlint 1.7.12 对基础提交和当前文件各产生 13 条相同诊断，本次新增诊断为 0。
 其中 11 条是该工具尚不识别 GitHub 当前支持的 `$/` 自仓库引用。
-本报告保留当时的诊断解释；后续生产工程整理已改用 `./.github/` 标准相对引用，并修正下列两项表达式。
+本报告保留当时的诊断解释；后续生产工程整理保持 GitHub `$/` 引用，并修正下列两项表达式。
+actionlint 的语法滞后由临时副本兼容检查处理，源码满足 zizmor 当前规则。
 当前完整 lint 结果以[生产工程验证](production-baseline-validation.md)为准；此前评估见[优化评估](../../governance/optimization-assessment.md)。
 
 另外两条基线表达式告警为：

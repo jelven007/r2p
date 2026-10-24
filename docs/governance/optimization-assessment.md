@@ -219,7 +219,8 @@ Actions SHA 固定、OIDC、Dependabot 和 zizmor 已有，继续使用。
 有实际人员和响应渠道后配置职责与问题报告政策，并核验远端环境、分支/标签规则、注册表身份和支持周期。
 这不是发现了可利用漏洞，而是独立维护所需的责任和证据工作。
 
-后续生产工程整理采用 `./.github/` 相对引用，以保持现有工作流检查工具和运行配置一致。
+生产工程整理保持当前 GitHub `$/` 引用；actionlint 1.7.12 的语法滞后由 `tools/check_workflows.py` 的临时副本处理。
+源码满足 zizmor 当前规则，其他工作流检查不跳过。
 面向旧 runner 或 GitHub Enterprise Server 时另外核验适用性，参考[GitHub 官方文档](https://docs.github.com/en/enterprise-cloud@latest/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions)。
 
 ### OPT-11：让支持与恢复流程有真实归属

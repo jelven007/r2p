@@ -18,7 +18,8 @@ Rust/Python 核心算法未在本期继续修改。
 | 主与隔离 workspace | 根、benchmarks/r2p-benches、tools/ffi-check 三个 metadata | 通过，`.tools/production-metadata-*.json` |
 | 目录/链接/身份/追踪/两快照 | Python 3.14.9 `tools/check_repository.py` | 24 Cargo 清单、44 工程文档、16 条追踪及两个标签通过 |
 | 完整格式/静态入口 | Nox `fmt` | 七会话通过，`.tools/production-fmt-final.log`；75 Markdown 文件无问题 |
-| 工作流结构/表达式 | actionlint 全部工作流 | 通过，0 诊断；标准相对引用及两处依赖/表达式修正 |
+| 工作流结构/表达式 | `tools/check_workflows.py --actionlint .tools/actionlint` | 11 工作流通过，0 诊断；临时副本兼容 actionlint 旧语法，源码保持 GitHub `$/` |
+| 工作流审计 | zizmor 1.30.1 | 当前源码 offline 检查无发现；首次远端要求恢复 `$/` 引用，已修正 |
 | CI 汇总 | 实际 YAML 中汇总脚本注入 | 25 job/24 前置，50 正负场景通过；两种 semver 身份路径和 MSRV/cache 顺序通过 |
 | 根 crate 文件内容 | `cargo package -p r2p --list --allow-dirty` | 301 候选文件，SDK/许可齐全，工程文档排除；仅文件清单，不是 package verification |
 | Rust/指南文档 | Nox `docs build-guide` | 通过，`.tools/production-docs.log`；最终指南复验通过 |
@@ -34,6 +35,11 @@ Rust/Python 核心算法未在本期继续修改。
 添加两份日期测试的有意无时区例外，仅调整 FFI 格式和 Markdown 换行，完整入口复验通过。
 初次误用 Python 3.9 执行检查脚本缺少 tomllib，改用要求范围内的 Python 3.14.9 后通过。
 指南保留 `class/protocols.md` 的两个历史 details 标签警告，构建成功。
+首次远端检查发现 FFI 工具仍读取旧 Cargo links 派生变量，已改为 `DEP_R2P_FFI_PYTHON_R2P_CONFIG` 并按实际工具链复验。
+no_std UI 的 enum constructor 快照仍保留旧包名列号，按实际诊断修正一列并保持严格检查。
+本地 FFI 头文件/签名/布局对照及 32 DLL 名、24 x86 私有导入校验通过，日志 `.tools/production-ffi-check.log`。
+本地 no_std 严格 UI 复验 56 通过、13 ignored、7 条件过滤，`.tools/production-ui-nostd.log`；修正后的完整 fmt 七会话再次通过。
+首次远端指南外链检查访问合并前 main 的新目录得到 404；流水线现在提供 `R2P_SOURCE_REV`，校验实际测试 SHA 的链接，未忽略失败链接。
 
 ## 3. 远端核验
 
@@ -43,7 +49,8 @@ Rust/Python 核心算法未在本期继续修改。
 
 ## 4. 限制
 
-注册表获取/验证、站点部署/恢复、完整 Python/ABI/平台矩阵、FFI 头文件对照和性能基准不属于本期已执行结论。
+注册表获取/验证、站点部署/恢复、完整 Python/ABI/平台矩阵和性能基准不属于本期已执行结论。
+FFI 对照本地补验只覆盖 CPython 3.14.9/macOS arm64，不能替代其他目标。
 历史上游快照使用旧名称，恢复它须配套恢复消费方。
 源码交付闭环不等于外部制品发行完成；支持使用本仓库 PR 尽力维护。
 目标仓库为 public fork，Issues 关闭；当前令牌修改仓库设置返回 403，未将 Issue 开通写为完成。

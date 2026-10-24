@@ -45,7 +45,7 @@ fn main() {
     r2p_build_config::add_libpython_rpath_link_args();
 
     // Forward config into this crate's compilation, so that `ffi-check` macro can consume it.
-    let r2p_config_raw =
-        std::env::var("DEP_PYTHON_R2P_CONFIG").expect("R2P_CONFIG environment variable not set");
-    println!("cargo:rustc-env=DEP_PYTHON_R2P_CONFIG={r2p_config_raw}");
+    let r2p_config_raw = std::env::var("DEP_R2P_FFI_PYTHON_R2P_CONFIG")
+        .expect("R2P_CONFIG environment variable not set");
+    println!("cargo:rustc-env=DEP_R2P_FFI_PYTHON_R2P_CONFIG={r2p_config_raw}");
 }
