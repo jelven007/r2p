@@ -1,20 +1,20 @@
 error: missing signature entry for argument `_x`
- --> tests/ui/invalid_pyfunction_signatures.rs:5:8
+ --> tests/ui/invalid_pyfunction_signatures.rs:5:7
   |
-5 | #[pyo3(signature = ())]
-  |        ^^^^^^^^^
+5 | #[r2p(signature = ())]
+  |       ^^^^^^^^^
 
 error: signature entry does not have a corresponding function argument
-  --> tests/ui/invalid_pyfunction_signatures.rs:10:21
+  --> tests/ui/invalid_pyfunction_signatures.rs:10:20
    |
-10 | #[pyo3(signature = (x))]
-   |                     ^
+10 | #[r2p(signature = (x))]
+   |                    ^
 
 error: expected argument from function definition `y` but got argument `x`
-  --> tests/ui/invalid_pyfunction_signatures.rs:15:21
+  --> tests/ui/invalid_pyfunction_signatures.rs:15:20
    |
-15 | #[pyo3(signature = (x))]
-   |                     ^
+15 | #[r2p(signature = (x))]
+   |                    ^
 
 error: expected one of: `name`, `pass_module`, `signature`, `text_signature`, `crate`, `warn`
   --> tests/ui/invalid_pyfunction_signatures.rs:21:14
@@ -23,28 +23,28 @@ error: expected one of: `name`, `pass_module`, `signature`, `text_signature`, `c
    |              ^
 
 error: `*args` not allowed after `*`
-  --> tests/ui/invalid_pyfunction_signatures.rs:29:24
+  --> tests/ui/invalid_pyfunction_signatures.rs:29:23
    |
-29 | #[pyo3(signature = (*, *args))]
-   |                        ^
+29 | #[r2p(signature = (*, *args))]
+   |                       ^
 
 error: `*` not allowed after `*`
-  --> tests/ui/invalid_pyfunction_signatures.rs:36:24
+  --> tests/ui/invalid_pyfunction_signatures.rs:36:23
    |
-36 | #[pyo3(signature = (*, *))]
-   |                        ^
+36 | #[r2p(signature = (*, *))]
+   |                       ^
 
 error: `*args` not allowed after `**kwargs`
-  --> tests/ui/invalid_pyfunction_signatures.rs:41:31
+  --> tests/ui/invalid_pyfunction_signatures.rs:41:30
    |
-41 | #[pyo3(signature = (**kwargs, *args))]
-   |                               ^
+41 | #[r2p(signature = (**kwargs, *args))]
+   |                              ^
 
 error: `**kwargs_b` not allowed after `**kwargs_a`
-  --> tests/ui/invalid_pyfunction_signatures.rs:49:33
+  --> tests/ui/invalid_pyfunction_signatures.rs:49:32
    |
-49 | #[pyo3(signature = (**kwargs_a, **kwargs_b))]
-   |                                 ^
+49 | #[r2p(signature = (**kwargs_a, **kwargs_b))]
+   |                                ^
 
 error: arguments of type `Python` must not be part of the signature
   --> tests/ui/invalid_pyfunction_signatures.rs:56:27
@@ -53,15 +53,15 @@ error: arguments of type `Python` must not be part of the signature
    |                           ^^
 
 error: expected argument from function definition `args` but got argument `kwargs`
-  --> tests/ui/invalid_pyfunction_signatures.rs:67:27
+  --> tests/ui/invalid_pyfunction_signatures.rs:67:26
    |
-67 |     #[pyo3(signature = (**kwargs, *, *args, x))]
-   |                           ^^^^^^
+67 |     #[r2p(signature = (**kwargs, *, *args, x))]
+   |                          ^^^^^^
 
 error: expected argument from function definition `x` but got argument `kwargs`
-  --> tests/ui/invalid_pyfunction_signatures.rs:75:27
+  --> tests/ui/invalid_pyfunction_signatures.rs:75:26
    |
-75 |     #[pyo3(signature = (**kwargs, *, *args, x))]
-   |                           ^^^^^^
+75 |     #[r2p(signature = (**kwargs, *, *args, x))]
+   |                          ^^^^^^
 
 error: aborting due to 11 previous errors

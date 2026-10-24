@@ -12,7 +12,7 @@ use crate::{BoundObject, IntoPyObject, IntoPyObjectExt, Py, Python, ffi};
 
 /// Represents a reference to a Python object supporting the sequence protocol.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PySequence>`][crate::Py] or [`Bound<'py, PySequence>`][Bound].
 ///
 /// For APIs available on sequence objects, see the [`PySequenceMethods`] trait which is implemented for

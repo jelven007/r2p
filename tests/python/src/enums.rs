@@ -1,0 +1,125 @@
+use r2p::{pyclass, pyfunction, pymodule};
+
+#[pymodule]
+pub mod enums {
+    #[pymodule_export]
+    use super::{
+        ComplexEnum, MixedComplexEnum, SimpleEnum, SimpleEnumWithoutDerive, SimpleTupleEnum,
+        TupleEnum, do_complex_stuff, do_mixed_complex_stuff, do_simple_stuff, do_tuple_stuff,
+    };
+}
+
+#[pyclass(eq, eq_int)]
+#[derive(PartialEq)]
+pub enum SimpleEnum {
+    /// A variant
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+}
+
+#[pyclass]
+pub enum SimpleEnumWithoutDerive {
+    A,
+    B,
+}
+
+#[pyfunction]
+pub fn do_simple_stuff(thing: &SimpleEnum) -> SimpleEnum {
+    match thing {
+        SimpleEnum::Sunday => SimpleEnum::Monday,
+        SimpleEnum::Monday => SimpleEnum::Tuesday,
+        SimpleEnum::Tuesday => SimpleEnum::Wednesday,
+        SimpleEnum::Wednesday => SimpleEnum::Thursday,
+        SimpleEnum::Thursday => SimpleEnum::Friday,
+        SimpleEnum::Friday => SimpleEnum::Saturday,
+        SimpleEnum::Saturday => SimpleEnum::Sunday,
+    }
+}
+
+#[pyclass]
+pub enum ComplexEnum {
+    /// A struct variant
+    Int {
+        /// An integer
+        i: i32,
+    },
+    Float {
+        f: f64,
+    },
+    Str {
+        s: String,
+    },
+    EmptyStruct {},
+    MultiFieldStruct {
+        a: i32,
+        b: f64,
+        c: bool,
+    },
+    #[r2p(constructor = (a = 42, b = None))]
+    VariantWithDefault {
+        a: i32,
+        b: Option<String>,
+    },
+}
+
+#[pyfunction]
+pub fn do_complex_stuff(thing: &ComplexEnum) -> ComplexEnum {
+    match thing {
+        ComplexEnum::Int { i } => ComplexEnum::Str { s: i.to_string() },
+        ComplexEnum::Float { f } => ComplexEnum::Float { f: f * f },
+        ComplexEnum::Str { s } => ComplexEnum::Int { i: s.len() as i32 },
+        ComplexEnum::EmptyStruct {} => ComplexEnum::EmptyStruct {},
+        ComplexEnum::MultiFieldStruct { a, b, c } => ComplexEnum::MultiFieldStruct {
+            a: *a,
+            b: *b,
+            c: *c,
+        },
+        ComplexEnum::VariantWithDefault { a, b } => ComplexEnum::VariantWithDefault {
+            a: 2 * a,
+            b: b.as_ref().map(|s| s.to_uppercase()),
+        },
+    }
+}
+
+#[pyclass]
+enum SimpleTupleEnum {
+    Int(i32),
+    Str(String),
+}
+
+#[pyclass]
+pub enum TupleEnum {
+    /// A tuple variant
+    #[r2p(constructor = (_0 = 1, _1 = 1.0, _2 = true))]
+    FullWithDefault(i32, f64, bool),
+    Full(i32, f64, bool),
+    EmptyTuple(),
+}
+
+#[pyfunction]
+pub fn do_tuple_stuff(thing: &TupleEnum) -> TupleEnum {
+    match thing {
+        TupleEnum::FullWithDefault(a, b, c) => TupleEnum::FullWithDefault(*a, *b, *c),
+        TupleEnum::Full(a, b, c) => TupleEnum::Full(*a, *b, *c),
+        TupleEnum::EmptyTuple() => TupleEnum::EmptyTuple(),
+    }
+}
+
+#[pyclass]
+pub enum MixedComplexEnum {
+    Nothing {},
+    Empty(),
+}
+
+#[pyfunction]
+pub fn do_mixed_complex_stuff(thing: &MixedComplexEnum) -> MixedComplexEnum {
+    match thing {
+        MixedComplexEnum::Nothing {} => MixedComplexEnum::Empty(),
+        MixedComplexEnum::Empty() => MixedComplexEnum::Nothing {},
+    }
+}

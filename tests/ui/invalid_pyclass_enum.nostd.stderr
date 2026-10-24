@@ -27,7 +27,7 @@ error: Unit variant `UnitVariant` is not yet supported in a complex enum
 error: `constructor` can't be used on a simple enum variant
   --> tests/ui/invalid_pyclass_enum.rs:34:12
    |
-34 |     #[pyo3(constructor = (a, b))]
+34 |     #[r2p(constructor = (a, b))]
    |            ^^^^^^^^^^^
 
 error: The `eq_int` option requires the `eq` option.
@@ -42,13 +42,13 @@ error: `eq_int` can only be used on simple enums.
 63 | #[pyclass(eq_int)]
    |           ^^^^^^
 
-error: `#[pyclass(hash)]` requires PyO3's `std` feature
+error: `#[pyclass(hash)]` requires r2p's `std` feature
   --> tests/ui/invalid_pyclass_enum.rs:70:31
    |
 70 | #[pyclass(frozen, eq, eq_int, hash)]
    |                               ^^^^
 
-error: `#[pyclass(hash)]` requires PyO3's `std` feature
+error: `#[pyclass(hash)]` requires r2p's `std` feature
   --> tests/ui/invalid_pyclass_enum.rs:79:23
    |
 79 | #[pyclass(frozen, eq, hash)]

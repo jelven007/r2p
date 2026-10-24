@@ -204,7 +204,7 @@ pub static NO_PY_CLASS_ITEMS: PyClassItems = PyClassItems {
 
 /// Implements the underlying functionality of `#[pyclass]`, assembled by various proc macros.
 ///
-/// Users are discouraged from implementing this trait manually; it is a PyO3 implementation detail
+/// Users are discouraged from implementing this trait manually; it is a r2p implementation detail
 /// and may be changed at any time.
 pub trait PyClassImpl: Sized + 'static {
     /// Module which the class will be associated with.
@@ -1178,13 +1178,13 @@ pub trait PyClassBaseType: Sized {
 
 /// Implementation of tp_dealloc for `#[pyclass]` types
 pub(crate) unsafe extern "C" fn tp_dealloc<T: PyClass>(obj: *mut ffi::PyObject) {
-    // All PyO3 types are heap allocated and are required to implement GC traversal to
+    // All r2p types are heap allocated and are required to implement GC traversal to
     // enable traversing the type object at a minimum.
     // SAFETY: `obj` is guaranteed to be a Python object (this function is called from the Python interpreter)
     #[cfg(not(PyPy))]
     unsafe {
         // https://github.com/pypy/pypy/issues/5556 - PyPy incorrectly does not make
-        // Python subclasses of PyO3 types proper GC types
+        // Python subclasses of r2p types proper GC types
         debug_assert_eq!(ffi::PyType_IS_GC(ffi::Py_TYPE(obj)), 1);
     }
     // SAFETY: `tp_dealloc` is required to untrack GC objects before invalidating any fields
@@ -1255,7 +1255,7 @@ impl core::ops::Add<usize> for PyObjectOffset {
 }
 
 /// Type which uses specialization on impl blocks to determine how to read a field from a Rust pyclass
-/// as part of a `#[pyo3(get)]` annotation.
+/// as part of a `#[r2p(get)]` annotation.
 pub struct PyClassGetterGenerator<
     // structural information about the field: class type, field type, offset of the field within
     // the class struct
@@ -1320,7 +1320,7 @@ impl<ClassT: PyClass, U: PyTypeCheck, const OFFSET: usize, const IMPLEMENTS_INTO
         } else {
             PyMethodDefType::Getter(PyGetterDef {
                 name,
-                meth: pyo3_get_value_into_pyobject_ref::<ClassT, Py<U>, OFFSET>,
+                meth: r2p_get_value_into_pyobject_ref::<ClassT, Py<U>, OFFSET>,
                 doc,
             })
         }
@@ -1342,7 +1342,7 @@ where
     ) -> PyMethodDefType {
         PyMethodDefType::Getter(PyGetterDef {
             name,
-            meth: pyo3_get_value_into_pyobject_ref::<ClassT, FieldT, OFFSET>,
+            meth: r2p_get_value_into_pyobject_ref::<ClassT, FieldT, OFFSET>,
             doc,
         })
     }
@@ -1350,11 +1350,11 @@ where
 
 #[diagnostic::on_unimplemented(
     message = "`{Self}` cannot be converted to a Python object",
-    label = "required by `#[pyo3(get)]` to create a readable property from a field of type `{Self}`",
+    label = "required by `#[r2p(get)]` to create a readable property from a field of type `{Self}`",
     note = "implement `IntoPyObject` for `&{Self}` or `IntoPyObject + Clone` for `{Self}` to define the conversion"
 )]
-pub trait PyO3GetField<'py>: IntoPyObject<'py> + Clone + pyo3_get_field::Sealed {}
-impl<'py, T> PyO3GetField<'py> for T where T: IntoPyObject<'py> + Clone {}
+pub trait R2pGetField<'py>: IntoPyObject<'py> + Clone + r2p_get_field::Sealed {}
+impl<'py, T> R2pGetField<'py> for T where T: IntoPyObject<'py> + Clone {}
 
 /// Base case attempts to use IntoPyObject + Clone
 impl<ClassT: PyClass, FieldT, const OFFSET: usize>
@@ -1364,17 +1364,17 @@ impl<ClassT: PyClass, FieldT, const OFFSET: usize>
     // The bound goes here rather than on the block so that this impl is always available
     // if no specialization is used instead
     where
-        for<'py> FieldT: PyO3GetField<'py>,
+        for<'py> FieldT: R2pGetField<'py>,
     {
         PyMethodDefType::Getter(PyGetterDef {
             name,
-            meth: pyo3_get_value_into_pyobject::<ClassT, FieldT, OFFSET>,
+            meth: r2p_get_value_into_pyobject::<ClassT, FieldT, OFFSET>,
             doc,
         })
     }
 }
 
-mod pyo3_get_field {
+mod r2p_get_field {
     use crate::IntoPyObject;
 
     pub trait Sealed {}
@@ -1396,7 +1396,7 @@ unsafe fn ensure_no_mutable_alias<'a, ClassT: PyClass>(
 /// # Safety
 /// - `obj` must be a valid pointer to an instance of `ClassT`
 /// - there must be a value of type `FieldT` at the calculated offset within `ClassT`
-unsafe fn pyo3_get_value_into_pyobject_ref<ClassT, FieldT, const OFFSET: usize>(
+unsafe fn r2p_get_value_into_pyobject_ref<ClassT, FieldT, const OFFSET: usize>(
     py: Python<'_>,
     obj: NonNull<ffi::PyObject>,
 ) -> PyResult<*mut ffi::PyObject>
@@ -1437,7 +1437,7 @@ where
 /// # Safety
 /// - `obj` must be a valid pointer to an instance of `ClassT`
 /// - there must be a value of type `FieldT` at the calculated offset within `ClassT`
-unsafe fn pyo3_get_value_into_pyobject<ClassT, FieldT, const OFFSET: usize>(
+unsafe fn r2p_get_value_into_pyobject<ClassT, FieldT, const OFFSET: usize>(
     py: Python<'_>,
     obj: NonNull<ffi::PyObject>,
 ) -> PyResult<*mut ffi::PyObject>
@@ -1488,7 +1488,7 @@ impl ConvertField<false> {
     #[inline]
     pub fn convert_field<'py, T>(obj: &T, py: Python<'py>) -> PyResult<Py<PyAny>>
     where
-        T: PyO3GetField<'py>,
+        T: R2pGetField<'py>,
     {
         obj.clone().into_py_any(py)
     }
@@ -1508,7 +1508,7 @@ mod tests {
     fn get_py_for_frozen_class() {
         #[crate::pyclass(crate = "crate", frozen)]
         struct FrozenClass {
-            #[pyo3(get)]
+            #[r2p(get)]
             value: Py<PyAny>,
         }
 
@@ -1553,7 +1553,7 @@ mod tests {
     fn get_py_for_non_frozen_class() {
         #[crate::pyclass(crate = "crate")]
         struct FrozenClass {
-            #[pyo3(get)]
+            #[r2p(get)]
             value: Py<PyAny>,
         }
 
@@ -1601,7 +1601,7 @@ mod tests {
 
         assert!(core::ptr::fn_addr_eq(
             def.meth,
-            pyo3_get_value_into_pyobject_ref::<MyClass, i32, FIELD_OFFSET> as Getter
+            r2p_get_value_into_pyobject_ref::<MyClass, i32, FIELD_OFFSET> as Getter
         ));
 
         // generate for a field via `IntoPyObject` + `Clone`
@@ -1617,7 +1617,7 @@ mod tests {
 
         assert!(core::ptr::fn_addr_eq(
             def.meth,
-            pyo3_get_value_into_pyobject::<MyClass, String, FIELD_OFFSET> as Getter
+            r2p_get_value_into_pyobject::<MyClass, String, FIELD_OFFSET> as Getter
         ));
     }
 
@@ -1677,7 +1677,7 @@ mod tests {
 
         assert!(core::ptr::fn_addr_eq(
             def.meth,
-            pyo3_get_value_into_pyobject_ref::<MyClass, Py<PyAny>, FIELD_OFFSET> as Getter
+            r2p_get_value_into_pyobject_ref::<MyClass, Py<PyAny>, FIELD_OFFSET> as Getter
         ));
     }
 }

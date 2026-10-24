@@ -87,70 +87,70 @@ error: transparent structs and variants can only have 1 field
    | |_____^
 
 error: expected one of: `attribute`, `item`, `from_py_with`, `into_py_with`, `default`
-  --> tests/ui/invalid_frompy_derive.rs:89:12
+  --> tests/ui/invalid_frompy_derive.rs:89:11
    |
-89 |     #[pyo3(attr)]
-   |            ^^^^
+89 |     #[r2p(attr)]
+   |           ^^^^
 
 error: expected string literal
-  --> tests/ui/invalid_frompy_derive.rs:96:22
+  --> tests/ui/invalid_frompy_derive.rs:96:21
    |
-96 |     #[pyo3(attribute(1))]
-   |                      ^
+96 |     #[r2p(attribute(1))]
+   |                     ^
 
 error: expected at most one argument: `attribute` or `attribute("name")`
-   --> tests/ui/invalid_frompy_derive.rs:103:25
+   --> tests/ui/invalid_frompy_derive.rs:103:24
     |
-103 |     #[pyo3(attribute("a", "b"))]
-    |                         ^
+103 |     #[r2p(attribute("a", "b"))]
+    |                        ^
 
 error: attribute name cannot be empty
-   --> tests/ui/invalid_frompy_derive.rs:110:22
+   --> tests/ui/invalid_frompy_derive.rs:110:21
     |
-110 |     #[pyo3(attribute(""))]
-    |                      ^^
+110 |     #[r2p(attribute(""))]
+    |                     ^^
 
 error: unexpected end of input, expected string literal
-   --> tests/ui/invalid_frompy_derive.rs:117:22
+   --> tests/ui/invalid_frompy_derive.rs:117:21
     |
-117 |     #[pyo3(attribute())]
-    |                      ^
+117 |     #[r2p(attribute())]
+    |                     ^
 
 error: expected at most one argument: `item` or `item(key)`
-   --> tests/ui/invalid_frompy_derive.rs:124:20
+   --> tests/ui/invalid_frompy_derive.rs:124:19
     |
-124 |     #[pyo3(item("a", "b"))]
-    |                    ^
+124 |     #[r2p(item("a", "b"))]
+    |                   ^
 
 error: unexpected end of input, expected literal
-   --> tests/ui/invalid_frompy_derive.rs:131:17
+   --> tests/ui/invalid_frompy_derive.rs:131:16
     |
-131 |     #[pyo3(item())]
-    |                 ^
+131 |     #[r2p(item())]
+    |                ^
 
 error: only one of `attribute` or `item` can be provided
-   --> tests/ui/invalid_frompy_derive.rs:138:18
+   --> tests/ui/invalid_frompy_derive.rs:138:17
     |
-138 |     #[pyo3(item, attribute)]
-    |                  ^^^^^^^^^
+138 |     #[r2p(item, attribute)]
+    |                 ^^^^^^^^^
 
 error: expected one of: `transparent`, `from_item_all`, `annotation`, `crate`, `rename_all`
-   --> tests/ui/invalid_frompy_derive.rs:144:8
+   --> tests/ui/invalid_frompy_derive.rs:144:7
     |
-144 | #[pyo3(unknown = "should not work")]
-    |        ^^^^^^^
+144 | #[r2p(unknown = "should not work")]
+    |       ^^^^^^^
 
 error: `annotation` is unsupported for structs
-   --> tests/ui/invalid_frompy_derive.rs:151:21
+   --> tests/ui/invalid_frompy_derive.rs:151:20
     |
-151 | #[pyo3(annotation = "should not work")]
-    |                     ^^^^^^^^^^^^^^^^^
+151 | #[r2p(annotation = "should not work")]
+    |                    ^^^^^^^^^^^^^^^^^
 
 error: expected string literal
-   --> tests/ui/invalid_frompy_derive.rs:159:25
+   --> tests/ui/invalid_frompy_derive.rs:159:24
     |
-159 |     #[pyo3(annotation = 1)]
-    |                         ^
+159 |     #[r2p(annotation = 1)]
+    |                        ^
 
 error: FromPyObject can be derived with at most one lifetime parameter
    --> tests/ui/invalid_frompy_derive.rs:165:22
@@ -173,15 +173,15 @@ error: cannot derive FromPyObject for empty structs and variants
     = note: this error originates in the derive macro `FromPyObject` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: expected `=`
-   --> tests/ui/invalid_frompy_derive.rs:185:24
+   --> tests/ui/invalid_frompy_derive.rs:185:23
     |
-185 |     #[pyo3(from_py_with)]
-    |                        ^
+185 |     #[r2p(from_py_with)]
+    |                       ^
 
 error: `getter` is not permitted on tuple struct elements.
    --> tests/ui/invalid_frompy_derive.rs:197:27
     |
-197 | struct InvalidTupleGetter(#[pyo3(item("foo"))] String);
+197 | struct InvalidTupleGetter(#[r2p(item("foo"))] String);
     |                           ^
 
 error: `transparent` structs may not have a `getter` for the inner field
@@ -197,28 +197,28 @@ error: `transparent` structs may not have a `getter` for the inner field
     |     ^^^^^
 
 error: `from_item_all` may only be specified once
-   --> tests/ui/invalid_frompy_derive.rs:221:23
+   --> tests/ui/invalid_frompy_derive.rs:221:22
     |
-221 | #[pyo3(from_item_all, from_item_all)]
-    |                       ^^^^^^^^^^^^^
+221 | #[r2p(from_item_all, from_item_all)]
+    |                      ^^^^^^^^^^^^^
 
 error: Useless `item` - the struct is already annotated with `from_item_all`
-   --> tests/ui/invalid_frompy_derive.rs:228:8
+   --> tests/ui/invalid_frompy_derive.rs:228:7
     |
-228 | #[pyo3(from_item_all)]
-    |        ^^^^^^^^^^^^^
+228 | #[r2p(from_item_all)]
+    |       ^^^^^^^^^^^^^
 
 error: The struct is already annotated with `from_item_all`, `attribute` is not allowed
-   --> tests/ui/invalid_frompy_derive.rs:236:8
+   --> tests/ui/invalid_frompy_derive.rs:236:7
     |
-236 | #[pyo3(from_item_all)]
-    |        ^^^^^^^^^^^^^
+236 | #[r2p(from_item_all)]
+    |       ^^^^^^^^^^^^^
 
 error: The struct is already annotated with `from_item_all`, `attribute` is not allowed
-   --> tests/ui/invalid_frompy_derive.rs:244:8
+   --> tests/ui/invalid_frompy_derive.rs:244:7
     |
-244 | #[pyo3(from_item_all)]
-    |        ^^^^^^^^^^^^^
+244 | #[r2p(from_item_all)]
+    |       ^^^^^^^^^^^^^
 
 error: cannot derive FromPyObject for structs and variants with only default values
    --> tests/ui/invalid_frompy_derive.rs:252:36
@@ -226,7 +226,7 @@ error: cannot derive FromPyObject for structs and variants with only default val
 252 |   struct StructWithOnlyDefaultValues {
     |  ____________________________________^
 253 | |
-254 | |     #[pyo3(default)]
+254 | |     #[r2p(default)]
 255 | |     field: String,
 256 | | }
     | |_^
@@ -237,7 +237,7 @@ error: cannot derive FromPyObject for structs and variants with only default val
 260 |       Foo {
     |  _________^
 261 | |
-262 | |         #[pyo3(default)]
+262 | |         #[r2p(default)]
 263 | |         field: String,
 264 | |     },
     | |_____^
@@ -245,37 +245,37 @@ error: cannot derive FromPyObject for structs and variants with only default val
 error: `default` is not permitted on tuple struct elements.
    --> tests/ui/invalid_frompy_derive.rs:268:37
     |
-268 | struct NamedTuplesWithDefaultValues(#[pyo3(default)] String);
+268 | struct NamedTuplesWithDefaultValues(#[r2p(default)] String);
     |                                     ^
 
 error: `rename_all` may only be specified once
-   --> tests/ui/invalid_frompy_derive.rs:272:34
+   --> tests/ui/invalid_frompy_derive.rs:272:33
     |
-272 | #[pyo3(rename_all = "camelCase", rename_all = "kebab-case")]
-    |                                  ^^^^^^^^^^
+272 | #[r2p(rename_all = "camelCase", rename_all = "kebab-case")]
+    |                                 ^^^^^^^^^^
 
 error: `rename_all` is useless on tuple structs and variants.
-   --> tests/ui/invalid_frompy_derive.rs:279:8
+   --> tests/ui/invalid_frompy_derive.rs:279:7
     |
-279 | #[pyo3(rename_all = "camelCase")]
-    |        ^^^^^^^^^^
+279 | #[r2p(rename_all = "camelCase")]
+    |       ^^^^^^^^^^
 
 error: `rename_all` is useless on tuple structs and variants.
-   --> tests/ui/invalid_frompy_derive.rs:285:12
+   --> tests/ui/invalid_frompy_derive.rs:285:11
     |
-285 |     #[pyo3(rename_all = "camelCase")]
-    |            ^^^^^^^^^^
+285 |     #[r2p(rename_all = "camelCase")]
+    |           ^^^^^^^^^^
 
 error: `rename_all` is not permitted on `transparent` structs and variants
-   --> tests/ui/invalid_frompy_derive.rs:291:21
+   --> tests/ui/invalid_frompy_derive.rs:291:20
     |
-291 | #[pyo3(transparent, rename_all = "camelCase")]
-    |                     ^^^^^^^^^^
+291 | #[r2p(transparent, rename_all = "camelCase")]
+    |                    ^^^^^^^^^^
 
 error: Useless variant `rename_all` - enum is already annotated with `rename_all
-   --> tests/ui/invalid_frompy_derive.rs:300:12
+   --> tests/ui/invalid_frompy_derive.rs:300:11
     |
-300 |     #[pyo3(rename_all = "camelCase")]
-    |            ^^^^^^^^^^
+300 |     #[r2p(rename_all = "camelCase")]
+    |           ^^^^^^^^^^
 
 error: aborting due to 43 previous errors

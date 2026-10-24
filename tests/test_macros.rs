@@ -1,8 +1,8 @@
 #![cfg(feature = "macros")]
 
-//! Ensure that pyo3 macros can be used inside macro_rules!
+//! Ensure that r2p macros can be used inside macro_rules!
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[macro_use]
 mod test_utils;
@@ -37,7 +37,7 @@ macro_rules! fn_macro {
     ($sig:literal, $a_exp:expr, $b_exp:expr, $c_exp: expr) => {
         // Try and pass a variable into the signature parameter
         #[pyfunction(signature = ($a_exp, $b_exp, *, $c_exp))]
-        #[pyo3(text_signature = $sig)]
+        #[r2p(text_signature = $sig)]
         fn my_function_in_macro(a: i32, b: Option<i32>, c: i32) {
             let _ = (a, b, c);
         }

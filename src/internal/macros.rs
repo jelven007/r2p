@@ -1,7 +1,7 @@
 /// Polyfill of `cfg_select` for MSRV < 1.95
 ///
 /// Note that this polyfill does not work in type position, so it is not as powerful as the
-/// real `cfg_select` macro. That is a limitation that PyO3 can live with for now.
+/// real `cfg_select` macro. That is a limitation that r2p can live with for now.
 #[doc(hidden)]
 #[cfg(not(cfg_select))]
 macro_rules! cfg_select {

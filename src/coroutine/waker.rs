@@ -4,7 +4,7 @@ use crate::types::any::PyAnyMethods;
 use crate::{Bound, Py, PyAny, PyResult, Python, intern, wrap_pyfunction};
 use alloc::sync::Arc;
 use alloc::task::Wake;
-use pyo3_macros::pyfunction;
+use r2p_macros::pyfunction;
 
 /// Lazy `asyncio.Future` wrapper, implementing [`Wake`] by calling `Future.set_result`.
 ///

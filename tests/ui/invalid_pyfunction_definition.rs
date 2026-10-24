@@ -1,6 +1,6 @@
-#[pyo3::pymodule]
-mod pyo3_scratch {
-    use pyo3::prelude::*;
+#[r2p::pymodule]
+mod r2p_scratch {
+    use r2p::prelude::*;
 
     #[pyclass]
     struct Foo {}

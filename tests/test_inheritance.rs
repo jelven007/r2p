@@ -1,8 +1,8 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::py_run;
-use pyo3::types::IntoPyDict;
+use r2p::prelude::*;
+use r2p::py_run;
+use r2p::types::IntoPyDict;
 
 #[path = "../src/internal/macros.rs"]
 #[macro_use]
@@ -28,7 +28,7 @@ macro_rules! assert_type_refcount_stable {
         let ty = Python::attach(|py| py.get_type::<$type_name>().unbind());
 
         // SAFETY: ty is known to be a valid object
-        let before = Python::attach(|_| unsafe { pyo3::ffi::Py_REFCNT(ty.as_ptr()) });
+        let before = Python::attach(|_| unsafe { r2p::ffi::Py_REFCNT(ty.as_ptr()) });
 
         let drive_refcounts = || {
             Python::attach(|py| {
@@ -57,7 +57,7 @@ macro_rules! assert_type_refcount_stable {
         }
 
         // SAFETY: ty is known to be a valid object
-        let after = Python::attach(|_| unsafe { pyo3::ffi::Py_REFCNT(ty.as_ptr()) });
+        let after = Python::attach(|_| unsafe { r2p::ffi::Py_REFCNT(ty.as_ptr()) });
 
         assert_eq!(
             before, after,
@@ -69,7 +69,7 @@ macro_rules! assert_type_refcount_stable {
 
 #[pyclass(subclass)]
 struct BaseClass {
-    #[pyo3(get)]
+    #[r2p(get)]
     val1: usize,
 }
 
@@ -111,7 +111,7 @@ impl BaseClass {
 
 #[pyclass(extends=BaseClass)]
 struct SubClass {
-    #[pyo3(get)]
+    #[r2p(get)]
     val2: usize,
 }
 
@@ -237,11 +237,11 @@ except Exception as e:
 #[cfg(any(not(Py_LIMITED_API), Py_3_12))]
 mod inheriting_native_type {
     use super::*;
-    use pyo3::exceptions::PyException;
+    use r2p::exceptions::PyException;
 
     #[cfg(not(GraalPy))]
     use {
-        pyo3::types::{PyCapsule, PyDict},
+        r2p::types::{PyCapsule, PyDict},
         std::sync::{
             Arc,
             atomic::{AtomicBool, Ordering},
@@ -249,13 +249,13 @@ mod inheriting_native_type {
     };
 
     #[cfg(not(any(PyPy, GraalPy)))]
-    use pyo3::types::PySet;
+    use r2p::types::PySet;
 
     #[cfg(not(any(PyPy, GraalPy)))]
     #[pyclass(extends=PySet)]
     #[derive(Debug)]
     pub struct SetWithName {
-        #[pyo3(get, name = "name")]
+        #[r2p(get, name = "name")]
         _name: &'static str,
     }
 
@@ -272,7 +272,7 @@ mod inheriting_native_type {
     #[test]
     fn inherit_set() {
         Python::attach(|py| {
-            let set_sub = pyo3::Py::new(py, SetWithName::new()).unwrap();
+            let set_sub = r2p::Py::new(py, SetWithName::new()).unwrap();
             py_run!(
                 py,
                 set_sub,
@@ -285,7 +285,7 @@ mod inheriting_native_type {
     #[pyclass(extends=PyDict)]
     #[derive(Debug)]
     struct DictWithName {
-        #[pyo3(get, name = "name")]
+        #[r2p(get, name = "name")]
         _name: &'static str,
     }
 
@@ -302,7 +302,7 @@ mod inheriting_native_type {
     #[test]
     fn inherit_dict() {
         Python::attach(|py| {
-            let dict_sub = pyo3::Py::new(py, DictWithName::new()).unwrap();
+            let dict_sub = r2p::Py::new(py, DictWithName::new()).unwrap();
             py_run!(
                 py,
                 dict_sub,
@@ -325,7 +325,7 @@ mod inheriting_native_type {
             )
             .unwrap();
 
-            let dict_sub = pyo3::Py::new(py, DictWithName::new()).unwrap();
+            let dict_sub = r2p::Py::new(py, DictWithName::new()).unwrap();
             dict_sub.bind(py).set_item("foo", &item).unwrap();
             drop(item);
             assert!(!dropped.load(Ordering::Relaxed));
@@ -336,7 +336,7 @@ mod inheriting_native_type {
 
     #[pyclass(extends=PyException)]
     struct CustomException {
-        #[pyo3(get)]
+        #[r2p(get)]
         context: &'static str,
     }
 
@@ -378,9 +378,9 @@ mod inheriting_native_type {
     }
 
     #[cfg(Py_3_12)]
-    #[pyclass(extends=pyo3::types::PyTzInfo)]
+    #[pyclass(extends=r2p::types::PyTzInfo)]
     struct TzInfoWithName {
-        #[pyo3(get)]
+        #[r2p(get)]
         name: &'static str,
     }
 
@@ -392,13 +392,13 @@ mod inheriting_native_type {
             Self { name: "Hello :)" }
         }
 
-        #[pyo3(signature = (_dt, /))]
+        #[r2p(signature = (_dt, /))]
         fn utcoffset<'py>(
             &self,
-            _dt: Option<&Bound<'_, pyo3::types::PyDateTime>>,
+            _dt: Option<&Bound<'_, r2p::types::PyDateTime>>,
             py: Python<'py>,
-        ) -> PyResult<Bound<'py, pyo3::types::PyDelta>> {
-            pyo3::types::PyDelta::new(py, 0, 3600, 0, true)
+        ) -> PyResult<Bound<'py, r2p::types::PyDelta>> {
+            r2p::types::PyDelta::new(py, 0, 3600, 0, true)
         }
     }
 
@@ -406,7 +406,7 @@ mod inheriting_native_type {
     #[test]
     fn inherit_tzinfo() {
         Python::attach(|py| {
-            let tz = pyo3::Py::new(py, TzInfoWithName::new()).unwrap();
+            let tz = r2p::Py::new(py, TzInfoWithName::new()).unwrap();
             py_run!(
                 py,
                 tz,
@@ -424,9 +424,9 @@ mod inheriting_native_type {
     }
 
     #[cfg(Py_3_12)]
-    #[pyclass(extends=pyo3::types::PyList, subclass)]
+    #[pyclass(extends=r2p::types::PyList, subclass)]
     struct ListWithName {
-        #[pyo3(get)]
+        #[r2p(get)]
         name: &'static str,
     }
 
@@ -442,7 +442,7 @@ mod inheriting_native_type {
     #[cfg(Py_3_12)]
     #[pyclass(extends=ListWithName)]
     struct SubListWithName {
-        #[pyo3(get)]
+        #[r2p(get)]
         sub_name: &'static str,
     }
 
@@ -461,8 +461,8 @@ mod inheriting_native_type {
     #[test]
     fn inherit_list() {
         Python::attach(|py| {
-            let list_with_name = pyo3::Bound::new(py, ListWithName::new()).unwrap();
-            let sub_list_with_name = pyo3::Bound::new(py, SubListWithName::new()).unwrap();
+            let list_with_name = r2p::Bound::new(py, ListWithName::new()).unwrap();
+            let sub_list_with_name = r2p::Bound::new(py, SubListWithName::new()).unwrap();
             py_run!(
                 py,
                 list_with_name sub_list_with_name,
@@ -523,7 +523,7 @@ fn test_inherit_pyclass_refcount() {
 #[cfg(not(GraalPy))] // FIXME: it should be possible to use variable layout to inherit dict on graalpy
 #[test]
 fn test_inherit_native_type_refcount() {
-    #[pyclass(extends=pyo3::types::PyDict)]
+    #[pyclass(extends=r2p::types::PyDict)]
     struct InheritDict {}
 
     #[pymethods]

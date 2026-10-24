@@ -9,9 +9,10 @@ name = "maturin_starter"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { path = "../../" }
+r2p-maturin-bridge = { package = "pyo3-ffi", path = "../../tools/maturin-bridge" }
+r2p = { path = "../../" }
 
 [features]
-abi3 = ["pyo3/abi3-py39"]
+abi3 = ["r2p/abi3-py39", "r2p-maturin-bridge/abi3-py39"]
 
 [workspace]

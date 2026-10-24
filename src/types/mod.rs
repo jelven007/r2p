@@ -86,29 +86,26 @@ pub use self::weakref::{PyWeakref, PyWeakrefMethods, PyWeakrefProxy, PyWeakrefRe
 
 /// Deprecated alias for [`crate::sync::PyMutex`].
 #[cfg(all(not(Py_LIMITED_API), Py_3_13, wip_feature_std))]
-#[deprecated(since = "0.30.0", note = "moved to `pyo3::sync::PyMutex`")]
+#[deprecated(since = "0.30.0", note = "moved to `r2p::sync::PyMutex`")]
 pub type PyMutex<T> = crate::sync::PyMutex<T>;
 
 /// Deprecated alias for [`crate::sync::PyMutexGuard`].
 #[cfg(all(not(Py_LIMITED_API), Py_3_13, wip_feature_std))]
-#[deprecated(since = "0.30.0", note = "moved to `pyo3::sync::PyMutexGuard`")]
+#[deprecated(since = "0.30.0", note = "moved to `r2p::sync::PyMutexGuard`")]
 pub type PyMutexGuard<'a, T> = crate::sync::PyMutexGuard<'a, T>;
 
 /// Deprecated alias for [`capsule::CapsuleName`].
-#[deprecated(
-    since = "0.30.0",
-    note = "moved to `pyo3::types::capsule::CapsuleName`"
-)]
+#[deprecated(since = "0.30.0", note = "moved to `r2p::types::capsule::CapsuleName`")]
 pub type CapsuleName = capsule::CapsuleName;
 
 /// Deprecated alias for [`code::PyCodeInput`].
-#[deprecated(since = "0.30.0", note = "moved to `pyo3::types::code::PyCodeInput`")]
+#[deprecated(since = "0.30.0", note = "moved to `r2p::types::code::PyCodeInput`")]
 pub type PyCodeInput = code::PyCodeInput;
 
 /// Deprecated alias for [`frozenset::PyFrozenSetBuilder`].
 #[deprecated(
     since = "0.30.0",
-    note = "moved to `pyo3::types::frozenset::PyFrozenSetBuilder`"
+    note = "moved to `r2p::types::frozenset::PyFrozenSetBuilder`"
 )]
 pub type PyFrozenSetBuilder<'py> = frozenset::PyFrozenSetBuilder<'py>;
 
@@ -116,23 +113,20 @@ pub type PyFrozenSetBuilder<'py> = frozenset::PyFrozenSetBuilder<'py>;
 #[cfg(all(not(PyPy), Py_3_10))]
 #[deprecated(
     since = "0.30.0",
-    note = "moved to `pyo3::types::iterator::PySendResult`"
+    note = "moved to `r2p::types::iterator::PySendResult`"
 )]
 pub type PySendResult<'py> = iterator::PySendResult<'py>;
 
 /// Deprecated alias for [`slice::PySliceIndices`].
 #[deprecated(
     since = "0.30.0",
-    note = "moved to `pyo3::types::slice::PySliceIndices`"
+    note = "moved to `r2p::types::slice::PySliceIndices`"
 )]
 pub type PySliceIndices = slice::PySliceIndices;
 
 /// Deprecated alias for [`string::PyStringData`].
 #[cfg(not(Py_LIMITED_API))]
-#[deprecated(
-    since = "0.30.0",
-    note = "moved to `pyo3::types::string::PyStringData`"
-)]
+#[deprecated(since = "0.30.0", note = "moved to `r2p::types::string::PyStringData`")]
 pub type PyStringData<'a> = string::PyStringData<'a>;
 
 /// Iteration over Python collections.
@@ -144,8 +138,8 @@ pub type PyStringData<'a> = string::PyStringData<'a>;
 /// # Examples
 ///
 /// ```rust
-/// use pyo3::prelude::*;
-/// use pyo3::types::PyDict;
+/// use r2p::prelude::*;
+/// use r2p::types::PyDict;
 ///
 /// # pub fn main() -> PyResult<()> {
 /// Python::attach(|py| {
@@ -160,7 +154,7 @@ pub type PyStringData<'a> = string::PyStringData<'a>;
 /// # }
 ///  ```
 ///
-/// If PyO3 detects that the collection is mutated during iteration, it will panic.
+/// If r2p detects that the collection is mutated during iteration, it will panic.
 ///
 /// These iterators use Python's C-API directly. However in certain cases, like when compiling for
 /// the Limited API and PyPy, the underlying structures are opaque and that may not be possible.
@@ -276,11 +270,11 @@ macro_rules! pyobject_native_type_info(
 
         impl $name {
             #[doc(hidden)]
-            pub const _PYO3_DEF: $crate::impl_::pymodule::AddTypeToModule<Self> = $crate::impl_::pymodule::AddTypeToModule::new();
+            pub const _R2P_DEF: $crate::impl_::pymodule::AddTypeToModule<Self> = $crate::impl_::pymodule::AddTypeToModule::new();
 
             #[allow(dead_code)]
             #[doc(hidden)]
-            pub const _PYO3_INTROSPECTION_ID: &'static str = concat!(stringify!($module), stringify!($name));
+            pub const _R2P_INTROSPECTION_ID: &'static str = concat!(stringify!($module), stringify!($name));
         }
     };
 );

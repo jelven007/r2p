@@ -10,7 +10,7 @@ name = "meson_starter"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "{{PYO3_VERSION}}"
+r2p = "{{R2P_VERSION}}"
 
 [features]
-abi3 = ["pyo3/abi3-py39"]
+abi3 = ["r2p/abi3-py39"]

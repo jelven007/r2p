@@ -16,7 +16,7 @@ use core::ptr;
 
 /// Represents a Python `bool`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyBool>`][crate::Py] or [`Bound<'py, PyBool>`][Bound].
 ///
 /// For APIs available on `bool` objects, see the [`PyBoolMethods`] trait which is implemented for

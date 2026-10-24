@@ -1,7 +1,7 @@
 #![cfg(feature = "macros")]
 
-use pyo3::types::{PyDict, PyList, PyString};
-use pyo3::{IntoPyObject, IntoPyObjectExt, intern, prelude::*, py_run};
+use r2p::types::{PyDict, PyList, PyString};
+use r2p::{IntoPyObject, IntoPyObjectExt, intern, prelude::*, py_run};
 use std::collections::BTreeMap;
 
 #[macro_use]
@@ -51,7 +51,7 @@ fn test_named_fields_struct() {
 }
 
 #[derive(Debug, IntoPyObject)]
-#[pyo3(transparent)]
+#[r2p(transparent)]
 pub struct B<'a> {
     test: &'a str,
 }
@@ -66,7 +66,7 @@ fn test_transparent_named_field_struct() {
 }
 
 #[derive(Debug, IntoPyObject)]
-#[pyo3(transparent)]
+#[r2p(transparent)]
 pub struct D<T> {
     test: T,
 }
@@ -160,14 +160,14 @@ pub enum Foo<'py> {
     TupleVar(
         usize,
         String,
-        #[pyo3(into_py_with = phantom_into_py::<()>)] std::marker::PhantomData<()>,
+        #[r2p(into_py_with = phantom_into_py::<()>)] std::marker::PhantomData<()>,
     ),
     StructVar {
         test: Bound<'py, PyString>,
     },
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     TransparentTuple(usize),
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     TransparentStructVar {
         a: Option<String>,
     },
@@ -213,10 +213,10 @@ fn test_enum() {
 
 #[derive(Debug, IntoPyObject, IntoPyObjectRef)]
 pub struct Zap {
-    #[pyo3(item)]
+    #[r2p(item)]
     name: String,
 
-    #[pyo3(into_py_with = zap_into_py, item("my_object"))]
+    #[r2p(into_py_with = zap_into_py, item("my_object"))]
     some_object_length: usize,
 }
 
@@ -254,12 +254,12 @@ fn test_into_py_with() {
 #[test]
 fn test_struct_into_py_rename_all() {
     #[derive(IntoPyObject, IntoPyObjectRef)]
-    #[pyo3(rename_all = "camelCase")]
+    #[r2p(rename_all = "camelCase")]
     struct Foo {
         foo_bar: String,
-        #[pyo3(item("BAZ"))]
+        #[r2p(item("BAZ"))]
         baz: usize,
-        #[pyo3(item)]
+        #[r2p(item)]
         long_field_name: f32,
     }
 
@@ -291,11 +291,11 @@ fn test_struct_into_py_non_str_item_keys() {
     #[derive(IntoPyObject, IntoPyObjectRef)]
     #[allow(dead_code, reason = "used to test non-str item(..) compiles")]
     struct Foo {
-        #[pyo3(item(1))]
+        #[r2p(item(1))]
         int_key: i32,
-        #[pyo3(item(b"bytes"))]
+        #[r2p(item(b"bytes"))]
         bytes_key: i32,
-        #[pyo3(item(true))]
+        #[r2p(item(true))]
         bool_key: i32,
     }
 }
@@ -337,7 +337,7 @@ fn test_generic_output_type() {
     struct Newtype<T>(T);
 
     #[derive(IntoPyObject)]
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     struct NamedNewtype<T> {
         inner: T,
     }

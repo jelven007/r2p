@@ -1,0 +1,396 @@
+use r2p_build_config::{
+    InterpreterConfig, PythonAbiKind, PythonImplementation, PythonVersion, StableAbi, bail, ensure,
+    r2p_build_script_impl::{
+        BuildConfig, BuildConfigSource, MaximumVersionExceeded, cargo_env_var, env_var,
+        errors::Result, is_linking_libpython_for_target, print_feature_cfgs,
+        print_libpython_rpath_link_args, resolve_build_config, target_triple_from_env,
+    },
+    warn,
+};
+
+/// Minimum Python version r2p supports.
+struct SupportedVersions {
+    min: PythonVersion,
+    max: PythonVersion,
+}
+
+const PY_3_9: PythonVersion = PythonVersion { major: 3, minor: 9 };
+const PY_3_10: PythonVersion = PythonVersion {
+    major: 3,
+    minor: 10,
+};
+const PY_3_11: PythonVersion = PythonVersion {
+    major: 3,
+    minor: 11,
+};
+const PY_3_12: PythonVersion = PythonVersion {
+    major: 3,
+    minor: 12,
+};
+const PY_3_14: PythonVersion = PythonVersion {
+    major: 3,
+    minor: 14,
+};
+const PY_3_15: PythonVersion = PythonVersion {
+    major: 3,
+    minor: 15,
+};
+
+const SUPPORTED_VERSIONS_CPYTHON: SupportedVersions = SupportedVersions {
+    min: PY_3_9,
+    max: PY_3_15,
+};
+
+const SUPPORTED_VERSIONS_PYPY: SupportedVersions = SupportedVersions {
+    min: PY_3_11,
+    max: SUPPORTED_VERSIONS_CPYTHON.max,
+};
+
+const SUPPORTED_VERSIONS_GRAALPY: SupportedVersions = SupportedVersions {
+    min: PY_3_10,
+    max: SUPPORTED_VERSIONS_CPYTHON.max,
+};
+
+const MIN_FREE_THREADED_VERSION: PythonVersion = PY_3_14;
+
+fn ensure_python_version(interpreter_config: &InterpreterConfig) -> Result<()> {
+    // This is an undocumented env var which is only really intended to be used in CI / for testing
+    // and development.
+    if std::env::var("UNSAFE_R2P_SKIP_VERSION_CHECK").as_deref() == Ok("1") {
+        return Ok(());
+    }
+
+    let implementation = interpreter_config.target_abi().implementation();
+
+    let supported_versions = match implementation {
+        PythonImplementation::CPython => SUPPORTED_VERSIONS_CPYTHON,
+        PythonImplementation::PyPy => SUPPORTED_VERSIONS_PYPY,
+        PythonImplementation::GraalPy => SUPPORTED_VERSIONS_GRAALPY,
+        PythonImplementation::RustPython => {
+            // We don't yet check anything for RustPython
+            return Ok(());
+        }
+    };
+
+    let interp_version = interpreter_config.target_abi().version();
+    ensure!(
+        interpreter_config.version() >= supported_versions.min,
+        "the configured Python interpreter version ({}) is lower than r2p's minimum supported version ({})",
+        interpreter_config.version(),
+        supported_versions.min,
+    );
+    let expected_next_version = PythonVersion {
+        major: supported_versions.max.major,
+        minor: supported_versions.max.minor + 1,
+    };
+    if interp_version == expected_next_version {
+        warn!(
+            "Using experimental support for the {implementation} {}.{} ABI. \
+             Build artifacts may not be compatible with the final release of {implementation}, \
+             so do not distribute them.",
+            expected_next_version.major, expected_next_version.minor,
+        );
+    } else if interp_version > expected_next_version {
+        let mut error = MaximumVersionExceeded::new(interpreter_config, supported_versions.max);
+        if interpreter_config.target_abi().kind().is_free_threaded()
+            && implementation == PythonImplementation::CPython
+        {
+            if interp_version >= PY_3_15 {
+                if env_var("R2P_USE_STABLE_ABI_FORWARD_COMPATIBILITY")
+                    .is_none_or(|os_str| os_str != "1")
+                {
+                    error.add_help(
+                        "set R2P_USE_STABLE_ABI_FORWARD_COMPATIBILITY=1 to suppress this check and build anyway using the free-threaded stable ABI"
+                    );
+                    return Err(error.finish().into());
+                }
+            } else {
+                error.add_help(format!(
+                    "the free-threaded build of CPython {}.{} does not support the limited API so this check cannot be suppressed.", interp_version.major, interp_version.minor
+                ).as_str());
+                return Err(error.finish().into());
+            }
+        }
+        // Only CPython and PyPy support the stable ABI
+        if matches!(
+            implementation,
+            PythonImplementation::CPython | PythonImplementation::PyPy
+        ) && env_var("R2P_USE_ABI3_FORWARD_COMPATIBILITY").is_none_or(|os_str| os_str != "1")
+            && env_var("R2P_USE_STABLE_ABI_FORWARD_COMPATIBILITY")
+                .is_none_or(|os_str| os_str != "1")
+        {
+            error.add_help("set R2P_USE_STABLE_ABI_FORWARD_COMPATIBILITY=1 to suppress this check and build anyway using the stable ABI");
+            return Err(error.finish().into());
+        }
+    }
+
+    if interpreter_config.target_abi().kind().is_free_threaded() {
+        ensure!(
+            implementation == PythonImplementation::CPython,
+            "r2p only supports the free-threaded build of CPython, \
+             the selected Python implementation is {implementation}",
+        );
+        ensure!(
+            interpreter_config.target_abi().version() >= MIN_FREE_THREADED_VERSION,
+            "r2p does not support the free-threaded build of CPython versions \
+             below {MIN_FREE_THREADED_VERSION}, the selected Python version is {}",
+            interpreter_config.target_abi().version(),
+        );
+    }
+
+    if let PythonAbiKind::Stable(abi) = interpreter_config.target_abi().kind() {
+        match implementation {
+            PythonImplementation::CPython | PythonImplementation::PyPy => match abi {
+                StableAbi::Abi3t => {
+                    ensure!(
+                        interpreter_config.target_abi().version() >= PY_3_15,
+                        "Abi3t builds are not supported on CPython targets before Python 3.15"
+                    )
+                }
+                StableAbi::Abi3 => {
+                    if implementation == PythonImplementation::PyPy
+                        && interpreter_config.target_abi().version() < PY_3_12
+                    {
+                        warn!(
+                            "PyPy does not support abi3 before PyPy 3.12 so the build artifacts will be version-specific."
+                        )
+                    }
+                }
+            },
+            PythonImplementation::GraalPy => warn!(
+                "GraalPy does not support {abi} so the build artifacts will be version-specific."
+            ),
+            // NB RustPython likely to support abi3t, but no checking here yet.
+            PythonImplementation::RustPython => {}
+        }
+    }
+
+    Ok(())
+}
+
+fn ensure_target_pointer_width(interpreter_config: &InterpreterConfig) -> Result<()> {
+    if let Some(pointer_width) = interpreter_config.pointer_width() {
+        // Try to check whether the target architecture matches the python library
+        let rust_target = match cargo_env_var("CARGO_CFG_TARGET_POINTER_WIDTH")
+            .unwrap()
+            .as_str()
+        {
+            "64" => 64,
+            "32" => 32,
+            x => bail!("unexpected Rust target pointer width: {}", x),
+        };
+
+        ensure!(
+            rust_target == pointer_width,
+            "your Rust target architecture ({}-bit) does not match your python interpreter ({}-bit)",
+            rust_target,
+            pointer_width
+        );
+    }
+    Ok(())
+}
+
+/// `raw-dylib` currently does not support arbitrary names
+/// (see https://internals.rust-lang.org/t/support-renames-with-link-name-kind-raw-dylib/24415)
+/// so if the lib name is not one of the known subset, we must fall back to full linking.
+fn lib_name_is_known_for_raw_dylib(lib_name: &str) -> bool {
+    if matches!(
+        lib_name,
+        // r2p_dll cfg for raw-dylib linking on Windows
+        "python3" | "python3_d" | "python3t" | "python3t_d"
+        // GraalPy DLL name
+        | "python-native"
+    ) {
+        return true;
+    }
+
+    // support raw-dylib linking for all CPython versions supported, plus the next prerelease
+    for i in SUPPORTED_VERSIONS_CPYTHON.min.minor..=SUPPORTED_VERSIONS_CPYTHON.max.minor + 1 {
+        if lib_name == format!("python3{i}") || lib_name == format!("python3{i}_d") {
+            return true;
+        }
+        if i >= 13 && (lib_name == format!("python3{i}t") || lib_name == format!("python3{i}t_d")) {
+            return true;
+        }
+    }
+    // PyPy DLL names (libpypy3.X-c.dll)
+    for i in SUPPORTED_VERSIONS_PYPY.min.minor..=SUPPORTED_VERSIONS_PYPY.max.minor {
+        if lib_name == format!("libpypy3.{i}-c") {
+            return true;
+        }
+    }
+
+    false
+}
+
+/// Whether to use raw-dylib linking.
+///
+/// Currently, this only applies if all of the following are true:
+/// - The target OS is Windows.
+/// - The Python library name is one of the [known subset][lib_name_is_known_for_raw_dylib].
+/// - The `R2P_USE_RAW_DYLIB` environment variable is not set, or is set to `1`.
+///
+/// NB in some cases (e.g. mixed C / Rust builds) it might be necessary to link the full Python
+/// library rather than rely on the symbols which r2p defines as raw-dylib, which is why
+/// we have the opt-out env var.
+fn should_use_raw_dylib_linking(lib_name: &str) -> bool {
+    let target_os = cargo_env_var("CARGO_CFG_TARGET_OS").unwrap();
+    if target_os != "windows" {
+        return false;
+    }
+
+    match (
+        lib_name_is_known_for_raw_dylib(lib_name),
+        env_var("R2P_USE_RAW_DYLIB"),
+    ) {
+        (true, None) => true,
+        (true, Some(os_str)) if os_str == "1" => true,
+        (false, Some(os_str)) if os_str == "1" => {
+            warn!(
+                "R2P_USE_RAW_DYLIB is set to 1 but the Python library name is not recognized. \
+                Falling back to full linking."
+            );
+            false
+        }
+        _ => false,
+    }
+}
+
+fn emit_link_config(build_config: &BuildConfig) -> Result<()> {
+    let target_os = cargo_env_var("CARGO_CFG_TARGET_OS").unwrap();
+    let interpreter_config = &build_config.interpreter_config;
+
+    let lib_name = interpreter_config
+        .lib_name()
+        .ok_or("attempted to link to Python shared library but config does not contain lib_name")?;
+
+    if should_use_raw_dylib_linking(lib_name) {
+        // Use raw-dylib linking: emit a cfg so that `extern_libpython!` picks the
+        // right `#[link(name = "...", kind = "raw-dylib")]` attribute at compile time.
+        // This eliminates the need for import libraries (.lib files) entirely.
+        //
+        // Note: raw-dylib is inherently dynamic linking. Static embedding of the
+        // Python interpreter on Windows is not supported by this path (and is not
+        // officially supported by CPython on Windows).
+        println!("cargo:rustc-cfg=r2p_use_raw_dylib");
+        println!("cargo:rustc-cfg=r2p_dll=\"{lib_name}\"");
+        return Ok(());
+    }
+
+    // Not using raw-dylib linking: PyPy dll needs to be the import library not the DLL name
+    let lib_name = if interpreter_config.target_abi().implementation() == PythonImplementation::PyPy
+        && target_os == "windows"
+    {
+        // FIXME: this should probably be done with better configuration in r2p-build-config
+        // for `raw-dylib` in general, rather than as a patch here.
+        //
+        // Assert expected raw pypy dll name as a sanity check for now
+        assert_eq!(
+            lib_name,
+            format!(
+                "libpypy3.{}-c",
+                interpreter_config.target_abi().version().minor
+            )
+        );
+        format!(
+            "python{}{}",
+            interpreter_config.target_abi().version().major,
+            interpreter_config.target_abi().version().minor
+        )
+    } else {
+        lib_name.to_string()
+    };
+
+    println!(
+        "cargo:rustc-link-lib={link_model}{alias}{lib_name}",
+        link_model = if interpreter_config.shared() {
+            ""
+        } else {
+            "static="
+        },
+        // on windows we emit `#[link(name = "pythonXY")]` attributes
+        // and need this alias here to get the right name for the final link
+        alias = if target_os == "windows" {
+            "pythonXY:"
+        } else {
+            ""
+        }
+    );
+
+    if let Some(lib_dir) = interpreter_config.lib_dir() {
+        println!("cargo:rustc-link-search=native={lib_dir}");
+    } else if matches!(build_config.source, BuildConfigSource::CrossCompile) {
+        warn!(
+            "The output binary will link to libpython, \
+            but R2P_CROSS_LIB_DIR environment variable is not set. \
+            Ensure that the target Python library directory is \
+            in the rustc native library search path."
+        );
+    }
+
+    Ok(())
+}
+
+/// Prepares the r2p crate for compilation.
+///
+/// This uses r2p-build-config implementation to detect the target Python interpreter and validate
+/// it's suitable for building with.
+///
+/// Emits the cargo configuration based on this config as well as a few checks of the Rust compiler
+/// version to enable features which aren't supported on MSRV.
+fn configure_r2p_ffi() -> Result<()> {
+    let target = target_triple_from_env();
+    let build_config = resolve_build_config(&target)?;
+    let interpreter_config = &build_config.interpreter_config;
+
+    if env_var("R2P_PRINT_CONFIG").is_some_and(|os_str| os_str == "1") {
+        print_config_and_exit(interpreter_config);
+    }
+
+    ensure_python_version(interpreter_config)?;
+    ensure_target_pointer_width(interpreter_config)?;
+
+    // Serialize the whole interpreter config into DEP_R2P_FFI_PYTHON_R2P_CONFIG env var.
+    interpreter_config.to_cargo_dep_env()?;
+
+    if is_linking_libpython_for_target(&target)
+        && !interpreter_config.suppress_build_script_link_lines()
+    {
+        emit_link_config(&build_config)?;
+    }
+
+    for cfg in interpreter_config.build_script_outputs() {
+        println!("{cfg}")
+    }
+
+    // Extra lines come last, to support last write wins.
+    for line in interpreter_config.extra_build_script_lines() {
+        println!("{line}");
+    }
+
+    print_feature_cfgs();
+
+    // Make `cargo test` etc work with non-system Python installations
+    print_libpython_rpath_link_args(&target, interpreter_config);
+
+    Ok(())
+}
+
+fn print_config_and_exit(config: &InterpreterConfig) {
+    println!("\n-- R2P_PRINT_CONFIG=1 is set, printing configuration and halting compile --");
+    config
+        .to_writer(std::io::stdout())
+        .expect("failed to print config to stdout");
+    println!(
+        "\nnote: unset the R2P_PRINT_CONFIG environment variable and retry to compile with the above config"
+    );
+    std::process::exit(101);
+}
+
+fn main() {
+    r2p_build_config::print_expected_cfgs();
+    if let Err(e) = configure_r2p_ffi() {
+        eprintln!("error: {}", e.report());
+        std::process::exit(1)
+    }
+}

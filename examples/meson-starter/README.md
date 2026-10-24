@@ -1,6 +1,6 @@
 # meson-starter
 
-An example of a basic Python extension module built using PyO3 and [`meson-python`](https://github.com/mesonbuild/meson-python).
+An example of a basic Python extension module built using r2p and [`meson-python`](https://github.com/mesonbuild/meson-python).
 
 ## Building and Testing
 
@@ -16,7 +16,7 @@ Use [`cargo-generate`](https://crates.io/crates/cargo-generate):
 
 ```bash
 $ cargo install cargo-generate
-$ cargo generate --git https://github.com/PyO3/pyo3 examples/meson-starter
+$ cargo generate --path /path/to/r2p examples/meson-starter
 ```
 
-(`cargo generate` will take a little while to clone the PyO3 repo first; be patient when waiting for the command to run.)
+(`cargo generate` will take a little while to clone the r2p repo first; be patient when waiting for the command to run.)

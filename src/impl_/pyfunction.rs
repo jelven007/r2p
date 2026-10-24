@@ -42,7 +42,7 @@ pub trait WrapPyFunctionArg<'py, T>: wrap_pyfunctionarg::Sealed {
     fn wrap_pyfunction(self, function_def: &'static PyFunctionDef) -> PyResult<T>;
 }
 
-/// Seals `WrapPyFunctionArg` so that types outside PyO3 cannot implement it.
+/// Seals `WrapPyFunctionArg` so that types outside r2p cannot implement it.
 mod wrap_pyfunctionarg {
     use crate::{Borrowed, Bound, Python, types::PyModule};
 

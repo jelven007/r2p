@@ -1,8 +1,8 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyTuple};
-use pyo3::{types::PyType, wrap_pymodule};
+use r2p::prelude::*;
+use r2p::types::{PyDict, PyTuple};
+use r2p::{types::PyType, wrap_pymodule};
 
 mod test_utils;
 
@@ -43,7 +43,7 @@ fn class_with_signature_no_doc() {
     #[pymethods]
     impl MyClass {
         #[new]
-        #[pyo3(signature = (a, b=None, *, c=42), text_signature = "(a, b=None, *, c=42)")]
+        #[r2p(signature = (a, b=None, *, c=42), text_signature = "(a, b=None, *, c=42)")]
         fn __new__(a: i32, b: Option<i32>, c: i32) -> Self {
             let _ = (a, b, c);
             Self {}
@@ -72,7 +72,7 @@ fn class_with_docs_and_signature() {
     #[pymethods]
     impl MyClass {
         #[new]
-        #[pyo3(signature = (a, b=None, *, c=42), text_signature = "(a, b=None, *, c=42)")]
+        #[r2p(signature = (a, b=None, *, c=42), text_signature = "(a, b=None, *, c=42)")]
         fn __new__(a: i32, b: Option<i32>, c: i32) -> Self {
             let _ = (a, b, c);
             Self {}
@@ -94,7 +94,7 @@ fn class_with_docs_and_signature() {
 #[test]
 fn test_function() {
     #[pyfunction(signature = (a, b=None, *, c=42))]
-    #[pyo3(text_signature = "(a, b=None, *, c=42)")]
+    #[r2p(text_signature = "(a, b=None, *, c=42)")]
     fn my_function(a: i32, b: Option<i32>, c: i32) {
         let _ = (a, b, c);
     }
@@ -135,20 +135,20 @@ fn test_auto_test_signature_function() {
         let _ = (a, b, args, c, d, kwargs);
     }
 
-    #[pyfunction(signature = (a = 1, /, b = None, c = 1.5, d=5, e = "pyo3", f = 'f', h = true))]
+    #[pyfunction(signature = (a = 1, /, b = None, c = 1.5, d=5, e = "r2p", f = 'f', h = true))]
     fn my_function_5(a: i32, b: Option<i32>, c: f32, d: i32, e: &str, f: char, h: bool) {
         let _ = (a, b, c, d, e, f, h);
     }
 
     #[pyfunction]
-    #[pyo3(signature=(a, b=None, c=None))]
+    #[r2p(signature=(a, b=None, c=None))]
     fn my_function_6(a: i32, b: Option<i32>, c: Option<i32>) {
         let _ = (a, b, c);
     }
 
     #[pyfunction]
     fn trailing_optional_required(a: i32, b: Option<i32>, c: Option<i32>) {
-        // Since PyO3 0.24, trailing optional arguments are treated like any other required argument
+        // Since r2p 0.24, trailing optional arguments are treated like any other required argument
         // (previously would get an implicit default of `None`)
         let _ = (a, b, c);
     }
@@ -160,7 +160,7 @@ fn test_auto_test_signature_function() {
                     .unwrap()
                     .getattr("__text_signature__")
                     .unwrap()
-                    .cast_into::<pyo3::types::PyString>()
+                    .cast_into::<r2p::types::PyString>()
                     .unwrap(),
                 $expected
             );
@@ -179,7 +179,7 @@ fn test_auto_test_signature_function() {
         assert_text_signature!(
             py,
             my_function_5,
-            "(a=1, /, b=None, c=1.5, d=5, e=\"pyo3\", f='f', h=True)"
+            "(a=1, /, b=None, c=1.5, d=5, e=\"r2p\", f='f', h=True)"
         );
 
         assert_text_signature!(py, my_function_6, "(a, b=None, c=None)");
@@ -205,12 +205,12 @@ fn test_auto_test_signature_method() {
             let _ = (a, b, c);
         }
 
-        #[pyo3(signature = (a, /, b = None, *, c = 5))]
+        #[r2p(signature = (a, /, b = None, *, c = 5))]
         fn method_2(&self, a: i32, b: Option<i32>, c: i32) {
             let _ = (a, b, c);
         }
 
-        #[pyo3(signature = (a, /, b = None, *args, c, d=5, **kwargs))]
+        #[r2p(signature = (a, /, b = None, *args, c, d=5, **kwargs))]
         fn method_3(
             &self,
             a: i32,
@@ -284,30 +284,30 @@ fn test_auto_test_signature_opt_out() {
     #[pymethods]
     impl MyClass {
         #[new]
-        #[pyo3(text_signature = None)]
+        #[r2p(text_signature = None)]
         fn new(a: i32, b: i32, c: i32) -> Self {
             let _ = (a, b, c);
             Self {}
         }
 
-        #[pyo3(text_signature = None)]
+        #[r2p(text_signature = None)]
         fn method(&self, a: i32, b: i32, c: i32) {
             let _ = (a, b, c);
         }
 
-        #[pyo3(signature = (a, /, b = None, *, c = 5), text_signature = None)]
+        #[r2p(signature = (a, /, b = None, *, c = 5), text_signature = None)]
         fn method_2(&self, a: i32, b: Option<i32>, c: i32) {
             let _ = (a, b, c);
         }
 
         #[staticmethod]
-        #[pyo3(text_signature = None)]
+        #[r2p(text_signature = None)]
         fn staticmethod(a: i32, b: i32, c: i32) {
             let _ = (a, b, c);
         }
 
         #[classmethod]
-        #[pyo3(text_signature = None)]
+        #[r2p(text_signature = None)]
         fn classmethod(cls: &Bound<'_, PyType>, a: i32, b: i32, c: i32) {
             let _ = (cls, a, b, c);
         }
@@ -335,7 +335,7 @@ fn test_pyfn() {
     #[pymodule]
     fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
         #[pyfn(m, signature = (a, b=None, *, c=42))]
-        #[pyo3(text_signature = "(a, b=None, *, c=42)")]
+        #[r2p(text_signature = "(a, b=None, *, c=42)")]
         fn my_function(a: i32, b: Option<i32>, c: i32) {
             let _ = (a, b, c);
         }
@@ -360,21 +360,21 @@ fn test_methods() {
 
     #[pymethods]
     impl MyClass {
-        #[pyo3(text_signature = "($self, a)")]
+        #[r2p(text_signature = "($self, a)")]
         fn method(&self, a: i32) {
             let _ = a;
         }
-        #[pyo3(text_signature = "($self, b)")]
+        #[r2p(text_signature = "($self, b)")]
         fn pyself_method(_this: &Bound<'_, Self>, b: i32) {
             let _ = b;
         }
         #[classmethod]
-        #[pyo3(text_signature = "($cls, c)")]
+        #[r2p(text_signature = "($cls, c)")]
         fn class_method(_cls: &Bound<'_, PyType>, c: i32) {
             let _ = c;
         }
         #[staticmethod]
-        #[pyo3(text_signature = "(d)")]
+        #[r2p(text_signature = "(d)")]
         fn static_method(d: i32) {
             let _ = d;
         }

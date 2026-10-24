@@ -18,21 +18,21 @@ use core::marker::PhantomData;
 /// # Examples
 ///
 /// ```
-/// # use pyo3::prelude::*;
-/// # use pyo3::py_run;
+/// # use r2p::prelude::*;
+/// # use r2p::py_run;
 /// #[pyclass(subclass)]
 /// struct BaseClass {
-///     #[pyo3(get)]
+///     #[r2p(get)]
 ///     basename: &'static str,
 /// }
 /// #[pyclass(extends=BaseClass, subclass)]
 /// struct SubClass {
-///     #[pyo3(get)]
+///     #[r2p(get)]
 ///     subname: &'static str,
 /// }
 /// #[pyclass(extends=SubClass)]
 /// struct SubSubClass {
-///     #[pyo3(get)]
+///     #[r2p(get)]
 ///     subsubname: &'static str,
 /// }
 ///
@@ -79,11 +79,11 @@ impl<T: PyClass> PyClassInitializer<T> {
     ///
     /// # Examples
     /// ```
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass(subclass)]
     /// struct BaseClass {
-    ///     #[pyo3(get)]
+    ///     #[r2p(get)]
     ///     value: i32,
     /// }
     ///

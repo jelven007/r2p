@@ -1,0 +1,17 @@
+id,priority,capability_status,source,design,test_evidence,acceptance_gate,owner
+FR-001,P0,implemented,src/lib.rs,docs/architecture/system-design.md,tests/test_pyfunction.rs,G2+G3,SDK developer
+FR-002,P0,implemented,src/interpreter_lifecycle.rs,docs/architecture/system-design.md,tests/test_append_to_inittab.rs,G2,SDK developer
+FR-003,P0,implemented,src/conversion.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_frompy_intopy_roundtrip.rs,G2+G3,SDK developer
+FR-004,P0,implemented,crates/r2p-macros-backend/src/lib.rs,docs/architecture/system-design.md,tests/test_compile_error.rs,G2,Macro developer
+FR-005,P0,production-matrix-pending,crates/r2p-ffi/Cargo.toml,docs/architecture/interfaces-and-compatibility.md,.github/workflows/ci.yml,G4,QA lead
+FR-006,P1,experimental,crates/r2p-introspection/src/introspection.rs,docs/architecture/interfaces-and-compatibility.md,tests/python/tests/test_stubs.py,G3+G4,SDK developer
+FR-007,P0,independent-release-pending,.github/workflows/python-wheel.yml,docs/maintenance/release-and-rollback.md,docs/testing/test-strategy.md,G5,Release lead
+FR-008,P0,local-baseline-delivered,tools/check_repository.py,docs/development/repository-layout.md,tools/check_repository.py,G1,Tech lead
+NFR-001,P0,production-acceptance-pending,src/pycell.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_gc.rs,G2+G4,Tech lead
+NFR-002,P1,baseline-pending,benchmarks/r2p-benches/Cargo.toml,docs/testing/test-strategy.md,benchmarks/r2p-benches/benches/bench_call.rs,G4,Performance owner
+NFR-003,P0,production-acceptance-pending,Cargo.toml,docs/architecture/interfaces-and-compatibility.md,.github/workflows/ci.yml,G2+G4,Tech lead
+NFR-004,P0,release-record-pending,uv.lock,docs/maintenance/release-and-rollback.md,docs/governance/change-record-template.md,G5,Release lead
+NFR-005,P0,production-acceptance-pending,noxfile.py,docs/testing/test-strategy.md,docs/testing/validation-report.md,G1+G2+G3+G4,QA lead
+NFR-006,P0,local-baseline-delivered,docs/README.md,docs/governance/document-management.md,tools/check_repository.py,G1,Document owner
+NFR-007,P0,drill-pending,docs/maintenance/runbook.md,docs/maintenance/release-and-rollback.md,docs/governance/change-record-template.md,G6,SRE lead
+NFR-008,P1,metrics-pending,docs/operations/operating-plan.md,docs/operations/operating-plan.md,docs/governance/change-record-template.md,G6,Support lead

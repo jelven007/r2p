@@ -5,7 +5,7 @@ use crate::{Borrowed, Bound, PyAny, PyTypeInfo, Python, ffi, types::any::PyAnyMe
 
 /// Represents the Python `None` object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyNone>`][crate::Py] or [`Bound<'py, PyNone>`][Bound].
 #[repr(transparent)]
 pub struct PyNone(PyAny);

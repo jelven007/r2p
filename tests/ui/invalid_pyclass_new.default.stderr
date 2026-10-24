@@ -21,8 +21,8 @@ help: the trait `IntoPyObject<'_>` is not implemented for `Invalid`
               &'a (T0, T1, T2, T3)
               &'a (T0, T1, T2, T3, T4)
             and $N others
-    = note: required for `Invalid` to implement `pyo3::internal::pyclass_init::PyClassInit<'_, InvalidNewReturn>`
-note: required by a bound in `pyo3::impl_::pymethods::tp_new_impl`
+    = note: required for `Invalid` to implement `r2p::internal::pyclass_init::PyClassInit<'_, InvalidNewReturn>`
+note: required by a bound in `r2p::impl_::pymethods::tp_new_impl`
  --> src/impl_/pymethods.rs
   |
   | pub unsafe fn tp_new_impl<'py, InitializerT, ClassT>(

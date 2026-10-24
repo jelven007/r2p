@@ -5,16 +5,16 @@ error: `name` may only be specified once
    |              ^^^^^^
 
 error: `name` may only be specified once
-  --> tests/ui/invalid_pymethod_names.rs:19:12
+  --> tests/ui/invalid_pymethod_names.rs:19:11
    |
-19 |     #[pyo3(name = "bar")]
-   |            ^^^^
+19 |     #[r2p(name = "bar")]
+   |           ^^^^
 
 error: `name` not allowed with `#[new]`
-  --> tests/ui/invalid_pymethod_names.rs:26:19
+  --> tests/ui/invalid_pymethod_names.rs:26:18
    |
-26 |     #[pyo3(name = "makenew")]
-   |                   ^^^^^^^^^
+26 |     #[r2p(name = "makenew")]
+   |                  ^^^^^^^^^
 
 error: expected ident or string literal for property name
   --> tests/ui/invalid_pymethod_names.rs:34:14

@@ -9,6 +9,7 @@ name = "decorator"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { path = "../../" }
+r2p-maturin-bridge = { package = "pyo3-ffi", path = "../../tools/maturin-bridge" }
+r2p = { path = "../../" }
 
 [workspace]

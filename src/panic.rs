@@ -4,7 +4,7 @@ use crate::exceptions::PyBaseException;
 use crate::platform::prelude::*;
 use core::any::Any;
 
-pyo3_exception!(
+r2p_exception!(
     "
 The exception raised when Rust code called from Python panics.
 

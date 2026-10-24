@@ -87,10 +87,10 @@ error: transparent structs and variants can only have 1 field
    | |_____^
 
 error: expected one of: `transparent`, `from_item_all`, `annotation`, `crate`, `rename_all`
-  --> tests/ui/invalid_intopy_derive.rs:88:8
+  --> tests/ui/invalid_intopy_derive.rs:88:7
    |
-88 | #[pyo3(unknown = "should not work")]
-   |        ^^^^^^^
+88 | #[r2p(unknown = "should not work")]
+   |       ^^^^^^^
 
 error: #[derive(`IntoPyObject`)] is not supported for unions
   --> tests/ui/invalid_intopy_derive.rs:95:1
@@ -105,81 +105,81 @@ error: cannot derive `IntoPyObject` for empty variants
     |     ^^^^
 
 error: `item` and `attribute` are not permitted on tuple struct elements.
-   --> tests/ui/invalid_intopy_derive.rs:107:30
+   --> tests/ui/invalid_intopy_derive.rs:107:29
     |
-107 | struct TupleAttribute(#[pyo3(attribute)] String, usize);
-    |                              ^^^^^^^^^
+107 | struct TupleAttribute(#[r2p(attribute)] String, usize);
+    |                             ^^^^^^^^^
 
 error: `item` and `attribute` are not permitted on tuple struct elements.
-   --> tests/ui/invalid_intopy_derive.rs:111:25
+   --> tests/ui/invalid_intopy_derive.rs:111:24
     |
-111 | struct TupleItem(#[pyo3(item)] String, usize);
-    |                         ^^^^
+111 | struct TupleItem(#[r2p(item)] String, usize);
+    |                        ^^^^
 
 error: `transparent` structs may not have `item` nor `attribute` for the inner field
-   --> tests/ui/invalid_intopy_derive.rs:123:12
+   --> tests/ui/invalid_intopy_derive.rs:123:11
     |
-123 |     #[pyo3(item)]
-    |            ^^^^
+123 |     #[r2p(item)]
+    |           ^^^^
 
 error: `into_py_with` is not permitted on `transparent` structs or variants
-   --> tests/ui/invalid_intopy_derive.rs:131:12
+   --> tests/ui/invalid_intopy_derive.rs:131:11
     |
-131 |     #[pyo3(into_py_with = into)]
-    |            ^^^^^^^^^^^^
+131 |     #[r2p(into_py_with = into)]
+    |           ^^^^^^^^^^^^
 
 error: `into_py_with` is not permitted on `transparent` structs or variants
-   --> tests/ui/invalid_intopy_derive.rs:139:12
+   --> tests/ui/invalid_intopy_derive.rs:139:11
     |
-139 |     #[pyo3(into_py_with = into_ref)]
-    |            ^^^^^^^^^^^^
+139 |     #[r2p(into_py_with = into_ref)]
+    |           ^^^^^^^^^^^^
 
 error: `into_py_with` is not permitted on `transparent` structs
-   --> tests/ui/invalid_intopy_derive.rs:146:42
+   --> tests/ui/invalid_intopy_derive.rs:146:41
     |
-146 | struct TupleTransparentIntoPyWith(#[pyo3(into_py_with = into)] String);
-    |                                          ^^^^^^^^^^^^
+146 | struct TupleTransparentIntoPyWith(#[r2p(into_py_with = into)] String);
+    |                                         ^^^^^^^^^^^^
 
 error: `into_py_with` is not permitted on `transparent` structs
-   --> tests/ui/invalid_intopy_derive.rs:151:29
+   --> tests/ui/invalid_intopy_derive.rs:151:28
     |
-151 |     TransparentTuple(#[pyo3(into_py_with = into)] usize),
-    |                             ^^^^^^^^^^^^
+151 |     TransparentTuple(#[r2p(into_py_with = into)] usize),
+    |                            ^^^^^^^^^^^^
 
 error: `into_py_with` is not permitted on `transparent` structs or variants
-   --> tests/ui/invalid_intopy_derive.rs:159:16
+   --> tests/ui/invalid_intopy_derive.rs:159:15
     |
-159 |         #[pyo3(into_py_with = into)]
-    |                ^^^^^^^^^^^^
+159 |         #[r2p(into_py_with = into)]
+    |               ^^^^^^^^^^^^
 
 error: `rename_all` is not permitted on `transparent` structs and variants
-   --> tests/ui/invalid_intopy_derive.rs:166:21
+   --> tests/ui/invalid_intopy_derive.rs:166:20
     |
-166 | #[pyo3(transparent, rename_all = "camelCase")]
-    |                     ^^^^^^^^^^
+166 | #[r2p(transparent, rename_all = "camelCase")]
+    |                    ^^^^^^^^^^
 
 error: `rename_all` is useless on tuple structs and variants.
-   --> tests/ui/invalid_intopy_derive.rs:173:8
+   --> tests/ui/invalid_intopy_derive.rs:173:7
     |
-173 | #[pyo3(rename_all = "camelCase")]
-    |        ^^^^^^^^^^
+173 | #[r2p(rename_all = "camelCase")]
+    |       ^^^^^^^^^^
 
 error: `rename_all` is not permitted on `transparent` structs and variants
-   --> tests/ui/invalid_intopy_derive.rs:179:12
+   --> tests/ui/invalid_intopy_derive.rs:179:11
     |
-179 |     #[pyo3(rename_all = "camelCase")]
-    |            ^^^^^^^^^^
+179 |     #[r2p(rename_all = "camelCase")]
+    |           ^^^^^^^^^^
 
 error: `rename_all` is useless on tuple structs and variants.
-   --> tests/ui/invalid_intopy_derive.rs:187:12
+   --> tests/ui/invalid_intopy_derive.rs:187:11
     |
-187 |     #[pyo3(rename_all = "camelCase")]
-    |            ^^^^^^^^^^
+187 |     #[r2p(rename_all = "camelCase")]
+    |           ^^^^^^^^^^
 
 error: `rename_all` is not supported at top level for enums
-   --> tests/ui/invalid_intopy_derive.rs:193:8
+   --> tests/ui/invalid_intopy_derive.rs:193:7
     |
-193 | #[pyo3(rename_all = "camelCase")]
-    |        ^^^^^^^^^^
+193 | #[r2p(rename_all = "camelCase")]
+    |       ^^^^^^^^^^
 
 error: aborting due to 29 previous errors

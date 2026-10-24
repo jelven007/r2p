@@ -1,0 +1,14 @@
+schema_version = 1
+
+[product]
+name = "r2p"
+description = "基于 PyO3 的 Rust/Python 互操作 SDK 工程"
+
+[implementation]
+rust_package = "r2p"
+python_runtime_package = "r2p-runtime"
+
+[source]
+repository = "https://github.com/jelven007/p2r"
+upstream_repository = "https://github.com/PyO3/pyo3"
+baseline_revision = "424149e8a1c42128b05a090941673008fc46c478"

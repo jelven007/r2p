@@ -30,22 +30,22 @@
 
 //! Rust bindings to the Python interpreter.
 //!
-//! PyO3 can be used to write native Python modules or run Python code and modules from Rust.
+//! r2p can be used to write native Python modules or run Python code and modules from Rust.
 //!
 //! See [the guide] for a detailed introduction.
 //!
-//! # PyO3's object types
+//! # r2p's object types
 //!
-//! PyO3 has several core types that you should familiarize yourself with:
+//! r2p has several core types that you should familiarize yourself with:
 //!
 //! ## The `Python<'py>` object, and the `'py` lifetime
 //!
 //! Holding the [global interpreter lock] (GIL) is modeled with the [`Python<'py>`](Python) token. Many
-//! Python APIs require that the GIL is held, and PyO3 uses this token as proof that these APIs
-//! can be called safely. It can be explicitly acquired and is also implicitly acquired by PyO3
+//! Python APIs require that the GIL is held, and r2p uses this token as proof that these APIs
+//! can be called safely. It can be explicitly acquired and is also implicitly acquired by r2p
 //! as it wraps Rust functions and structs into Python functions and objects.
 //!
-//! The [`Python<'py>`](Python) token's lifetime `'py` is common to many PyO3 APIs:
+//! The [`Python<'py>`](Python) token's lifetime `'py` is common to many r2p APIs:
 //! - Types that also have the `'py` lifetime, such as the [`Bound<'py, T>`](Bound) smart pointer, are
 //!   bound to the Python GIL and rely on this to offer their functionality. These types often
 //!   have a [`.py()`](Bound::py) method to get the associated [`Python<'py>`](Python) token.
@@ -58,7 +58,7 @@
 //!
 //! ## Python object smart pointers
 //!
-//! PyO3 has two core smart pointers to refer to Python objects, [`Py<T>`](Py) and its GIL-bound
+//! r2p has two core smart pointers to refer to Python objects, [`Py<T>`](Py) and its GIL-bound
 //! form [`Bound<'py, T>`](Bound) which carries the `'py` lifetime. (There is also
 //! [`Borrowed<'a, 'py, T>`](instance::Borrowed), but it is used much more rarely).
 //!
@@ -76,11 +76,11 @@
 //! This is an alias for the type `Result<..., PyErr>`.
 //!
 //! A `PyErr` represents a Python exception. A `PyErr` returned to Python code will be raised as a
-//! Python exception. Errors from `PyO3` itself are also exposed as Python exceptions.
+//! Python exception. Errors from `r2p` itself are also exposed as Python exceptions.
 //!
 //! # Feature flags
 //!
-//! PyO3 uses [feature flags] to enable you to opt-in to additional functionality. For a detailed
+//! r2p uses [feature flags] to enable you to opt-in to additional functionality. For a detailed
 //! description, see the [Features chapter of the guide].
 //!
 //! ## Default feature flags
@@ -90,9 +90,9 @@
 //!
 //! ## Optional feature flags
 //!
-//! The following features customize PyO3's behavior:
+//! The following features customize r2p's behavior:
 //!
-//! - `abi3`: Restricts PyO3's API to a subset of the full Python API which is guaranteed by
+//! - `abi3`: Restricts r2p's API to a subset of the full Python API which is guaranteed by
 //! [PEP 384] to be forward-compatible with future Python versions.
 //! - `auto-initialize`: Changes [`Python::attach`] to automatically initialize the Python
 //! interpreter if needed.
@@ -142,22 +142,22 @@
 //! #[cfg(py_sys_config = "Py_DEBUG")]
 //! println!("only runs if python was compiled with Py_DEBUG")
 //! ```
-//! To use these attributes, add [`pyo3-build-config`] as a build dependency in
-//! your `Cargo.toml` and call `pyo3_build_config::use_pyo3_cfgs()` in a
+//! To use these attributes, add [`r2p-build-config`] as a build dependency in
+//! your `Cargo.toml` and call `r2p_build_config::use_r2p_cfgs()` in a
 //! `build.rs` file.
 //!
 //! # Minimum supported Rust and Python versions
 //!
 //! Requires Rust 1.85 or greater.
 //!
-//! PyO3 supports the following Python distributions:
+//! r2p supports the following Python distributions:
 //!   - CPython 3.9 or greater
 //!   - PyPy 7.3 (Python 3.11+)
 //!   - GraalPy 24.0 or greater (Python 3.10+)
 //!
 //! # Example: Building a native Python module
 //!
-//! PyO3 can be used to generate a native Python module. The easiest way to try this out for the
+//! r2p can be used to generate a native Python module. The easiest way to try this out for the
 //! first time is to use [`maturin`]. `maturin` is a tool for building and publishing Rust-based
 //! Python packages with minimal configuration. The following steps set up some files for an example
 //! Python module, install `maturin`, and then show how to build and import the Python module.
@@ -182,12 +182,13 @@
 //! crate-type = ["cdylib"]
 //!
 //! [dependencies]
-#![doc = concat!("pyo3 = \"", env!("CARGO_PKG_VERSION"),  "\"")]
+//! r2p = { path = "/path/to/r2p" }
+//! r2p-maturin-bridge = { package = "pyo3-ffi", path = "/path/to/r2p/tools/maturin-bridge" }
 //! ```
 //!
 //! **`src/lib.rs`**
 //! ```rust,no_run
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! /// Formats the sum of two numbers as string.
 //! #[pyfunction]
@@ -197,7 +198,7 @@
 //!
 //! /// A Python module implemented in Rust.
 //! #[pymodule]
-//! # #[pyo3(name = "example_string_sum_lib_rs")]
+//! # #[r2p(name = "example_string_sum_lib_rs")]
 //! fn string_sum(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
 //!
@@ -240,9 +241,9 @@
 //! sudo apt install python3-dev
 //! ```
 //!
-//! Start a new project with `cargo new` and add  `pyo3` to the `Cargo.toml` like this:
+//! Start a new project with `cargo new` and add  `r2p` to the `Cargo.toml` like this:
 //! ```toml
-//! [dependencies.pyo3]
+//! [dependencies.r2p]
 #![doc = concat!("version = \"", env!("CARGO_PKG_VERSION"),  "\"")]
 //! # this is necessary to automatically initialize the Python interpreter
 //! features = ["auto-initialize"]
@@ -250,8 +251,8 @@
 //!
 //! Example program displaying the value of `sys.version` and the current user name:
 //! ```rust
-//! use pyo3::prelude::*;
-//! use pyo3::types::IntoPyDict;
+//! use r2p::prelude::*;
+//! use r2p::types::IntoPyDict;
 //!
 //! fn main() -> PyResult<()> {
 //!     Python::attach(|py| {
@@ -272,13 +273,13 @@
 //!
 //! # Other Examples
 //!
-//! The PyO3 [README](https://github.com/PyO3/pyo3#readme) contains quick-start examples for both
+//! The r2p [README](https://github.com/jelven007/p2r/blob/main/docs/sdk/README.md) contains quick-start examples for both
 //! using [Rust from Python] and [Python from Rust].
 //!
-//! The PyO3 repository's [examples subdirectory]
-//! contains some basic packages to demonstrate usage of PyO3.
+//! The r2p repository's [examples subdirectory]
+//! contains some basic packages to demonstrate usage of r2p.
 //!
-//! There are many projects using PyO3 - see a list of some at
+//! There are many projects using r2p - see a list of some at
 //! <https://github.com/PyO3/pyo3#examples>.
 //!
 //! [anyhow]: https://docs.rs/anyhow/ "A trait object based error system for easy idiomatic error handling in Rust applications."
@@ -307,37 +308,37 @@
 //! [`eyre`]: ./eyre/index.html "Documentation about the `eyre` feature."
 //! [`hashbrown`]: ./hashbrown/index.html "Documentation about the `hashbrown` feature."
 //! [indexmap_feature]: ./indexmap/index.html "Documentation about the `indexmap` feature."
-//! [`maturin`]: https://github.com/PyO3/maturin "Build and publish crates with pyo3, rust-cpython and cffi bindings as well as rust binaries as python packages"
+//! [`maturin`]: https://github.com/PyO3/maturin "Build and publish crates with r2p, rust-cpython and cffi bindings as well as rust binaries as python packages"
 //! [`num-bigint`]: ./num_bigint/index.html "Documentation about the `num-bigint` feature."
 //! [`num-complex`]: ./num_complex/index.html "Documentation about the `num-complex` feature."
 //! [`num-rational`]: ./num_rational/index.html "Documentation about the `num-rational` feature."
 //! [`ordered-float`]: ./ordered_float/index.html "Documentation about the `ordered-float` feature."
-//! [`pyo3-build-config`]: https://docs.rs/pyo3-build-config
+//! [`r2p-build-config`]: https://docs.rs/pyo3-build-config
 //! [rust_decimal]: https://docs.rs/rust_decimal
 //! [`rust_decimal`]: ./rust_decimal/index.html "Documentation about the `rust_decimal` feature."
 //! [`Decimal`]: https://docs.rs/rust_decimal/latest/rust_decimal/struct.Decimal.html
 //! [`serde`]: <./serde/index.html> "Documentation about the `serde` feature."
-#![doc = concat!("[calling_rust]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/python-from-rust.html \"Calling Python from Rust - PyO3 user guide\"")]
-//! [examples subdirectory]: https://github.com/PyO3/pyo3/tree/main/examples
+#![doc = concat!("[calling_rust]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/python-from-rust.html \"Calling Python from Rust - r2p user guide\"")]
+//! [examples subdirectory]: https://github.com/jelven007/p2r/tree/main/examples
 //! [feature flags]: https://doc.rust-lang.org/cargo/reference/features.html "Features - The Cargo Book"
 //! [global interpreter lock]: https://docs.python.org/3/glossary.html#term-global-interpreter-lock
 //! [hashbrown]: https://docs.rs/hashbrown
 //! [smallvec]: https://docs.rs/smallvec
 //! [uuid]: https://docs.rs/uuid
 //! [indexmap]: https://docs.rs/indexmap
-#![doc = concat!("[manual_builds]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/building-and-distribution.html#manual-builds \"Manual builds - Building and Distribution - PyO3 user guide\"")]
+#![doc = concat!("[manual_builds]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/building-and-distribution.html#manual-builds \"Manual builds - Building and Distribution - r2p user guide\"")]
 //! [num-bigint]: https://docs.rs/num-bigint
 //! [num-complex]: https://docs.rs/num-complex
 //! [num-rational]: https://docs.rs/num-rational
 //! [ordered-float]: https://docs.rs/ordered-float
 //! [serde]: https://docs.rs/serde
 //! [setuptools-rust]: https://github.com/PyO3/setuptools-rust "Setuptools plugin for Rust extensions"
-//! [the guide]: https://pyo3.rs "PyO3 user guide"
+//! [the guide]: https://github.com/jelven007/p2r/tree/main/docs/guide "r2p user guide"
 #![doc = concat!("[types]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/types.html \"GIL lifetimes, mutability and Python object types\"")]
 //! [PEP 384]: https://www.python.org/dev/peps/pep-0384 "PEP 384 -- Defining a Stable ABI"
 //! [Python from Rust]: https://github.com/PyO3/pyo3#using-python-from-rust
 //! [Rust from Python]: https://github.com/PyO3/pyo3#using-rust-from-python
-#![doc = concat!("[Features chapter of the guide]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/features.html#features-reference \"Features Reference - PyO3 user guide\"")]
+#![doc = concat!("[Features chapter of the guide]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/features.html#features-reference \"Features Reference - r2p user guide\"")]
 //! [`Ungil`]: crate::marker::Ungil
 
 #[macro_use]
@@ -364,8 +365,8 @@ pub(crate) mod sealed;
 
 /// Old module which contained some implementation details of the `#[pyproto]` module.
 ///
-/// Prefer using the same content from `pyo3::pyclass`, e.g. `use pyo3::pyclass::CompareOp` instead
-/// of `use pyo3::class::basic::CompareOp`.
+/// Prefer using the same content from `r2p::pyclass`, e.g. `use r2p::pyclass::CompareOp` instead
+/// of `use r2p::class::basic::CompareOp`.
 ///
 /// For compatibility reasons this has not yet been removed, however will be done so
 /// once <https://github.com/rust-lang/rust/issues/30827> is resolved.
@@ -374,8 +375,8 @@ pub mod class {
 
     /// Old module which contained some implementation details of the `#[pyproto]` module.
     ///
-    /// Prefer using the same content from `pyo3::pyclass`, e.g. `use pyo3::pyclass::CompareOp` instead
-    /// of `use pyo3::class::basic::CompareOp`.
+    /// Prefer using the same content from `r2p::pyclass`, e.g. `use r2p::pyclass::CompareOp` instead
+    /// of `use r2p::class::basic::CompareOp`.
     ///
     /// For compatibility reasons this has not yet been removed, however will be done so
     /// once <https://github.com/rust-lang/rust/issues/30827> is resolved.
@@ -385,8 +386,8 @@ pub mod class {
 
     /// Old module which contained some implementation details of the `#[pyproto]` module.
     ///
-    /// Prefer using the same content from `pyo3::pyclass`, e.g. `use pyo3::pyclass::PyTraverseError` instead
-    /// of `use pyo3::class::gc::PyTraverseError`.
+    /// Prefer using the same content from `r2p::pyclass`, e.g. `use r2p::pyclass::PyTraverseError` instead
+    /// of `use r2p::class::gc::PyTraverseError`.
     ///
     /// For compatibility reasons this has not yet been removed, however will be done so
     /// once <https://github.com/rust-lang/rust/issues/30827> is resolved.
@@ -399,7 +400,7 @@ pub mod class {
 #[doc(hidden)]
 pub use inventory; // Re-exported for `#[pyclass]` and `#[pymethods]` with `multiple-pymethods`.
 
-/// Tests and helpers which reside inside PyO3's main library. Declared first so that macros
+/// Tests and helpers which reside inside r2p's main library. Declared first so that macros
 /// are available in unit tests.
 #[cfg(test)]
 mod test_utils;
@@ -452,20 +453,20 @@ mod version;
 pub use crate::conversions::*;
 
 #[cfg(feature = "macros")]
-pub use pyo3_macros::{
+pub use r2p_macros::{
     FromPyObject, IntoPyObject, IntoPyObjectRef, pyfunction, pymethods, pymodule,
 };
 
 /// A proc macro used to expose Rust structs and fieldless enums as Python objects.
 ///
-#[doc = include_str!("../guide/pyclass-parameters.md")]
+#[doc = include_str!("../docs/guide/pyclass-parameters.md")]
 ///
 /// For more on creating Python classes,
 /// see the [class section of the guide][1].
 ///
 #[doc = concat!("[1]: https://pyo3.rs/v", env!("CARGO_PKG_VERSION"), "/class.html")]
 #[cfg(feature = "macros")]
-pub use pyo3_macros::pyclass;
+pub use r2p_macros::pyclass;
 
 #[cfg(feature = "macros")]
 #[macro_use]
@@ -475,7 +476,7 @@ mod macros;
 pub mod inspect;
 
 // Putting the declaration of prelude at the end seems to help encourage rustc and rustdoc to prefer using
-// other paths to the same items. (e.g. `pyo3::types::PyAnyMethods` instead of `pyo3::prelude::PyAnyMethods`).
+// other paths to the same items. (e.g. `r2p::types::PyAnyMethods` instead of `r2p::prelude::PyAnyMethods`).
 pub mod prelude;
 
 /// Test readme and user guide
@@ -484,14 +485,14 @@ pub mod doc_test {
     macro_rules! doctests {
         ($($path:expr => $mod:ident),* $(,)?) => {
             $(
-                #[doc = include_str!(concat!("../", $path))]
+                #[doc = include_str!(concat!("../docs/", $path))]
                 mod $mod{}
             )*
         };
     }
 
     doctests! {
-        "README.md" => readme_md,
+        "sdk/README.md" => readme_md,
         "guide/src/advanced.md" => guide_advanced_md,
         "guide/src/async-await.md" => guide_async_await_md,
         "guide/src/building-and-distribution.md" => guide_building_and_distribution_md,

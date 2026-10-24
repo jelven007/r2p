@@ -13,7 +13,7 @@ use core::ffi::c_double;
 
 /// Represents a Python [`complex`](https://docs.python.org/3/library/functions.html#complex) object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyComplex>`][crate::Py] or [`Bound<'py, PyComplex>`][Bound].
 ///
 /// For APIs available on `complex` objects, see the [`PyComplexMethods`] trait which is implemented for

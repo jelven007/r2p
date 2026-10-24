@@ -9,4 +9,4 @@ name = "setuptools_rust_starter"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "{{PYO3_VERSION}}"
+r2p = "{{R2P_VERSION}}"

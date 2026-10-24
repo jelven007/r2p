@@ -23,8 +23,8 @@ use core::ptr::NonNull;
 /// the complete opposite of that - any Python object can be referenced any
 /// number of times, and mutation is allowed from any reference.
 ///
-/// PyO3 deals with these differences by employing the [Interior Mutability]
-/// pattern. This requires that PyO3 enforces the borrowing rules and it has two
+/// r2p deals with these differences by employing the [Interior Mutability]
+/// pattern. This requires that r2p enforces the borrowing rules and it has two
 /// mechanisms for doing so:
 /// - Statically it can enforce thread-safe access with the
 ///   [`Python<'py>`](crate::Python) token. All Rust code holding that token, or
@@ -32,7 +32,7 @@ use core::ptr::NonNull;
 ///   Python interpreter's state. For this reason all the native Python objects
 ///   can be mutated through shared references.
 /// - However, methods and functions in Rust usually *do* need `&mut`
-///   references. While PyO3 can use the [`Python<'py>`](crate::Python) token to
+///   references. While r2p can use the [`Python<'py>`](crate::Python) token to
 ///   guarantee thread-safe access to them, it cannot statically guarantee
 ///   uniqueness of `&mut` references. As such those references have to be
 ///   tracked dynamically at runtime, using [`PyClassGuard`] and
@@ -50,8 +50,8 @@ use core::ptr::NonNull;
 /// - you need to access the pointer of the `PyClass`, or
 /// - you want to get a super class.
 /// ```
-/// # use pyo3::prelude::*;
-/// # use pyo3::PyClassGuard;
+/// # use r2p::prelude::*;
+/// # use r2p::PyClassGuard;
 /// #[pyclass(subclass)]
 /// struct Parent {
 ///     basename: &'static str,
@@ -78,7 +78,7 @@ use core::ptr::NonNull;
 /// }
 /// # Python::attach(|py| {
 /// #     let sub = Py::new(py, Child::new()).unwrap();
-/// #     pyo3::py_run!(py, sub, "assert sub.format() == 'Caterpillar(base: Butterfly)', sub.format()");
+/// #     r2p::py_run!(py, sub, "assert sub.format() == 'Caterpillar(base: Butterfly)', sub.format()");
 /// # });
 /// ```
 ///
@@ -129,8 +129,8 @@ impl<'a, T: PyClass> PyClassGuard<'a, T> {
     /// # Examples
     ///
     /// ```
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::PyClassGuard;
+    /// # use r2p::prelude::*;
+    /// # use r2p::PyClassGuard;
     ///
     /// #[pyclass]
     /// pub struct MyClass {
@@ -169,8 +169,8 @@ where
     ///
     /// # Examples
     /// ```
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::PyClassGuard;
+    /// # use r2p::prelude::*;
+    /// # use r2p::PyClassGuard;
     /// #[pyclass(subclass)]
     /// struct Base {
     ///     base_name: &'static str,
@@ -203,7 +203,7 @@ where
     /// }
     /// # Python::attach(|py| {
     /// #     let sub = Py::new(py, Sub::new()).unwrap();
-    /// #     pyo3::py_run!(py, sub, "assert sub.format_name_lengths() == '9 8'")
+    /// #     r2p::py_run!(py, sub, "assert sub.format_name_lengths() == '9 8'")
     /// # });
     /// ```
     pub fn as_super(&self) -> &PyClassGuard<'a, T::BaseType> {
@@ -218,8 +218,8 @@ where
     ///
     /// # Examples
     /// ```
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::PyClassGuard;
+    /// # use r2p::prelude::*;
+    /// # use r2p::PyClassGuard;
     /// #[pyclass(subclass)]
     /// struct Base1 {
     ///     name1: &'static str,
@@ -251,7 +251,7 @@ where
     /// }
     /// # Python::attach(|py| {
     /// #     let sub = Py::new(py, Sub::new()).unwrap();
-    /// #     pyo3::py_run!(py, sub, "assert sub.name() == 'base1 base2 sub'")
+    /// #     r2p::py_run!(py, sub, "assert sub.name() == 'base1 base2 sub'")
     /// # });
     /// ```
     pub fn into_super(self) -> PyClassGuard<'a, T::BaseType> {
@@ -435,7 +435,7 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// arguments, and you won't need to use [`PyClassGuardMut`] directly:
 ///
 /// ```rust,no_run
-/// use pyo3::prelude::*;
+/// use r2p::prelude::*;
 ///
 /// #[pyclass]
 /// struct Number {
@@ -454,7 +454,7 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// function (and more), using [`PyClassGuardMut`] under the hood:
 ///
 /// ```rust,no_run
-/// # use pyo3::prelude::*;
+/// # use r2p::prelude::*;
 /// # #[pyclass]
 /// # struct Number {
 /// #    inner: u32,
@@ -469,24 +469,24 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// #
 /// // The function which is exported to Python looks roughly like the following
 /// unsafe extern "C" fn __pymethod_increment__(
-///     _slf: *mut ::pyo3::ffi::PyObject,
-///     _args: *mut ::pyo3::ffi::PyObject,
-/// ) -> *mut ::pyo3::ffi::PyObject {
+///     _slf: *mut ::r2p::ffi::PyObject,
+///     _args: *mut ::r2p::ffi::PyObject,
+/// ) -> *mut ::r2p::ffi::PyObject {
 ///     unsafe fn inner<'py>(
-///         py: ::pyo3::Python<'py>,
-///         _slf: *mut ::pyo3::ffi::PyObject,
-///     ) -> ::pyo3::PyResult<*mut ::pyo3::ffi::PyObject> {
+///         py: ::r2p::Python<'py>,
+///         _slf: *mut ::r2p::ffi::PyObject,
+///     ) -> ::r2p::PyResult<*mut ::r2p::ffi::PyObject> {
 ///         let function = Number::increment;
-///         let (mut holder_0,) = (::pyo3::impl_::extract_argument::FunctionArgumentHolder::INIT,);
-///         let ret = function(::pyo3::impl_::extract_argument::extract_pyclass_ref_mut::<Number>(
-///             unsafe { ::pyo3::impl_::extract_argument::cast_function_argument(py, _slf) },
+///         let (mut holder_0,) = (::r2p::impl_::extract_argument::FunctionArgumentHolder::INIT,);
+///         let ret = function(::r2p::impl_::extract_argument::extract_pyclass_ref_mut::<Number>(
+///             unsafe { ::r2p::impl_::extract_argument::cast_function_argument(py, _slf) },
 ///             &mut holder_0,
 ///         )?);
-///         ::pyo3::impl_::wrap::converter(&ret).wrap_into_ptr(py, ret)
+///         ::r2p::impl_::wrap::converter(&ret).wrap_into_ptr(py, ret)
 ///     }
 ///
 ///     unsafe {
-///         ::pyo3::impl_::trampoline::get_trampoline_function!(noargs, inner)(
+///         ::r2p::impl_::trampoline::get_trampoline_function!(noargs, inner)(
 ///             _slf,
 ///             _args,
 ///         )
@@ -500,8 +500,8 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// However, we *do* need [`PyClassGuardMut`] if we want to call its methods
 /// from Rust:
 /// ```rust
-/// # use pyo3::prelude::*;
-/// # use pyo3::{PyClassGuard, PyClassGuardMut};
+/// # use r2p::prelude::*;
+/// # use r2p::{PyClassGuard, PyClassGuardMut};
 /// #
 /// # #[pyclass]
 /// # struct Number {
@@ -542,7 +542,7 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// arguments that may overlap. Suppose the following function that swaps the
 /// values of two `Number`s:
 /// ```
-/// # use pyo3::prelude::*;
+/// # use r2p::prelude::*;
 /// # #[pyclass]
 /// # pub struct Number {
 /// #     inner: u32,
@@ -556,7 +556,7 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// #         let n = Py::new(py, Number{inner: 35}).unwrap();
 /// #         let n2 = n.clone_ref(py);
 /// #         assert!(n.is(&n2));
-/// #         let fun = pyo3::wrap_pyfunction!(swap_numbers, py).unwrap();
+/// #         let fun = r2p::wrap_pyfunction!(swap_numbers, py).unwrap();
 /// #         fun.call1((n, n2)).expect_err("Managed to create overlapping mutable references. Note: this is undefined behaviour.");
 /// #     });
 /// # }
@@ -573,8 +573,8 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 ///
 /// It is better to write that function like this:
 /// ```rust
-/// # use pyo3::prelude::*;
-/// # use pyo3::{PyClassGuard, PyClassGuardMut};
+/// # use r2p::prelude::*;
+/// # use r2p::{PyClassGuard, PyClassGuardMut};
 /// # #[pyclass]
 /// # pub struct Number {
 /// #     inner: u32,
@@ -597,7 +597,7 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// #         let n = Py::new(py, Number{inner: 35}).unwrap();
 /// #         let n2 = n.clone_ref(py);
 /// #         assert!(n.is(&n2));
-/// #         let fun = pyo3::wrap_pyfunction!(swap_numbers, py).unwrap();
+/// #         let fun = r2p::wrap_pyfunction!(swap_numbers, py).unwrap();
 /// #         fun.call1((n, n2)).unwrap();
 /// #     });
 /// #
@@ -606,7 +606,7 @@ impl<U: ?Sized> Drop for PyClassGuardMap<'_, U> {
 /// #         let n = Py::new(py, Number{inner: 35}).unwrap();
 /// #         let n2 = Py::new(py, Number{inner: 42}).unwrap();
 /// #         assert!(!n.is(&n2));
-/// #         let fun = pyo3::wrap_pyfunction!(swap_numbers, py).unwrap();
+/// #         let fun = r2p::wrap_pyfunction!(swap_numbers, py).unwrap();
 /// #         fun.call1((&n, &n2)).unwrap();
 /// #         let n: u32 = n.extract::<PyClassGuard<'_, Number>>(py).unwrap().inner;
 /// #         let n2: u32 = n2.extract::<PyClassGuard<'_, Number>>(py).unwrap().inner;
@@ -658,8 +658,8 @@ impl<'a, T: PyClass<Frozen = False>> PyClassGuardMut<'a, T> {
     /// # Examples
     ///
     /// ```
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::PyClassGuardMut;
+    /// # use r2p::prelude::*;
+    /// # use r2p::PyClassGuardMut;
     ///
     /// #[pyclass]
     /// pub struct MyClass {
@@ -943,15 +943,15 @@ mod tests {
     #[test]
     fn test_into_frozen_super_released_borrow() {
         #[crate::pyclass]
-        #[pyo3(crate = "crate", subclass, frozen)]
+        #[r2p(crate = "crate", subclass, frozen)]
         struct BaseClass {}
 
         #[crate::pyclass]
-        #[pyo3(crate = "crate", extends=BaseClass, subclass)]
+        #[r2p(crate = "crate", extends=BaseClass, subclass)]
         struct SubClass {}
 
         #[crate::pymethods]
-        #[pyo3(crate = "crate")]
+        #[r2p(crate = "crate")]
         impl SubClass {
             #[new]
             fn new(py: Python<'_>) -> Py<SubClass> {
@@ -970,19 +970,19 @@ mod tests {
     #[test]
     fn test_into_frozen_super_mutable_base_holds_borrow() {
         #[crate::pyclass]
-        #[pyo3(crate = "crate", subclass)]
+        #[r2p(crate = "crate", subclass)]
         struct BaseClass {}
 
         #[crate::pyclass]
-        #[pyo3(crate = "crate", extends=BaseClass, subclass, frozen)]
+        #[r2p(crate = "crate", extends=BaseClass, subclass, frozen)]
         struct SubClass {}
 
         #[crate::pyclass]
-        #[pyo3(crate = "crate", extends=SubClass, subclass)]
+        #[r2p(crate = "crate", extends=SubClass, subclass)]
         struct SubSubClass {}
 
         #[crate::pymethods]
-        #[pyo3(crate = "crate")]
+        #[r2p(crate = "crate")]
         impl SubSubClass {
             #[new]
             fn new(py: Python<'_>) -> Py<SubSubClass> {
@@ -1003,26 +1003,26 @@ mod tests {
     }
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate", subclass)]
+    #[r2p(crate = "crate", subclass)]
     struct BaseClass {
         val1: usize,
     }
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate", extends=BaseClass, subclass)]
+    #[r2p(crate = "crate", extends=BaseClass, subclass)]
     struct SubClass {
         val2: usize,
     }
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate", extends=SubClass)]
+    #[r2p(crate = "crate", extends=SubClass)]
     struct SubSubClass {
-        #[pyo3(get)]
+        #[r2p(get)]
         val3: usize,
     }
 
     #[crate::pymethods]
-    #[pyo3(crate = "crate")]
+    #[r2p(crate = "crate")]
     impl SubSubClass {
         #[new]
         fn new(py: Python<'_>) -> Py<SubSubClass> {
@@ -1147,7 +1147,7 @@ mod tests {
     }
 
     #[crate::pyclass]
-    #[pyo3(crate = "crate")]
+    #[r2p(crate = "crate")]
     pub struct MyClass {
         data: [i32; 100],
     }
@@ -1188,11 +1188,11 @@ mod tests {
         use crate::types::{PyString, PyStringMethods};
         Python::attach(|py| {
             let obj = Bound::new(py, MyClass { data: [0; 100] })?;
-            let string = PyString::new(py, "pyo3");
+            let string = PyString::new(py, "r2p");
             // It is possible to return something not borrowing from the guard, but that shouldn't
             // matter. `RefCell` has the same behaviour
             let refmap = PyClassGuard::try_borrow(obj.as_unbound())?.map(|_| &string);
-            assert_eq!(refmap.to_cow()?, "pyo3");
+            assert_eq!(refmap.to_cow()?, "r2p");
             Ok::<_, PyErr>(())
         })
         .unwrap()

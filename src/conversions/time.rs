@@ -10,15 +10,15 @@
 //! ```toml
 //! [dependencies]
 //! time = "0.3"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"time\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"time\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of time and PyO3.
-//! The required time version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of time and r2p.
+//! The required time version may vary based on the version of r2p.
 //!
 //! ```rust
 //! use time::{Duration, OffsetDateTime, PrimitiveDateTime, Date, Time, Month};
-//! use pyo3::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
+//! use r2p::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
 //!
 //! fn main() -> PyResult<()> {
 //!     Python::initialize();

@@ -1,0 +1,19 @@
+[book]
+title = "r2p user guide"
+description = "r2p user guide"
+authors = ["PyO3 Project and Contributors"]
+
+[preprocessor.r2p_version]
+command = "python3 r2p_version.py"
+
+[preprocessor.glossary_linker]
+command = "python3 glossary_linker.py"
+
+[preprocessor.tabs]
+
+[output.html]
+git-repository-url = "https://github.com/jelven007/p2r/tree/main/docs/guide"
+edit-url-template = "https://github.com/jelven007/p2r/edit/main/docs/guide/{path}"
+playground.runnable = false
+additional-css = ["theme/tabs.css"]
+additional-js = ["theme/tabs.js"]

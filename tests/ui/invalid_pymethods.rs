@@ -1,4 +1,4 @@
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass]
 struct MyClass {}
@@ -7,7 +7,7 @@ struct MyClass {}
 impl MyClass {
     #[classattr]
     fn class_attr_with_args(_foo: i32) {}
-    //~^ ERROR: #[classattr] can only have one argument (of type pyo3::Python)
+    //~^ ERROR: #[classattr] can only have one argument (of type r2p::Python)
 
     #[classattr(foobar)]
     //~^ ERROR: `#[classattr]` does not take any arguments
@@ -37,7 +37,7 @@ struct NotATypeObject;
 impl MyClass {
     #[classmethod]
     fn classmethod_wrong_first_argument(_t: NotATypeObject) -> Self {
-        //~^ ERROR: the trait bound `NotATypeObject: From<&pyo3::Bound<'_, PyType>>` is not satisfied
+        //~^ ERROR: the trait bound `NotATypeObject: From<&r2p::Bound<'_, PyType>>` is not satisfied
         Self {}
     }
 }
@@ -58,31 +58,31 @@ impl MyClass {
 
 #[pymethods]
 impl MyClass {
-    #[pyo3(name = "__call__", text_signature = "()")]
+    #[r2p(name = "__call__", text_signature = "()")]
     fn text_signature_on_call() {}
     //~^ ERROR: static method needs #[staticmethod] attribute
 
     #[getter(x)]
-    #[pyo3(text_signature = "()")]
+    #[r2p(text_signature = "()")]
     //~^ ERROR: `text_signature` not allowed with `getter`
     fn text_signature_on_getter(&self) {}
 
     #[setter(x)]
-    #[pyo3(text_signature = "()")]
+    #[r2p(text_signature = "()")]
     //~^ ERROR: `text_signature` not allowed with `setter`
     fn text_signature_on_setter(&self) {}
 
     #[classattr]
-    #[pyo3(text_signature = "()")]
+    #[r2p(text_signature = "()")]
     //~^ ERROR: `text_signature` not allowed with `classattr`
     fn text_signature_on_classattr() {}
 
-    #[pyo3(text_signature = 1)]
+    #[r2p(text_signature = 1)]
     //~^ ERROR: expected a string literal or `None`
     fn invalid_text_signature() {}
 
-    #[pyo3(text_signature = "()")]
-    #[pyo3(text_signature = None)]
+    #[r2p(text_signature = "()")]
+    #[r2p(text_signature = None)]
     //~^ ERROR: `text_signature` may only be specified once
     fn duplicate_text_signature() {}
 }
@@ -90,17 +90,17 @@ impl MyClass {
 #[pymethods]
 impl MyClass {
     #[getter(x)]
-    #[pyo3(signature = ())]
+    #[r2p(signature = ())]
     //~^ ERROR: `signature` not allowed with `getter`
     fn signature_on_getter(&self) {}
 
     #[setter(x)]
-    #[pyo3(signature = ())]
+    #[r2p(signature = ())]
     //~^ ERROR: `signature` not allowed with `setter`
     fn signature_on_setter(&self) {}
 
     #[classattr]
-    #[pyo3(signature = ())]
+    #[r2p(signature = ())]
     //~^ ERROR: `signature` not allowed with `classattr`
     fn signature_on_classattr() {}
 }
@@ -126,7 +126,7 @@ impl MyClass {
 
 #[pymethods]
 impl MyClass {
-    #[new = ()] // in this form there's no suggestion to move arguments to `#[pyo3()]` attribute
+    #[new = ()] // in this form there's no suggestion to move arguments to `#[r2p()]` attribute
                 //~^ ERROR: `#[new]` does not take any arguments
     fn new_takes_no_arguments_nv(&self) {}
 }
@@ -169,7 +169,7 @@ impl MyClass {
 
 #[pymethods]
 impl MyClass {
-    #[pyo3(pass_module)]
+    #[r2p(pass_module)]
     //~^ ERROR: `pass_module` cannot be used on Python methods
     fn method_cannot_pass_module(&self, _m: &PyModule) {}
 }

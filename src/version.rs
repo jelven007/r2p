@@ -5,9 +5,9 @@
 /// # Examples
 ///
 /// ```rust
-/// # use pyo3::Python;
+/// # use r2p::Python;
 /// Python::attach(|py| {
-///     // PyO3 supports Python 3.9 and up.
+///     // r2p supports Python 3.9 and up.
 ///     assert!(py.version_info() >= (3, 9));
 ///     assert!(py.version_info() >= (3, 9, 0));
 /// });

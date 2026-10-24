@@ -22,17 +22,17 @@
 //! [dependencies]
 //! ## change * to the version you want to use, ideally the latest.
 //! anyhow = "*"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"anyhow\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"anyhow\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of anyhow and PyO3.
-//! The required anyhow version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of anyhow and r2p.
+//! The required anyhow version may vary based on the version of r2p.
 //!
 //! # Example: Propagating a `PyErr` into [`anyhow::Error`]
 //!
 //! ```rust
 //! # #[cfg(wip_feature_std)]
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //! # #[cfg(wip_feature_std)]
 //! use std::path::PathBuf;
 //!
@@ -65,8 +65,8 @@
 //! it can already convert anything that implements [`Error`](core::error::Error):
 //!
 //! ```rust
-//! use pyo3::prelude::*;
-//! use pyo3::types::PyBytes;
+//! use r2p::prelude::*;
+//! use r2p::types::PyBytes;
 //!
 //! // An example function that must handle multiple error types.
 //! //
@@ -146,7 +146,7 @@ mod test_anyhow {
     }
 
     #[test]
-    fn test_pyo3_exception_contents() {
+    fn test_r2p_exception_contents() {
         let err = h().unwrap_err();
         let expected_contents = format!("{err:?}");
         let pyerr = PyErr::from(err);
@@ -163,7 +163,7 @@ mod test_anyhow {
     }
 
     #[test]
-    fn test_pyo3_exception_contents2() {
+    fn test_r2p_exception_contents2() {
         let err = k().unwrap_err();
         let expected_contents = format!("{err:?}");
         let pyerr = PyErr::from(err);
@@ -176,7 +176,7 @@ mod test_anyhow {
     }
 
     #[test]
-    fn test_pyo3_unwrap_simple_err() {
+    fn test_r2p_unwrap_simple_err() {
         let origin_exc = PyValueError::new_err("Value Error");
         let err: anyhow::Error = origin_exc.into();
         let converted: PyErr = err.into();
@@ -185,7 +185,7 @@ mod test_anyhow {
         ))
     }
     #[test]
-    fn test_pyo3_unwrap_complex_err() {
+    fn test_r2p_unwrap_complex_err() {
         let origin_exc = PyValueError::new_err("Value Error");
         let mut err: anyhow::Error = origin_exc.into();
         err = err.context("Context");

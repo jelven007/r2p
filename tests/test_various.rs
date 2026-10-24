@@ -1,8 +1,8 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::py_run;
-use pyo3::types::PyTuple;
+use r2p::prelude::*;
+use r2p::py_run;
+use r2p::types::PyTuple;
 
 use std::fmt;
 
@@ -37,7 +37,7 @@ fn mut_ref_arg() {
 
 #[pyclass]
 struct PyUsize {
-    #[pyo3(get)]
+    #[r2p(get)]
     pub value: usize,
 }
 
@@ -115,7 +115,7 @@ fn pytuple_pyclass_iter() {
 
 #[test]
 fn test_pickle() {
-    use pyo3::types::PyDict;
+    use r2p::types::PyDict;
 
     #[pyclass(dict, module = "test_module")]
     struct PickleSupport {}
@@ -187,8 +187,8 @@ impl fmt::Display for MyError {
 
 /// Important for the automatic conversion to `PyErr`.
 impl From<MyError> for PyErr {
-    fn from(err: MyError) -> pyo3::PyErr {
-        pyo3::exceptions::PyOSError::new_err(err.to_string())
+    fn from(err: MyError) -> r2p::PyErr {
+        r2p::exceptions::PyOSError::new_err(err.to_string())
     }
 }
 

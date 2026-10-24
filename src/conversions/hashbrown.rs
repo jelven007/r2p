@@ -11,11 +11,11 @@
 //! [dependencies]
 //! # change * to the latest versions
 //! hashbrown = "*"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"hashbrown\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"hashbrown\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of hashbrown and PyO3.
-//! The required hashbrown version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of hashbrown and r2p.
+//! The required hashbrown version may vary based on the version of r2p.
 #[cfg(feature = "experimental-inspect")]
 use crate::inspect::PyStaticExpr;
 use crate::{

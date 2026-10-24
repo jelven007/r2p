@@ -1,28 +1,30 @@
-# PyO3 Examples
+# 使用与打包示例
 
-These example crates are a collection of toy extension modules built with PyO3. They are all tested using `nox` in PyO3's CI.
+现有示例包括 maturin、setuptools-rust、Meson、Rust 嵌入和其他扩展集成，按各示例清单和说明运行。
+FFI 独立示例位于 `crates/r2p-ffi/examples/`。
 
-Below is a brief description of each of these:
+| 示例 | 目的 |
+| --- | --- |
+| `decorator` | 可调用对象/装饰器实现 |
+| `maturin-starter` | maturin 扩展开发模板 |
+| `meson-starter` | meson-python 构建模板 |
+| `setuptools-rust-starter` | setuptools-rust 构建模板 |
+| `plugin` | Rust 应用使用 Python 脚本 |
+| `word-count` | 使用 Rust 进行文本计数的扩展示例 |
 
-| Example | Description |
-| ------- | ----------- |
-| `decorator` | A project showcasing the example from the [Emulating callable objects](https://pyo3.rs/latest/class/call.html) chapter of the guide. |
-| `maturin-starter` | A template project which is configured to use [`maturin`](https://github.com/PyO3/maturin) for development. |
-| `meson-starter` | A template project which is configured to use [`meson-python`](https://github.com/mesonbuild/meson-python) for development. |
-| `setuptools-rust-starter` | A template project which is configured to use [`setuptools_rust`](https://github.com/PyO3/setuptools-rust/) for development. |
-| `plugin` | Illustrates how to use Python as a scripting language within a Rust application |
+根 `examples/Cargo.toml` 组织示例清单；生成模板在 `.template/` 下维护，模板中的发行版本依赖与本地开发路径用途不同。
 
-Note that there are also other examples in the `pyo3-ffi/examples`
-directory that illustrate how to create rust extensions using raw FFI calls into
-the CPython C API instead of using PyO3's abstractions.
-
-## Creating new projects from these examples
-
-To copy an example, use [`cargo-generate`](https://crates.io/crates/cargo-generate). Follow the commands below, replacing `<example>` with the example to start from:
+复制上游模板可使用 cargo-generate；此命令生成一个新的消费项目：
 
 ```bash
-$ cargo install cargo-generate
-$ cargo generate --git https://github.com/PyO3/pyo3 examples/<example>
+cargo install cargo-generate
+cargo generate --path /path/to/r2p examples/<example>
 ```
 
-(`cargo generate` will take a little while to clone the PyO3 repo first; be patient when waiting for the command to run.)
+`<example>` 替换为具体模板目录。
+本仓库尚未提交的目录迁移不能通过远端生成命令获取；修改本地模板时按 cargo-generate 的本地路径方式验证。
+
+从根运行 `uv run --isolated --only-group nox nox -s test-py`，包含跨语言测试和各示例 Nox 会话。
+部分示例依赖额外原生工具或 Python 包，实际验证范围见[验证报告](../docs/testing/validation-report.md)。
+
+学习入口：[用户指南](../docs/guide/src/SUMMARY.md)；贡献和环境：[开发指南](../docs/development/developer-guide.md)。

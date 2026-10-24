@@ -1,13 +1,13 @@
 //! These tests are located in a separate file because they cause conflicting implementation
 //! errors, which means other errors such as typechecking errors are not reported.
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass]
 struct TwoNew {}
 
 #[pymethods]
-//~^ ERROR: conflicting implementations of trait `pyo3::impl_::pyclass::doc::PyClassNewTextSignature` for type `TwoNew`
+//~^ ERROR: conflicting implementations of trait `r2p::impl_::pyclass::doc::PyClassNewTextSignature` for type `TwoNew`
 //~| ERROR: duplicate definitions with name `__pymethod___new____`
 impl TwoNew {
     #[new]
@@ -27,10 +27,10 @@ struct DuplicateMethod {}
 #[pymethods]
 //~^ ERROR: duplicate definitions with name `__pymethod_func__`
 impl DuplicateMethod {
-    #[pyo3(name = "func")]
+    #[r2p(name = "func")]
     fn func_a(&self) {}
 
-    #[pyo3(name = "func")]
+    #[r2p(name = "func")]
     fn func_b(&self) {}
 }
 

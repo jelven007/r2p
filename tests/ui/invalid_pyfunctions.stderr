@@ -40,11 +40,11 @@ error: expected `&PyModule` or `Py<PyModule>` as first argument with `pass_modul
 35 | fn pass_module_but_no_arguments<'py>() {}
    |                                     ^^
 
-error[E0277]: the trait bound `&str: From<&pyo3::Bound<'_, pyo3::types::PyModule>>` is not satisfied
+error[E0277]: the trait bound `&str: From<&r2p::Bound<'_, r2p::types::PyModule>>` is not satisfied
   --> tests/ui/invalid_pyfunctions.rs:40:14
    |
 40 |     _string: &str,
-   |              ^ the trait `From<&pyo3::Bound<'_, pyo3::types::PyModule>>` is not implemented for `&str`
+   |              ^ the trait `From<&r2p::Bound<'_, r2p::types::PyModule>>` is not implemented for `&str`
    |
    = help: `String` implements trait `From<T>`:
              From<&String>
@@ -53,7 +53,7 @@ error[E0277]: the trait bound `&str: From<&pyo3::Bound<'_, pyo3::types::PyModule
              From<Box<str>>
              From<Cow<'_, str>>
              From<char>
-   = note: required for `&pyo3::Bound<'_, pyo3::types::PyModule>` to implement `Into<&str>`
+   = note: required for `&r2p::Bound<'_, r2p::types::PyModule>` to implement `Into<&str>`
 
 error: aborting due to 8 previous errors
 

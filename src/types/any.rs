@@ -22,7 +22,7 @@ use core::ptr;
 
 /// Represents any Python object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyAny>`][crate::Py] or [`Bound<'py, PyAny>`][Bound].
 ///
 /// For APIs available on all Python objects, see the [`PyAnyMethods`] trait which is implemented for
@@ -86,7 +86,7 @@ pyobject_subclassable_native_type!(PyAny, ffi::PyObject);
 
 /// This trait represents the Python APIs which are usable on all Python objects.
 ///
-/// It is recommended you import this trait via `use pyo3::prelude::*` rather than
+/// It is recommended you import this trait via `use r2p::prelude::*` rather than
 /// by importing this trait directly.
 #[doc(alias = "PyAny")]
 pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
@@ -106,7 +106,7 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Example: `intern!`ing the attribute name
     ///
     /// ```
-    /// # use pyo3::{prelude::*, intern};
+    /// # use r2p::{prelude::*, intern};
     /// #
     /// #[pyfunction]
     /// fn has_version(sys: &Bound<'_, PyModule>) -> PyResult<bool> {
@@ -132,7 +132,7 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Example: `intern!`ing the attribute name
     ///
     /// ```
-    /// # use pyo3::{prelude::*, intern};
+    /// # use r2p::{prelude::*, intern};
     /// #
     /// #[pyfunction]
     /// fn version<'py>(sys: &Bound<'py, PyModule>) -> PyResult<Bound<'py, PyAny>> {
@@ -163,7 +163,7 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     ///
     /// # Example: Retrieving an optional attribute
     /// ```
-    /// # use pyo3::{prelude::*, intern};
+    /// # use r2p::{prelude::*, intern};
     /// #
     /// #[pyfunction]
     /// fn get_version_if_exists<'py>(sys: &Bound<'py, PyModule>) -> PyResult<Option<Bound<'py, PyAny>>> {
@@ -190,7 +190,7 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Example: `intern!`ing the attribute name
     ///
     /// ```
-    /// # use pyo3::{prelude::*, intern};
+    /// # use r2p::{prelude::*, intern};
     /// #
     /// #[pyfunction]
     /// fn set_answer(ob: &Bound<'_, PyAny>) -> PyResult<()> {
@@ -234,8 +234,8 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyFloat;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyFloat;
     /// use core::cmp::Ordering;
     ///
     /// # fn main() -> PyResult<()> {
@@ -251,8 +251,8 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// It will return `PyErr` for values that cannot be compared:
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::{PyFloat, PyString};
+    /// use r2p::prelude::*;
+    /// use r2p::types::{PyFloat, PyString};
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -288,8 +288,8 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::class::basic::CompareOp;
-    /// use pyo3::prelude::*;
+    /// use r2p::class::basic::CompareOp;
+    /// use r2p::prelude::*;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -443,7 +443,7 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -472,9 +472,9 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyDict;
-    /// use pyo3_ffi::c_str;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyDict;
+    /// use r2p_ffi::c_str;
     /// use core::ffi::CStr;
     ///
     /// const CODE: &CStr = cr#"
@@ -508,7 +508,7 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```no_run
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -530,8 +530,8 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3_ffi::c_str;
+    /// use r2p::prelude::*;
+    /// use r2p_ffi::c_str;
     /// use core::ffi::CStr;
     ///
     /// const CODE: &CStr = cr#"
@@ -566,9 +566,9 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyDict;
-    /// use pyo3_ffi::c_str;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyDict;
+    /// use r2p_ffi::c_str;
     /// use core::ffi::CStr;
     ///
     /// const CODE: &CStr = cr#"
@@ -613,8 +613,8 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3_ffi::c_str;
+    /// use r2p::prelude::*;
+    /// use r2p_ffi::c_str;
     /// use core::ffi::CStr;
     ///
     /// const CODE: &CStr = cr#"
@@ -650,8 +650,8 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3_ffi::c_str;
+    /// use r2p::prelude::*;
+    /// use r2p_ffi::c_str;
     /// use core::ffi::CStr;
     ///
     /// const CODE: &CStr = cr#"
@@ -725,8 +725,8 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// # Example: Checking a Python object for iterability
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::{PyAny, PyNone};
+    /// use r2p::prelude::*;
+    /// use r2p::types::{PyAny, PyNone};
     ///
     /// fn is_iterable(obj: &Bound<'_, PyAny>) -> bool {
     ///     match obj.try_iter() {
@@ -758,7 +758,7 @@ pub trait PyAnyMethods<'py>: crate::sealed::Sealed {
     /// Returns the reference count for the Python object.
     #[deprecated(
         since = "0.29.0",
-        note = "use `pyo3::ffi::Py_REFCNT(obj.as_ptr())` instead"
+        note = "use `r2p::ffi::Py_REFCNT(obj.as_ptr())` instead"
     )]
     fn get_refcnt(&self) -> isize;
 
@@ -1346,7 +1346,7 @@ mod tests {
         types::{IntoPyDict, PyAny, PyAnyMethods, PyBool, PyInt, PyList, PyModule, PyTypeMethods},
     };
     use core::fmt::Debug;
-    use pyo3_ffi::c_str;
+    use r2p_ffi::c_str;
 
     #[test]
     fn test_lookup_special() {

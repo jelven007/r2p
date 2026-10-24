@@ -1,6 +1,6 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass(subclass)]
 struct Base {
@@ -64,7 +64,7 @@ impl SubWithInit {
         PyClassInitializer::from(Base::new()).add_subclass(Self)
     }
 
-    fn __init__(mut slf: pyo3::PyClassGuardMut<'_, Self>) {
+    fn __init__(mut slf: r2p::PyClassGuardMut<'_, Self>) {
         slf.as_super().__init__(); // need to call super __init__ manually
         slf.as_super().num += 1;
     }

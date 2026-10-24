@@ -201,7 +201,7 @@ impl PyTypeBuilder {
     }
 
     fn finalize_methods_and_properties(&mut self) -> Vec<GetSetDefType> {
-        let method_defs: Vec<pyo3_ffi::PyMethodDef> = core::mem::take(&mut self.method_defs);
+        let method_defs: Vec<r2p_ffi::PyMethodDef> = core::mem::take(&mut self.method_defs);
         // Safety: Py_tp_methods expects a raw vec of PyMethodDef
         unsafe { self.push_raw_vec_slot(ffi::Py_tp_methods, method_defs) };
 
@@ -246,7 +246,7 @@ impl PyTypeBuilder {
                     unsafe {
                         trampoline(|_| {
                             let dict_offset = closure as ffi::Py_ssize_t;
-                            // we don't support negative dict_offset here; PyO3 doesn't set it negative
+                            // we don't support negative dict_offset here; r2p doesn't set it negative
                             assert!(dict_offset > 0);
                             let dict_ptr =
                                 object.byte_offset(dict_offset).cast::<*mut ffi::PyObject>();
@@ -669,7 +669,7 @@ impl GetSetDefType {
                         closure: *mut c_void,
                     ) -> *mut ffi::PyObject {
                         let slf = unsafe { NonNull::new_unchecked(slf) };
-                        // Safety: PyO3 sets the closure when constructing the ffi getter so this cast should always be valid
+                        // Safety: r2p sets the closure when constructing the ffi getter so this cast should always be valid
                         let getter: Getter = unsafe { core::mem::transmute(closure) };
                         unsafe { trampoline(|py| getter(py, slf)) }
                     }
@@ -682,7 +682,7 @@ impl GetSetDefType {
                         closure: *mut c_void,
                     ) -> c_int {
                         let slf = unsafe { NonNull::new_unchecked(slf) };
-                        // Safety: PyO3 sets the closure when constructing the ffi setter so this cast should always be valid
+                        // Safety: r2p sets the closure when constructing the ffi setter so this cast should always be valid
                         let setter: Setter = unsafe { core::mem::transmute(closure) };
                         unsafe {
                             trampoline(|py| {

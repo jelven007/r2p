@@ -9,7 +9,7 @@
 //!
 //! ```toml
 //! [dependencies]
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"num-rational\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"num-rational\"] }")]
 //! num-rational = "0.4.1"
 //! ```
 //!
@@ -19,7 +19,7 @@
 //!
 //! ```rust,no_run
 //! use num_rational::Ratio;
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! #[pyfunction]
 //! fn add_five_to_fraction(fraction: Ratio<i32>) -> Ratio<i32> {
@@ -27,7 +27,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_num_rational")]
+//! # #[r2p(name = "example_num_rational")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(add_five_to_fraction, m)?)?;
 //!     Ok(())

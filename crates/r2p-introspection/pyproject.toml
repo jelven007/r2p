@@ -1,0 +1,33 @@
+[project]
+name = "r2p-introspection"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Rust",
+]
+license-files = ["LICENSE-APACHE", "LICENSE-MIT"]
+dynamic = [
+    "authors",
+    "description",
+    "keywords",
+    "license",
+    "maintainers",
+    "readme",
+    "version",
+]
+
+[project.urls]
+Changelog = "https://github.com/jelven007/p2r/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/jelven007/p2r/tree/main/docs/guide"
+Homepage = "https://github.com/jelven007/p2r/tree/main/docs/guide"
+Source = "https://github.com/jelven007/p2r/tree/main/crates/r2p-introspection"
+Tracker = "https://github.com/jelven007/p2r/issues"
+
+[build-system]
+requires = ["maturin>=1,<2"]
+build-backend = "maturin"
+
+[tool.maturin]
+bindings = "bin"

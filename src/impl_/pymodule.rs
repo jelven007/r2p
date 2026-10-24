@@ -76,7 +76,7 @@ impl ModuleDef {
         slots: &'static PrimaryModuleSlots,
         secondary_slots: &'static SecondaryModuleSlots,
     ) -> Self {
-        // This is only used in PyO3 for append_to_inittab on Python 3.15 and newer.
+        // This is only used in r2p for append_to_inittab on Python 3.15 and newer.
         // There could also be other tools that need the legacy init hook.
         #[cfg(not(all(Py_LIMITED_API, Py_GIL_DISABLED)))]
         let ffi_def = UnsafeCell::new(ffi::PyModuleDef {
@@ -148,7 +148,7 @@ impl ModuleDef {
                 ) {
                     if initialized_interpreter != current_interpreter {
                         return Err(PyImportError::new_err(
-                            "PyO3 modules do not yet support subinterpreters, see https://github.com/PyO3/pyo3/issues/576",
+                            "r2p modules do not yet support subinterpreters, see https://github.com/PyO3/pyo3/issues/576",
                         ));
                     }
                 }
@@ -160,7 +160,7 @@ impl ModuleDef {
                 // twice
                 if self.module.get(py).is_some() {
                     return Err(PyImportError::new_err(
-                        "PyO3 modules compiled for the stable API on Windows targeting Python 3.9 may only be initialized once per interpreter process",
+                        "r2p modules compiled for the stable API on Windows targeting Python 3.9 may only be initialized once per interpreter process",
                     ));
                 }
             }
@@ -215,11 +215,11 @@ impl ModuleDef {
 #[cfg(Py_3_15)]
 #[doc(hidden)]
 #[macro_export]
-macro_rules! __pyo3_pymodexport {
+macro_rules! __r2p_pymodexport {
     ($symbol:literal, $def:path) => {
         #[doc(hidden)]
         #[unsafe(export_name = $symbol)]
-        pub unsafe extern "C" fn __pyo3_export() -> *mut $crate::ffi::PySlot {
+        pub unsafe extern "C" fn __r2p_export() -> *mut $crate::ffi::PySlot {
             $def.get_slots()
         }
     };
@@ -228,7 +228,7 @@ macro_rules! __pyo3_pymodexport {
 #[cfg(not(Py_3_15))]
 #[doc(hidden)]
 #[macro_export]
-macro_rules! __pyo3_pymodexport {
+macro_rules! __r2p_pymodexport {
     ($symbol:literal, $def:path) => {};
 }
 
@@ -239,11 +239,11 @@ macro_rules! __pyo3_pymodexport {
 #[cfg(not(all(Py_3_15, Py_LIMITED_API, Py_GIL_DISABLED)))]
 #[doc(hidden)]
 #[macro_export]
-macro_rules! __pyo3_pyinit {
+macro_rules! __r2p_pyinit {
     ($symbol:literal, $def:path) => {
         #[doc(hidden)]
         #[unsafe(export_name = $symbol)]
-        pub unsafe extern "C" fn __pyo3_init() -> *mut $crate::ffi::PyObject {
+        pub unsafe extern "C" fn __r2p_init() -> *mut $crate::ffi::PyObject {
             $def.init_multi_phase()
         }
     };
@@ -252,7 +252,7 @@ macro_rules! __pyo3_pyinit {
 #[cfg(all(Py_3_15, Py_LIMITED_API, Py_GIL_DISABLED))]
 #[doc(hidden)]
 #[macro_export]
-macro_rules! __pyo3_pyinit {
+macro_rules! __r2p_pyinit {
     ($symbol:literal, $def:path) => {};
 }
 

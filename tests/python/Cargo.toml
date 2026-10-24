@@ -1,0 +1,26 @@
+[package]
+authors = ["PyO3 Authors"]
+name = "r2p-pytests"
+version = "0.1.0"
+description = "Python-based tests for r2p"
+edition = "2024"
+publish = false
+rust-version = "1.85"
+
+[features]
+experimental-async = ["r2p/experimental-async"]
+experimental-inspect = ["r2p/experimental-inspect"]
+
+[dependencies]
+r2p-maturin-bridge = { package = "pyo3-ffi", path = "../../tools/maturin-bridge" }
+r2p.path = "../.."
+
+[build-dependencies]
+r2p-build-config = { path = "../../crates/r2p-build-config" }
+
+[lib]
+name = "r2p_pytests"
+crate-type = ["cdylib"]
+
+[lints]
+workspace = true

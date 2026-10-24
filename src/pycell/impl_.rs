@@ -186,7 +186,7 @@ pub trait GetBorrowChecker<T: PyClassImpl> {
         class_object: &T::Layout,
     ) -> &<T::PyClassMutability as PyClassMutability>::Checker;
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn borrow_checker_during_gc(
         class_object: PyBorrowedUnbound<'_, T>,
     ) -> &<T::PyClassMutability as PyClassMutability>::Checker;
@@ -197,7 +197,7 @@ impl<T: PyClassImpl<PyClassMutability = Self>> GetBorrowChecker<T> for MutableCl
         &class_object.contents().borrow_checker
     }
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn borrow_checker_during_gc(class_object: PyBorrowedUnbound<'_, T>) -> &BorrowChecker {
         &T::Layout::contents_during_gc(class_object).borrow_checker
     }
@@ -208,7 +208,7 @@ impl<T: PyClass<PyClassMutability = Self>> GetBorrowChecker<T> for ImmutableClas
         &class_object.contents().borrow_checker
     }
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn borrow_checker_during_gc(class_object: PyBorrowedUnbound<'_, T>) -> &EmptySlot {
         &T::Layout::contents_during_gc(class_object).borrow_checker
     }
@@ -224,7 +224,7 @@ where
         <<T::BaseType as PyClassImpl>::Layout>::borrow_checker(class_object.ob_base())
     }
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn borrow_checker_during_gc(class_object: PyBorrowedUnbound<'_, T>) -> &BorrowChecker {
         // SAFETY: `T` can always be interpreted as its base type
         let super_obj = unsafe { class_object.cast_unchecked() };
@@ -397,7 +397,7 @@ pub trait PyClassObjectLayout<T: PyClassImpl>: PyClassObjectBaseLayout<T> {
     fn contents_mut(&mut self) -> &mut PyClassObjectContents<T>;
 
     /// Variant of the above which is correct to call during GC (e.g. no refcounting)
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn contents_during_gc(this: PyBorrowedUnbound<'_, T>) -> &PyClassObjectContents<T>;
 
     /// Obtain a pointer to the pyclass struct.
@@ -408,7 +408,7 @@ pub trait PyClassObjectLayout<T: PyClassImpl>: PyClassObjectBaseLayout<T> {
 
     fn borrow_checker(&self) -> &<T::PyClassMutability as PyClassMutability>::Checker;
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn borrow_checker_during_gc(
         this: PyBorrowedUnbound<'_, T>,
     ) -> &<T::PyClassMutability as PyClassMutability>::Checker;
@@ -504,7 +504,7 @@ impl<T: PyClassImpl<Layout = Self>> PyClassObjectLayout<T> for PyStaticClassObje
         &mut self.contents
     }
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn contents_during_gc(this: PyBorrowedUnbound<'_, T>) -> &PyClassObjectContents<T> {
         let this = this.as_non_null().cast::<Self>();
         unsafe { &this.as_ref().contents }
@@ -522,7 +522,7 @@ impl<T: PyClassImpl<Layout = Self>> PyClassObjectLayout<T> for PyStaticClassObje
         T::PyClassMutability::borrow_checker(self)
     }
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn borrow_checker_during_gc(
         this: PyBorrowedUnbound<'_, T>,
     ) -> &<T::PyClassMutability as PyClassMutability>::Checker {
@@ -572,7 +572,7 @@ impl<T: PyClass<Layout = Self>> PyVariableClassObject<T> {
     unsafe fn get_contents_of_obj(
         obj: *mut ffi::PyObject,
     ) -> *mut MaybeUninit<PyClassObjectContents<T>> {
-        // TODO: it would be nice to eventually avoid coupling to the PyO3 statics here, maybe using
+        // TODO: it would be nice to eventually avoid coupling to the r2p statics here, maybe using
         // 3.14's PyType_GetBaseByToken, to support PEP 587 / multiple interpreters better
         // SAFETY: caller guarantees attached to the interpreter
         let type_obj = T::type_object_raw(unsafe { Python::assume_attached() });
@@ -638,10 +638,10 @@ impl<T: PyClass<Layout = Self>> PyClassObjectLayout<T> for PyVariableClassObject
             .expect("should be able to cast PyClassObjectContents pointer")
     }
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn contents_during_gc(this: PyBorrowedUnbound<'_, T>) -> &PyClassObjectContents<T> {
         let obj: *mut ffi::PyObject = this.as_ptr();
-        // This goes through PyO3 statics which is technically not correct once PyO3 supports
+        // This goes through r2p statics which is technically not correct once r2p supports
         // reloadable modules / module state.
         let type_obj = T::lazy_type_object()
             .get_during_gc()
@@ -665,7 +665,7 @@ impl<T: PyClass<Layout = Self>> PyClassObjectLayout<T> for PyVariableClassObject
         T::PyClassMutability::borrow_checker(self)
     }
 
-    #[allow(private_interfaces, reason = "only intended for use within PyO3")]
+    #[allow(private_interfaces, reason = "only intended for use within r2p")]
     fn borrow_checker_during_gc(
         this: PyBorrowedUnbound<'_, T>,
     ) -> &<T::PyClassMutability as PyClassMutability>::Checker {

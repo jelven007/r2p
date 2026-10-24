@@ -16,5 +16,5 @@ def test_doc() -> None:
 
     assert (
         setuptools_rust_starter.__doc__
-        == "An example module implemented in Rust using PyO3."
+        == "An example module implemented in Rust using r2p."
     )

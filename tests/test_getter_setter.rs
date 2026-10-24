@@ -1,9 +1,9 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::py_run;
-use pyo3::types::PyString;
-use pyo3::types::{IntoPyDict, PyList};
+use r2p::prelude::*;
+use r2p::py_run;
+use r2p::types::PyString;
+use r2p::types::{IntoPyDict, PyList};
 use std::cell::Cell;
 use std::convert::Infallible;
 
@@ -42,7 +42,7 @@ impl ClassWithProperties {
     }
 
     #[setter]
-    fn set_from_len(&mut self, #[pyo3(from_py_with = extract_len)] value: i32) {
+    fn set_from_len(&mut self, #[r2p(from_py_with = extract_len)] value: i32) {
         self.num = value;
     }
 
@@ -94,9 +94,9 @@ fn class_with_properties() {
 
 #[pyclass]
 struct GetterSetter {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     num: i32,
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     text: String,
 }
 
@@ -202,7 +202,7 @@ fn get_set_all() {
 
 #[pyclass(get_all)]
 struct All2 {
-    #[pyo3(set)]
+    #[r2p(set)]
     num: i32,
 }
 
@@ -218,7 +218,7 @@ fn get_all_and_set() {
 
 #[pyclass(unsendable)]
 struct CellGetterSetter {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     cell_inner: Cell<i32>,
 }
 
@@ -265,7 +265,7 @@ fn borrowed_value_with_lifetime_of_self() {
 fn frozen_py_field_get() {
     #[pyclass(frozen)]
     struct FrozenPyField {
-        #[pyo3(get)]
+        #[r2p(get)]
         value: Py<PyString>,
     }
 
@@ -335,7 +335,7 @@ fn test_ref_only_getter() {
 
     #[pyclass]
     struct Container {
-        #[pyo3(get)]
+        #[r2p(get)]
         value: RefOnly,
     }
 }
@@ -345,7 +345,7 @@ fn test_unit_getter() {
     #[derive(Clone)]
     #[pyclass]
     struct Container {
-        #[pyo3(get)]
+        #[r2p(get)]
         value: (),
     }
 

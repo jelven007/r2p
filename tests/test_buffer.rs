@@ -3,7 +3,7 @@
 #![cfg(feature = "macros")]
 #![cfg(any(not(Py_LIMITED_API), Py_3_11))]
 
-use pyo3::{buffer::PyBuffer, exceptions::PyBufferError, ffi, prelude::*};
+use r2p::{buffer::PyBuffer, exceptions::PyBufferError, ffi, prelude::*};
 use std::{
     ffi::{c_int, c_void},
     ptr,

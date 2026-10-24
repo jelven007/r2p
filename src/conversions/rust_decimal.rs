@@ -9,12 +9,12 @@
 //!
 //! ```toml
 //! [dependencies]
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"rust_decimal\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"rust_decimal\"] }")]
 //! rust_decimal = "1.0"
 //! ```
 //!
-//! Note that you must use a compatible version of rust_decimal and PyO3.
-//! The required rust_decimal version may vary based on the version of PyO3.
+//! Note that you must use a compatible version of rust_decimal and r2p.
+//! The required rust_decimal version may vary based on the version of r2p.
 //!
 //! # Example
 //!
@@ -22,7 +22,7 @@
 //!
 //! ```rust,no_run
 //! use rust_decimal::Decimal;
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! #[pyfunction]
 //! fn add_one(d: Decimal) -> Decimal {
@@ -30,7 +30,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_rust_decimal")]
+//! # #[r2p(name = "example_rust_decimal")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(add_one, m)?)?;
 //!     Ok(())

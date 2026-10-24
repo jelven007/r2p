@@ -1,7 +1,7 @@
 #![cfg(feature = "macros")]
 
-use pyo3::types::{PyDict, PyString};
-use pyo3::{IntoPyObject, IntoPyObjectExt, IntoPyObjectRef, prelude::*};
+use r2p::types::{PyDict, PyString};
+use r2p::{IntoPyObject, IntoPyObjectExt, IntoPyObjectRef, prelude::*};
 use std::collections::BTreeMap;
 
 #[macro_use]
@@ -9,11 +9,11 @@ mod test_utils;
 
 #[derive(Debug, Clone, IntoPyObject, IntoPyObjectRef, FromPyObject)]
 pub struct A<'py> {
-    #[pyo3(item)]
+    #[r2p(item)]
     s: String,
-    #[pyo3(item)]
+    #[r2p(item)]
     t: Bound<'py, PyString>,
-    #[pyo3(item("foo"))]
+    #[r2p(item("foo"))]
     p: Bound<'py, PyAny>,
 }
 
@@ -48,7 +48,7 @@ fn test_named_fields_struct() {
 }
 
 #[derive(Debug, Clone, PartialEq, IntoPyObject, IntoPyObjectRef, FromPyObject)]
-#[pyo3(transparent)]
+#[r2p(transparent)]
 pub struct B {
     test: String,
 }
@@ -70,7 +70,7 @@ fn test_transparent_named_field_struct() {
 }
 
 #[derive(Debug, Clone, PartialEq, IntoPyObject, IntoPyObjectRef, FromPyObject)]
-#[pyo3(transparent)]
+#[r2p(transparent)]
 pub struct D<T> {
     test: T,
 }
@@ -212,18 +212,18 @@ fn int_wrapper_from_py(v: &Bound<'_, PyAny>) -> PyResult<IntWrapper> {
 pub enum Foo {
     TupleVar(usize, String),
     StructVar {
-        #[pyo3(item)]
+        #[r2p(item)]
         test: char,
-        #[pyo3(item, into_py_with=int_wrapper_into_py, from_py_with=int_wrapper_from_py)]
+        #[r2p(item, into_py_with=int_wrapper_into_py, from_py_with=int_wrapper_from_py)]
         int: IntWrapper,
     },
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     TransparentTuple(usize),
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     TransparentStructVar {
         a: Option<String>,
     },
-    #[pyo3(rename_all = "camelCase", from_item_all)]
+    #[r2p(rename_all = "camelCase", from_item_all)]
     RenameAll {
         long_field_name: [u16; 2],
         other_field: Option<String>,

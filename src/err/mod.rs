@@ -91,8 +91,8 @@ impl PyErr {
     /// # Examples
     ///
     /// ```
-    /// use pyo3::prelude::*;
-    /// use pyo3::exceptions::PyTypeError;
+    /// use r2p::prelude::*;
+    /// use r2p::exceptions::PyTypeError;
     ///
     /// #[pyfunction]
     /// fn always_throws() -> PyResult<()> {
@@ -100,7 +100,7 @@ impl PyErr {
     /// }
     /// #
     /// # Python::attach(|py| {
-    /// #     let fun = pyo3::wrap_pyfunction!(always_throws, py).unwrap();
+    /// #     let fun = r2p::wrap_pyfunction!(always_throws, py).unwrap();
     /// #     let err = fun.call0().expect_err("called a function that should always return an error but the return value was Ok");
     /// #     assert!(err.is_instance_of::<PyTypeError>(py))
     /// # });
@@ -109,8 +109,8 @@ impl PyErr {
     /// In most cases, you can use a concrete exception's constructor instead:
     ///
     /// ```
-    /// use pyo3::prelude::*;
-    /// use pyo3::exceptions::PyTypeError;
+    /// use r2p::prelude::*;
+    /// use r2p::exceptions::PyTypeError;
     ///
     /// #[pyfunction]
     /// fn always_throws() -> PyResult<()> {
@@ -118,7 +118,7 @@ impl PyErr {
     /// }
     /// #
     /// # Python::attach(|py| {
-    /// #     let fun = pyo3::wrap_pyfunction!(always_throws, py).unwrap();
+    /// #     let fun = r2p::wrap_pyfunction!(always_throws, py).unwrap();
     /// #     let err = fun.call0().expect_err("called a function that should always return an error but the return value was Ok");
     /// #     assert!(err.is_instance_of::<PyTypeError>(py))
     /// # });
@@ -164,10 +164,10 @@ impl PyErr {
     ///
     /// # Examples
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::PyTypeInfo;
-    /// use pyo3::exceptions::PyTypeError;
-    /// use pyo3::types::PyString;
+    /// use r2p::prelude::*;
+    /// use r2p::PyTypeInfo;
+    /// use r2p::exceptions::PyTypeError;
+    /// use r2p::types::PyString;
     ///
     /// Python::attach(|py| {
     ///     // Case #1: Exception object
@@ -206,7 +206,7 @@ impl PyErr {
     ///
     /// # Examples
     /// ```rust
-    /// use pyo3::{prelude::*, exceptions::PyTypeError, types::PyType};
+    /// use r2p::{prelude::*, exceptions::PyTypeError, types::PyType};
     ///
     /// Python::attach(|py| {
     ///     let err: PyErr = PyTypeError::new_err(("some type error",));
@@ -222,7 +222,7 @@ impl PyErr {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::{exceptions::PyTypeError, PyErr, Python};
+    /// use r2p::{exceptions::PyTypeError, PyErr, Python};
     ///
     /// Python::attach(|py| {
     ///     let err: PyErr = PyTypeError::new_err(("some type error",));
@@ -253,7 +253,7 @@ impl PyErr {
     ///
     /// # Examples
     /// ```rust
-    /// use pyo3::{exceptions::PyTypeError, Python};
+    /// use r2p::{exceptions::PyTypeError, Python};
     ///
     /// Python::attach(|py| {
     ///     let err = PyTypeError::new_err(("some type error",));
@@ -278,7 +278,7 @@ impl PyErr {
     /// Takes the current error from the Python interpreter's global state and clears the global
     /// state. If no error is set, returns `None`.
     ///
-    /// If the error is a `PanicException` (which would have originated from a panic in a pyo3
+    /// If the error is a `PanicException` (which would have originated from a panic in a r2p
     /// callback) then this function will resume the panic.
     ///
     /// Use this function when it is not known if an error should be present. If the error is
@@ -306,7 +306,7 @@ impl PyErr {
             .unwrap_or_else(|_| String::from("Unwrapped panic from Python code"));
 
         std::eprintln!(
-            "--- PyO3 is resuming a panic after fetching a PanicException from Python. ---"
+            "--- r2p is resuming a panic after fetching a PanicException from Python. ---"
         );
         std::eprintln!("Python stack trace below:");
 
@@ -468,8 +468,8 @@ impl PyErr {
     ///
     /// Example:
     /// ```rust
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::exceptions::PyRuntimeError;
+    /// # use r2p::prelude::*;
+    /// # use r2p::exceptions::PyRuntimeError;
     /// # fn failing_function() -> PyResult<()> { Err(PyRuntimeError::new_err("foo")) }
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| {
@@ -493,16 +493,16 @@ impl PyErr {
     /// Equivalent to `warnings.warn()` in Python.
     ///
     /// The `category` should be one of the `Warning` classes available in
-    /// [`pyo3::exceptions`](crate::exceptions), or a subclass.  The Python
+    /// [`r2p::exceptions`](crate::exceptions), or a subclass.  The Python
     /// object can be retrieved using [`Python::get_type()`].
     ///
     /// Example:
     /// ```rust
-    /// # use pyo3::prelude::*;
-    /// # use pyo3::ffi::c_str;
+    /// # use r2p::prelude::*;
+    /// # use r2p::ffi::c_str;
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| {
-    ///     let user_warning = py.get_type::<pyo3::exceptions::PyUserWarning>();
+    ///     let user_warning = py.get_type::<r2p::exceptions::PyUserWarning>();
     ///     PyErr::warn(py, &user_warning, c"I am warning you", 0)?;
     ///     Ok(())
     /// })
@@ -530,7 +530,7 @@ impl PyErr {
     /// Equivalent to `warnings.warn_explicit()` in Python.
     ///
     /// The `category` should be one of the `Warning` classes available in
-    /// [`pyo3::exceptions`](crate::exceptions), or a subclass.
+    /// [`r2p::exceptions`](crate::exceptions), or a subclass.
     pub fn warn_explicit<'py>(
         py: Python<'py>,
         category: &Bound<'py, PyAny>,
@@ -564,7 +564,7 @@ impl PyErr {
     ///
     /// # Examples
     /// ```rust
-    /// use pyo3::{exceptions::PyTypeError, PyErr, Python, prelude::PyAnyMethods};
+    /// use r2p::{exceptions::PyTypeError, PyErr, Python, prelude::PyAnyMethods};
     /// Python::attach(|py| {
     ///     let err: PyErr = PyTypeError::new_err(("some type error",));
     ///     let err_clone = err.clone_ref(py);
@@ -1006,7 +1006,7 @@ mod tests {
             // Test with error for an explicit module
             warnings.call_method0("resetwarnings").unwrap();
             warnings
-                .call_method1("filterwarnings", ("error", "", &cls, "pyo3test"))
+                .call_method1("filterwarnings", ("error", "", &cls, "r2ptest"))
                 .unwrap();
 
             // This has the wrong module and will not raise, just be emitted
@@ -1020,7 +1020,7 @@ mod tests {
                 py,
                 &cls,
                 c"I am warning you",
-                c"pyo3test.py",
+                c"r2ptest.py",
                 427,
                 None,
                 None,

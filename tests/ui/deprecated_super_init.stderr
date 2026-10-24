@@ -1,4 +1,4 @@
-error: use of deprecated method `pyo3::internal::pyclass_init::TpNewTupleResolver::<S, (S, B)>::resolve`: Tuple syntax for super class initialization is phased out. Use `PyClassInitializer` instead.
+error: use of deprecated method `r2p::internal::pyclass_init::TpNewTupleResolver::<S, (S, B)>::resolve`: Tuple syntax for super class initialization is phased out. Use `PyClassInitializer` instead.
   --> tests/ui/deprecated_super_init.rs:14:17
    |
 14 |     fn new() -> (Sub1, Base) {
@@ -10,7 +10,7 @@ note: the lint level is defined here
  1 | #![deny(deprecated)]
    |         ^^^^^^^^^^
 
-error: use of deprecated method `pyo3::internal::pyclass_init::TpNewTupleResolver::<S, (S, B)>::resolve`: Tuple syntax for super class initialization is phased out. Use `PyClassInitializer` instead.
+error: use of deprecated method `r2p::internal::pyclass_init::TpNewTupleResolver::<S, (S, B)>::resolve`: Tuple syntax for super class initialization is phased out. Use `PyClassInitializer` instead.
   --> tests/ui/deprecated_super_init.rs:26:17
    |
 26 |     fn new() -> PyResult<(Sub2, Base)> {

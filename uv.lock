@@ -545,7 +545,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pyo3"
+name = "r2p"
 source = { virtual = "." }
 
 [package.dev-dependencies]

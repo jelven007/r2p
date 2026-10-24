@@ -17,7 +17,7 @@ pub trait Probe: probe::Sealed {
     const VALUE: bool = false;
 }
 
-/// Seals `Probe` so that types outside PyO3 cannot implement it.
+/// Seals `Probe` so that types outside r2p cannot implement it.
 mod probe {
     pub trait Sealed {}
 }

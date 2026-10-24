@@ -1,0 +1,45 @@
+[build-system]
+requires = ["maturin>=1.9.4,<2"]
+build-backend = "maturin"
+
+[tool.pytest.ini_options]
+addopts = "--benchmark-disable"
+
+[project]
+name = "r2p_pytests"
+version = "0.1.0"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Rust",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS :: MacOS X",
+]
+requires-python = ">=3.9"
+
+[tool.ruff.per-file-target-version]
+"tests/test_enums_match.py" = "py310"
+
+# Some ruff lints our auto-generated stub fails
+[tool.ruff.lint.per-file-ignores]
+"stubs/*.pyi" = [
+    "I001",   # unsorted imports
+    "PYI020", # quoted annotations
+    "PYI029", # redundant `__str__` definition
+    "PYI034", # `__new__` returning the class instead of `Self`
+    "UP037",  # quoted annotations
+]
+
+[project.optional-dependencies]
+dev = [
+    # mypy doesn't build on GraalPy when installed via uv
+    "mypy~=1.0; platform_python_implementation != 'GraalVM'",
+    "pyrefly~=0.57.0",
+    "pytest-asyncio>=0.21,<2",
+    "pytest-benchmark>=3.4",
+    "pytest>=7",
+    # 4.2 for `assert_type`
+    "typing_extensions>=4.2.0"
+]

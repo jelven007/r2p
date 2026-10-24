@@ -1,0 +1,23 @@
+[package]
+name = "r2p-build-config"
+version = "0.30.0"
+description = "Build configuration for the r2p ecosystem"
+authors.workspace = true
+keywords.workspace = true
+homepage.workspace = true
+repository.workspace = true
+categories.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+target-lexicon = "0.13.3"
+
+[features]
+default = []
+
+# deprecated
+resolve-config = []
+extension-module = []
+generate-import-lib = []

@@ -1,5 +1,5 @@
-use pyo3::exceptions::PyException;
-use pyo3::prelude::*;
+use r2p::exceptions::PyException;
+use r2p::prelude::*;
 
 #[pyclass(extends=PyException)]
 //~^ ERROR: `PyException` cannot be subclassed

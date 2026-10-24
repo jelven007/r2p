@@ -9,4 +9,5 @@ name = "plugin_api"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-pyo3 = "{{PYO3_VERSION}}"
+r2p-maturin-bridge = { package = "pyo3-ffi", path = "../maturin-bridge" }
+r2p = "{{R2P_VERSION}}"

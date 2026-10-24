@@ -3,7 +3,7 @@ use crate::impl_::pyclass::PyClassImpl;
 use crate::inspect::PyStaticExpr;
 use crate::pycell::impl_::PyClassObjectLayout;
 
-/// Seals `PyReturnType` so that types outside PyO3 cannot implement it.
+/// Seals `PyReturnType` so that types outside r2p cannot implement it.
 mod return_type {
     use crate::{IntoPyObject, impl_::introspection::PyReturnType};
 
@@ -31,7 +31,7 @@ impl<T: PyReturnType, E> PyReturnType for Result<T, E> {
 
 #[diagnostic::on_unimplemented(
     message = "`{Self}` cannot be converted to a Python object",
-    label = "required by `#[pyo3(get)]` to create a readable property from a field of type `{Self}`",
+    label = "required by `#[r2p(get)]` to create a readable property from a field of type `{Self}`",
     note = "implement `IntoPyObject` for `&{Self}` or `IntoPyObject + Clone` for `{Self}` to define the conversion"
 )]
 pub trait PyIntoPyObjectMaybeRefType<const REF_IMPL_EXISTS: bool> {

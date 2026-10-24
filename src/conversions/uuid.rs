@@ -10,20 +10,20 @@
 //!
 //! ```toml
 //! [dependencies]
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"uuid\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"uuid\"] }")]
 //! uuid = "1.11.0"
 //! ```
 //!
-//! Note that you must use a compatible version of uuid and PyO3.
-//! The required uuid version may vary based on the version of PyO3.
+//! Note that you must use a compatible version of uuid and r2p.
+//! The required uuid version may vary based on the version of r2p.
 //!
 //! # Example
 //!
 //! Rust code to create a function that parses a UUID string and returns it as a `Uuid`:
 //!
 //! ```rust,no_run
-//! use pyo3::prelude::*;
-//! use pyo3::exceptions::PyValueError;
+//! use r2p::prelude::*;
+//! use r2p::exceptions::PyValueError;
 //! use uuid::Uuid;
 //!
 //! /// Parse a UUID from a string.
@@ -39,7 +39,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_uuid")]
+//! # #[r2p(name = "example_uuid")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(get_uuid_from_str, m)?)?;
 //!     m.add_function(wrap_pyfunction!(get_uuid, m)?)?;

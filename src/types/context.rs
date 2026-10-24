@@ -16,7 +16,7 @@ use core::ffi::c_int;
 
 /// Represents a Python [`contextvars.Context`][1] object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyContext>`][crate::Py] or [`Bound<'py, PyContext>`][crate::Bound].
 ///
 /// [1]: https://docs.python.org/3/library/contextvars.html#contextvars.Context
@@ -78,7 +78,7 @@ pub enum ContextEvent<'a, 'py> {
     /// The value is the new current context, or `None` when there is no current context.
     Switched(Option<Borrowed<'a, 'py, PyContext>>),
 
-    /// An event which is not known to this version of PyO3.
+    /// An event which is not known to this version of r2p.
     Unknown {
         /// The raw CPython event value.
         raw_event: ffi::PyContextEvent,
@@ -160,9 +160,9 @@ impl Drop for BoundContextWatcherGuard<'_> {
 /// # Example
 ///
 /// ```rust
-/// use pyo3::prelude::*;
-/// use pyo3::types::context::{watch_callback, ContextEvent};
-/// use pyo3::types::PyContext;
+/// use r2p::prelude::*;
+/// use r2p::types::context::{watch_callback, ContextEvent};
+/// use r2p::types::PyContext;
 ///
 /// fn context_changed(
 ///     _py: Python<'_>,
@@ -200,7 +200,7 @@ impl ContextWatcherGuard {
 
     /// Connects this guard to the given Python attachment.
     ///
-    /// PyO3 does not currently support using a module from multiple interpreters, so `py` is the
+    /// r2p does not currently support using a module from multiple interpreters, so `py` is the
     /// attachment for the interpreter in which this watcher was registered.
     pub fn into_bound<'py>(mut self, py: Python<'py>) -> BoundContextWatcherGuard<'py> {
         self.active = false;
@@ -228,7 +228,7 @@ impl Drop for ContextWatcherGuard {
 #[cfg(all(Py_3_14, not(Py_GIL_DISABLED)))]
 fn clear_watcher(py: Python<'_>, watcher_id: c_int) -> PyResult<()> {
     // SAFETY:
-    // - `py` proves that the thread is attached to an interpreter; PyO3 does not currently support
+    // - `py` proves that the thread is attached to an interpreter; r2p does not currently support
     //   attaching to more than one interpreter, so this is the interpreter for which the watcher
     //   was registered
     // - `watcher_id` was returned by `PyContext_AddWatcher`
@@ -238,7 +238,7 @@ fn clear_watcher(py: Python<'_>, watcher_id: c_int) -> PyResult<()> {
 #[cfg(all(Py_3_14, not(Py_GIL_DISABLED)))]
 fn clear_watcher_on_drop(_py: Python<'_>, watcher_id: c_int) {
     // A destructor must not replace an exception which was already pending. The Python token proves
-    // that this thread is attached to an interpreter; PyO3 does not currently support attaching to
+    // that this thread is attached to an interpreter; r2p does not currently support attaching to
     // more than one interpreter, so this is the same interpreter the watcher was registered on. The
     // raw exception API is intentional because `PyErr::take` may resume a `PanicException`, while
     // `Drop` must preserve it without unwinding.
@@ -274,9 +274,9 @@ pub struct WatchCallback(ffi::PyContext_WatchCallback);
 /// The function must be a path with this signature:
 ///
 /// ```rust
-/// use pyo3::prelude::*;
-/// use pyo3::types::context::{watch_callback, ContextEvent};
-/// use pyo3::types::PyContext;
+/// use r2p::prelude::*;
+/// use r2p::types::context::{watch_callback, ContextEvent};
+/// use r2p::types::PyContext;
 ///
 /// fn context_changed(
 ///     _py: Python<'_>,
@@ -372,7 +372,7 @@ pub mod impl_ {
         object: *mut ffi::PyObject,
     ) -> c_int {
         // A context watcher may be called with an exception already set. Save it before invoking
-        // arbitrary Rust code so that safe PyO3 APIs can be used normally inside the callback. The
+        // arbitrary Rust code so that safe r2p APIs can be used normally inside the callback. The
         // raw exception API is intentional because `PyErr::take` may resume a `PanicException`,
         // which must not unwind across this C boundary.
         //

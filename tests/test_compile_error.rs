@@ -80,27 +80,27 @@ fn main() {
     // so have to just list the relevant ones here.
     let deps_features = [
         #[cfg(not(wip_feature_std))]
-        "pyo3/hashbrown".to_string(),
+        "r2p/hashbrown".to_string(),
         #[cfg(not(wip_feature_std))]
-        "pyo3/parking_lot".to_string(),
+        "r2p/parking_lot".to_string(),
         #[cfg(feature = "macros")]
-        "pyo3/macros".to_string(),
+        "r2p/macros".to_string(),
         #[cfg(feature = "abi3")]
-        "pyo3/abi3".to_string(),
+        "r2p/abi3".to_string(),
         #[cfg(feature = "abi3-py39")]
-        "pyo3/abi3-py39".to_string(),
+        "r2p/abi3-py39".to_string(),
         #[cfg(feature = "abi3-py310")]
-        "pyo3/abi3-py310".to_string(),
+        "r2p/abi3-py310".to_string(),
         #[cfg(feature = "abi3-py311")]
-        "pyo3/abi3-py311".to_string(),
+        "r2p/abi3-py311".to_string(),
         #[cfg(feature = "abi3-py312")]
-        "pyo3/abi3-py312".to_string(),
+        "r2p/abi3-py312".to_string(),
         #[cfg(feature = "abi3-py313")]
-        "pyo3/abi3-py313".to_string(),
+        "r2p/abi3-py313".to_string(),
         #[cfg(feature = "abi3-py314")]
-        "pyo3/abi3-py314".to_string(),
+        "r2p/abi3-py314".to_string(),
         #[cfg(feature = "full")]
-        "pyo3/full".to_string(),
+        "r2p/full".to_string(),
     ];
 
     let mut deps_cargo = ui_test::CommandBuilder::cargo();
@@ -109,7 +109,7 @@ fn main() {
     #[cfg(not(wip_feature_std))]
     deps_cargo
         .envs
-        .push(("PYO3_WIP_NO_STD".into(), Some("1".into())));
+        .push(("R2P_WIP_NO_STD".into(), Some("1".into())));
 
     config.comment_defaults.base().set_custom(
         "dependencies",
@@ -248,7 +248,7 @@ fn main() {
 /// 226 |     T: PyFunctionArgument<'a, 'holder, 'py, IMPLEMENTS_FROMPYOBJECT>,
 ///     |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `extract_argument`
 ///     = note: required for `CancelHandle` to implement `FromPyObject<'_, '_>`
-///     = note: required for `CancelHandle` to implement `pyo3::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
+///     = note: required for `CancelHandle` to implement `r2p::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
 /// ```
 ///
 /// becomes:
@@ -262,7 +262,7 @@ fn main() {
 ///   |     T: PyFunctionArgument<'a, 'holder, 'py, IMPLEMENTS_FROMPYOBJECT>,
 ///   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `extract_argument`
 ///   = note: required for `CancelHandle` to implement `FromPyObject<'_, '_>`
-///   = note: required for `CancelHandle` to implement `pyo3::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
+///   = note: required for `CancelHandle` to implement `r2p::impl_::extract_argument::PyFunctionArgument<'_, '_, '_, true>`
 /// ```
 ///
 /// Regex replacement via `ui_test`'s `normalize_stderr` can't express the transformation

@@ -1,0 +1,18 @@
+[package]
+name = "string_sum"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+
+[lib]
+name = "string_sum"
+crate-type = ["cdylib"]
+
+[dependencies]
+r2p-maturin-bridge = { package = "pyo3-ffi", path = "../../../../tools/maturin-bridge" }
+r2p-ffi = { path = "../../" }
+
+[build-dependencies]
+r2p-build-config = { path = "../../../r2p-build-config" }
+
+[workspace]

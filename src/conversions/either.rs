@@ -16,17 +16,17 @@
 //! [dependencies]
 //! ## change * to the version you want to use, ideally the latest.
 //! either = "*"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"either\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"either\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of either and PyO3.
-//! The required either version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of either and r2p.
+//! The required either version may vary based on the version of r2p.
 //!
 //! # Example: Convert a `int | str` to `Either<i32, String>`.
 //!
 //! ```rust
 //! use either::Either;
-//! use pyo3::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
+//! use r2p::{Python, PyResult, IntoPyObject, types::PyAnyMethods};
 //!
 //! fn main() -> PyResult<()> {
 //!     Python::initialize();

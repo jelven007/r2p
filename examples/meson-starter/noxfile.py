@@ -27,11 +27,11 @@ def python(session):
     args = parser.parse_args(session.posargs)
 
     features = args.features.split(",") if args.features else []
-    # replace `pyo3/hashbrown` with `hashbrown` and similar for `parking_lot`;
+    # replace `r2p/hashbrown` with `hashbrown` and similar for `parking_lot`;
     # meson doesn't support dependency features in the way that cargo does.
     features = [
-        feature[len("pyo3/") :]
-        if feature in ("pyo3/hashbrown", "pyo3/parking_lot")
+        feature[len("r2p/") :]
+        if feature in ("r2p/hashbrown", "r2p/parking_lot")
         else feature
         for feature in features
     ]

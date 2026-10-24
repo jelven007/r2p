@@ -5,7 +5,7 @@
 //! Testing https://github.com/PyO3/pyo3/issues/1106. A result type that
 //! *doesn't* implement `From<MyError> for PyErr` won't be automatically
 //! converted when using `#[pyfunction]`.
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 use std::fmt;
 

@@ -1,7 +1,7 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
-use pyo3::{exceptions, py_run};
+use r2p::prelude::*;
+use r2p::{exceptions, py_run};
 use std::error::Error;
 use std::fmt;
 #[cfg(wip_feature_std)]
@@ -105,7 +105,7 @@ fn test_exception_nosegfault() {
 
 #[test]
 fn test_write_unraisable() {
-    use pyo3::{exceptions::PyRuntimeError, types::PyNotImplemented};
+    use r2p::{exceptions::PyRuntimeError, types::PyNotImplemented};
     use test_utils::UnraisableCapture;
 
     Python::attach(|py| {

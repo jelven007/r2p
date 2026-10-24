@@ -2,7 +2,7 @@
 #![deny(missing_docs)]
 //! Some crate docs
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 /// Some module documentation
 #[pymodule]

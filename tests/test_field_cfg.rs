@@ -1,13 +1,13 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pyclass]
 struct CfgClass {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     #[cfg(any())]
     pub a: u32,
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     // This is always true
     #[cfg(any(
         target_family = "unix",
@@ -41,7 +41,7 @@ fn test_cfg() {
 fn test_cfg_simple_enum() {
     Python::attach(|py| {
         let simple = py.get_type::<CfgSimpleEnum>();
-        pyo3::py_run!(
+        r2p::py_run!(
             py,
             simple,
             r#"

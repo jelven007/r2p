@@ -28,11 +28,11 @@ pub(crate) mod private {
 ///
 /// This trait is not intended to used by downstream crates directly. As such it
 /// has no publicly available methods and cannot be implemented outside of
-/// `pyo3`. The corresponding public API is available through [`call`]
+/// `r2p`. The corresponding public API is available through [`call`]
 /// ([`call0`], [`call1`] and friends) on [`PyAnyMethods`].
 ///
 /// # What is `PyCallArgs` used for?
-/// `PyCallArgs` is used internally in `pyo3` to dispatch the Python calls in
+/// `PyCallArgs` is used internally in `r2p` to dispatch the Python calls in
 /// the most optimal way for the current build configuration. Certain types,
 /// such as Rust tuples, do allow the usage of a faster calling convention of
 /// the Python interpreter (if available). More types that may take advantage

@@ -11,16 +11,16 @@ error: Expected 1 arguments, got 0
    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: `signature` cannot be used with magic method `__bool__`
-  --> tests/ui/invalid_proto_pymethods.rs:40:31
+  --> tests/ui/invalid_proto_pymethods.rs:40:30
    |
-40 |     #[pyo3(name = "__bool__", signature = ())]
-   |                               ^^^^^^^^^
+40 |     #[r2p(name = "__bool__", signature = ())]
+   |                              ^^^^^^^^^
 
 error: `text_signature` cannot be used with magic method `__bool__`
-  --> tests/ui/invalid_proto_pymethods.rs:49:31
+  --> tests/ui/invalid_proto_pymethods.rs:49:30
    |
-49 |     #[pyo3(name = "__bool__", text_signature = "")]
-   |                               ^^^^^^^^^^^^^^
+49 |     #[r2p(name = "__bool__", text_signature = "")]
+   |                              ^^^^^^^^^^^^^^
 
 error[E0592]: duplicate definitions with name `__pymethod___richcmp____`
   --> tests/ui/invalid_proto_pymethods.rs:59:1
@@ -31,7 +31,7 @@ error[E0592]: duplicate definitions with name `__pymethod___richcmp____`
    | duplicate definitions for `__pymethod___richcmp____`
    | other definition for `__pymethod___richcmp____`
    |
-   = note: this error originates in the macro `::pyo3::impl_::pyclass::generate_pyclass_richcompare_slot` which comes from the expansion of the attribute macro `pymethods` (in Nightly builds, run with -Z macro-backtrace for more info)
+   = note: this error originates in the macro `::r2p::impl_::pyclass::generate_pyclass_richcompare_slot` which comes from the expansion of the attribute macro `pymethods` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error[E0034]: multiple applicable items in scope
   --> tests/ui/invalid_proto_pymethods.rs:59:1
@@ -67,7 +67,7 @@ note: candidate #2 is defined in an impl for the type `EqAndRichcmp`
    |
 59 | #[pymethods]
    | ^^^^^^^^^^^^
-   = note: this error originates in the macro `::pyo3::impl_::pyclass::generate_pyclass_richcompare_slot` which comes from the expansion of the attribute macro `pymethods` (in Nightly builds, run with -Z macro-backtrace for more info)
+   = note: this error originates in the macro `::r2p::impl_::pyclass::generate_pyclass_richcompare_slot` which comes from the expansion of the attribute macro `pymethods` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: aborting due to 7 previous errors
 

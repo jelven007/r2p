@@ -1,0 +1,86 @@
+import argparse
+import shutil
+import sys
+from collections.abc import Iterable
+from pathlib import Path
+
+import nox
+from nox.command import CommandFailed
+
+nox.options.sessions = ["test"]
+
+
+@nox.session
+def test(session: nox.Session):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--features")
+    (args, unhandled_posargs) = parser.parse_known_args(session.posargs)
+
+    session.env["MATURIN_PEP517_ARGS"] = "--profile=dev"
+    if args.features:
+        session.env["MATURIN_PEP517_ARGS"] += f" --features={args.features}"
+    session.install("-v", ".[dev]")
+
+    def try_install_binary(package: str, constraint: str):
+        try:
+            session.install("--only-binary=:all:", f"{package}{constraint}")
+        except CommandFailed:
+            # No binary wheel available on this platform
+            pass
+
+    try_install_binary("numpy", ">=1.16")
+    try_install_binary("gevent", ">=22.10.2")
+    # hypothesis itself depends on upstream PyO3 so newer Python versions may fail
+    # to build
+    try_install_binary("hypothesis", ">=6.156.1")
+    # The stubs are generated from a build with `experimental-async,experimental-inspect`,
+    # so only such a build exports the members they declare. The `test-introspection`
+    # session runs this test against one.
+    ignored_paths = ["tests/test_stubs.py"]
+    if sys.version_info < (3, 10):
+        # Match syntax is only available in Python >= 3.10
+        ignored_paths.append("tests/test_enums_match.py")
+    ignore_args = [f"--ignore={path}" for path in ignored_paths]
+
+    extra_args = []
+    # https://github.com/oracle/graalpython/issues/1211
+    if sys.implementation.name == "graalpy":
+        extra_args.append("--assert=plain")
+
+    session.run("pytest", *extra_args, *ignore_args, *unhandled_posargs)
+
+
+@nox.session
+def bench(session: nox.Session):
+    session.install(".[dev]")
+    session.run("pytest", "--benchmark-enable", "--benchmark-only", *session.posargs)
+
+
+@nox.session
+def mypy(session: nox.Session):
+    type_checker(
+        session,
+        ("python", "-m", "mypy", "tests"),
+    )
+    # TODO: enable stubtest session.run_always("python", "-m", "mypy.stubtest", "r2p_pytests")
+
+
+@nox.session
+def pyrefly(session: nox.Session):
+    type_checker(
+        session,
+        ("python", "-m", "pyrefly", "check", "tests"),
+    )
+
+
+def type_checker(session: nox.Session, command: Iterable[str]):
+    session.env["MATURIN_PEP517_ARGS"] = "--profile=dev"
+    try:
+        # We move the stubs where maturin is expecting them to be
+        shutil.copytree("stubs", "r2p_pytests")
+        (Path("r2p_pytests") / "py.typed").touch()
+        session.install(".[dev]")
+
+        session.run_always(*command)
+    finally:
+        shutil.rmtree("r2p_pytests")

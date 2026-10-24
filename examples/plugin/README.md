@@ -1,6 +1,6 @@
 # plugin
 
-An example of a Rust app that uses Python for a plugin. A Python extension module built using PyO3 and [`maturin`](https://github.com/PyO3/maturin) is used to provide
+An example of a Rust app that uses Python for a plugin. A Python extension module built using r2p and [`maturin`](https://github.com/PyO3/maturin) is used to provide
 interface types that can be used to exchange data between Rust and Python. This also deals with how to separately test and load python modules.
 
 # Building and Testing
@@ -36,7 +36,7 @@ Use [`cargo-generate`](https://crates.io/crates/cargo-generate):
 
 ```bash
 $ cargo install cargo-generate
-$ cargo generate --git https://github.com/PyO3/pyo3 examples/plugin
+$ cargo generate --path /path/to/r2p examples/plugin
 ```
 
-(`cargo generate` will take a little while to clone the PyO3 repo first; be patient when waiting for the command to run.)
+(`cargo generate` will take a little while to clone the r2p repo first; be patient when waiting for the command to run.)

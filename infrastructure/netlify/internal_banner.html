@@ -1,0 +1,47 @@
+<div id='r2p-internal-banner'>
+    <div style="white-space: nowrap;">
+        ⚠️ Internal Docs ⚠️ Not Public API 👉
+        <a href='/main/doc/r2p/index.html' style='color:red;text-decoration:underline;'>
+            Official Docs Here
+        </a>
+    </div>
+    <style id="r2p-noscript-style">
+        body {
+            padding-top: 2em;
+        }
+    </style>
+    <style>
+        #r2p-internal-banner {
+            position: fixed;
+            display: flex;
+            align-items: center;
+            justify-content:
+                center;
+            z-index: 99999;
+            color: red;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 2em;
+            border: 3px solid red;
+            width: 100%;
+            overflow-x: hidden;
+            background-color: var(--target-background-color);
+        }
+
+        @media (max-width: 700px) {
+            #r2p-internal-banner {
+                top: 50px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</div>
+<script>
+    // when javascript is active, splice the banner into a "sticky" location
+    // inside the doc body for best appearance
+    banner = document.getElementById("r2p-internal-banner")
+    banner.style.position = "sticky"
+    document.getElementsByTagName("main")[0].prepend(banner)
+    document.getElementById("r2p-noscript-style").remove()
+</script>

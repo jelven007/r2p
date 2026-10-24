@@ -1,9 +1,9 @@
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 ///this is our Gadget that python plugin code can create, and rust app can then access natively.
 #[pyclass]
 pub struct Gadget {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     pub prop: usize,
     //this field will only be accessible to rust code
     pub rustonly: Vec<usize>,

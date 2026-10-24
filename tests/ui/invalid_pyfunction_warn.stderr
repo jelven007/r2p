@@ -1,49 +1,49 @@
 error: unexpected end of input, expected parentheses
- --> tests/ui/invalid_pyfunction_warn.rs:4:12
+ --> tests/ui/invalid_pyfunction_warn.rs:4:11
   |
-4 | #[pyo3(warn)]
+4 | #[r2p(warn)]
+  |           ^
+
+error: missing `message` in `warn` attribute
+ --> tests/ui/invalid_pyfunction_warn.rs:9:12
+  |
+9 | #[r2p(warn())]
   |            ^
 
 error: missing `message` in `warn` attribute
- --> tests/ui/invalid_pyfunction_warn.rs:9:13
-  |
-9 | #[pyo3(warn())]
-  |             ^
-
-error: missing `message` in `warn` attribute
-  --> tests/ui/invalid_pyfunction_warn.rs:14:62
+  --> tests/ui/invalid_pyfunction_warn.rs:14:60
    |
-14 | #[pyo3(warn(category = pyo3::exceptions::PyDeprecationWarning))]
-   |                                                              ^
+14 | #[r2p(warn(category = r2p::exceptions::PyDeprecationWarning))]
+   |                                                            ^
 
 error: expected string literal
-  --> tests/ui/invalid_pyfunction_warn.rs:19:74
+  --> tests/ui/invalid_pyfunction_warn.rs:19:72
    |
-19 | #[pyo3(warn(category = pyo3::exceptions::PyDeprecationWarning, message = ,))]
-   |                                                                          ^
+19 | #[r2p(warn(category = r2p::exceptions::PyDeprecationWarning, message = ,))]
+   |                                                                        ^
 
 error: expected identifier
-  --> tests/ui/invalid_pyfunction_warn.rs:24:57
+  --> tests/ui/invalid_pyfunction_warn.rs:24:56
    |
-24 | #[pyo3(warn(message = "deprecated function", category = ,))]
-   |                                                         ^
+24 | #[r2p(warn(message = "deprecated function", category = ,))]
+   |                                                        ^
 
 error: expected `message` or `category`
-  --> tests/ui/invalid_pyfunction_warn.rs:29:46
+  --> tests/ui/invalid_pyfunction_warn.rs:29:45
    |
-29 | #[pyo3(warn(message = "deprecated function", random_key))]
-   |                                              ^^^^^^^^^^
+29 | #[r2p(warn(message = "deprecated function", random_key))]
+   |                                             ^^^^^^^^^^
 
-error: #[classattr] cannot be used with #[pyo3(warn)]
-  --> tests/ui/invalid_pyfunction_warn.rs:39:12
+error: #[classattr] cannot be used with #[r2p(warn)]
+  --> tests/ui/invalid_pyfunction_warn.rs:39:11
    |
-39 |     #[pyo3(warn(message = "deprecated class attr"))]
-   |            ^^^^
+39 |     #[r2p(warn(message = "deprecated class attr"))]
+   |           ^^^^
 
-error: __traverse__ cannot be used with #[pyo3(warn)]
-  --> tests/ui/invalid_pyfunction_warn.rs:48:12
+error: __traverse__ cannot be used with #[r2p(warn)]
+  --> tests/ui/invalid_pyfunction_warn.rs:48:11
    |
-48 |     #[pyo3(warn(message = "deprecated __traverse__"))]
-   |            ^^^^
+48 |     #[r2p(warn(message = "deprecated __traverse__"))]
+   |           ^^^^
 
 error: aborting due to 8 previous errors

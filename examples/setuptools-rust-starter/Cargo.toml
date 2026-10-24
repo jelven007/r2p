@@ -9,6 +9,6 @@ name = "setuptools_rust_starter"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { path = "../../" }
+r2p = { path = "../../" }
 
 [workspace]

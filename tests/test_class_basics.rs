@@ -1,10 +1,10 @@
 #![cfg(feature = "macros")]
 
 #[cfg(not(target_arch = "wasm32"))]
-use pyo3::PyClass;
-use pyo3::prelude::*;
-use pyo3::py_run;
-use pyo3::types::PyType;
+use r2p::PyClass;
+use r2p::prelude::*;
+use r2p::py_run;
+use r2p::types::PyType;
 
 mod test_utils;
 
@@ -43,15 +43,15 @@ fn unit_class() {
 #[pyclass]
 struct ClassWithDocs {
     /// Property field
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     value: i32,
 
     /// Read-only property field
-    #[pyo3(get)]
+    #[r2p(get)]
     readonly: i32,
 
     /// Write-only property field
-    #[pyo3(set)]
+    #[r2p(set)]
     writeonly: i32,
 }
 
@@ -87,15 +87,15 @@ struct EmptyClass2 {}
 
 #[pymethods]
 impl EmptyClass2 {
-    #[pyo3(name = "custom_fn")]
+    #[r2p(name = "custom_fn")]
     fn bar(&self) {}
 
     #[staticmethod]
-    #[pyo3(name = "custom_static")]
+    #[r2p(name = "custom_static")]
     fn bar_static() {}
 
     #[getter]
-    #[pyo3(name = "custom_getter")]
+    #[r2p(name = "custom_getter")]
     fn foo(&self) -> i32 {
         5
     }
@@ -125,17 +125,17 @@ fn custom_names() {
 
 #[pyclass(name = "loop")]
 struct ClassRustKeywords {
-    #[pyo3(name = "unsafe", get, set)]
+    #[r2p(name = "unsafe", get, set)]
     unsafe_variable: usize,
 }
 
 #[pymethods]
 impl ClassRustKeywords {
-    #[pyo3(name = "struct")]
+    #[r2p(name = "struct")]
     fn struct_method(&self) {}
 
     #[staticmethod]
-    #[pyo3(name = "type")]
+    #[r2p(name = "type")]
     fn type_method() {}
 }
 
@@ -155,7 +155,7 @@ fn keyword_names() {
 
 #[pyclass]
 struct RawIdents {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     r#type: i64,
 }
 
@@ -206,7 +206,7 @@ fn empty_class_in_module() {
 struct ClassWithObjectField {
     // It used to be that PyObject was not supported with (get, set)
     // - this test is just ensuring it compiles.
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     value: Py<PyAny>,
 }
 
@@ -238,7 +238,7 @@ struct ClassWithHash {
 #[cfg(wip_feature_std)]
 fn class_with_hash() {
     Python::attach(|py| {
-        use pyo3::types::IntoPyDict;
+        use r2p::types::IntoPyDict;
         let class = ClassWithHash { value: 42 };
         let hash = {
             use std::hash::{Hash, Hasher};
@@ -360,23 +360,23 @@ struct ClassWithFromPyWithMethods {}
 
 #[pymethods]
 impl ClassWithFromPyWithMethods {
-    fn instance_method(&self, #[pyo3(from_py_with = get_length)] argument: usize) -> usize {
+    fn instance_method(&self, #[r2p(from_py_with = get_length)] argument: usize) -> usize {
         argument
     }
     #[classmethod]
     fn classmethod(
         _cls: &Bound<'_, PyType>,
-        #[pyo3(from_py_with = Bound::<'_, PyAny>::len)] argument: usize,
+        #[r2p(from_py_with = Bound::<'_, PyAny>::len)] argument: usize,
     ) -> usize {
         argument
     }
 
     #[staticmethod]
-    fn staticmethod(#[pyo3(from_py_with = get_length)] argument: usize) -> usize {
+    fn staticmethod(#[r2p(from_py_with = get_length)] argument: usize) -> usize {
         argument
     }
 
-    fn __contains__(&self, #[pyo3(from_py_with = is_even)] obj: bool) -> bool {
+    fn __contains__(&self, #[r2p(from_py_with = is_even)] obj: bool) -> bool {
         obj
     }
 }
@@ -404,7 +404,7 @@ fn test_pymethods_from_py_with() {
 }
 
 #[pyclass]
-struct TupleClass(#[pyo3(get, set, name = "value")] i32);
+struct TupleClass(#[r2p(get, set, name = "value")] i32);
 
 #[test]
 fn test_tuple_struct_class() {
@@ -493,7 +493,7 @@ fn dunder_dict_is_released() {
         let dict = inst.bind(py).getattr("__dict__").unwrap();
         let get_refcnt = || {
             // SAFETY: `dict` holds a valid reference while its reference count is read.
-            unsafe { pyo3::ffi::Py_REFCNT(dict.as_ptr()) }
+            unsafe { r2p::ffi::Py_REFCNT(dict.as_ptr()) }
         };
         let refcnt = get_refcnt();
 
@@ -524,13 +524,13 @@ fn instance_dict_slot_is_not_clobbered() {
         // going through `__dict__`.
         // SAFETY: `inst` is a valid object whose type has a positive `tp_dictoffset`.
         let read_slot = || unsafe {
-            let offset = (*pyo3::ffi::Py_TYPE(inst.as_ptr())).tp_dictoffset;
+            let offset = (*r2p::ffi::Py_TYPE(inst.as_ptr())).tp_dictoffset;
             assert!(offset > 0);
             *inst
                 .as_ptr()
                 .cast::<u8>()
                 .offset(offset)
-                .cast::<*mut pyo3::ffi::PyObject>()
+                .cast::<*mut r2p::ffi::PyObject>()
         };
 
         let slot_dict = read_slot();
@@ -542,7 +542,7 @@ fn instance_dict_slot_is_not_clobbered() {
             );
             // The slot holds the only reference to it.
             // SAFETY: previous assert guarantees it's a valid PyObject
-            assert_eq!(unsafe { pyo3::ffi::Py_REFCNT(slot_dict) }, 1);
+            assert_eq!(unsafe { r2p::ffi::Py_REFCNT(slot_dict) }, 1);
         } else {
             // No eager creation on these versions; the slot starts out empty.
             assert!(slot_dict.is_null());
@@ -781,7 +781,7 @@ fn test_unsendable_dict_with_weakref() {
 
 #[pyclass(generic)]
 struct ClassWithRuntimeParametrization {
-    #[pyo3(get, set)]
+    #[r2p(get, set)]
     value: Py<PyAny>,
 }
 

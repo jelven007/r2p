@@ -1,6 +1,6 @@
 #![cfg(feature = "macros")]
 
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 mod test_utils;
 

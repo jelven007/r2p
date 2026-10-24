@@ -5,10 +5,10 @@ error[E0277]: `usize` is not a suitable return value for `#[pymodule_init]` func
     |        ^^^^^^^-
     |        |      |
     |        |      required by a bound introduced by this call
-    |        the trait `pyo3::impl_::pymodule::PyModuleInitResult` is not implemented for `usize`
+    |        the trait `r2p::impl_::pymodule::PyModuleInitResult` is not implemented for `usize`
     |
     = note: `#[pymodule_init]` functions may return `()` or `Result<(), E>` where `PyErr: From<E>`
-help: the following other types implement trait `pyo3::impl_::pymodule::PyModuleInitResult`
+help: the following other types implement trait `r2p::impl_::pymodule::PyModuleInitResult`
  --> src/impl_/pymodule.rs
   |
   |   impl PyModuleInitResult for () {
@@ -26,10 +26,10 @@ error[E0277]: `Result<usize, PyErr>` is not a suitable return value for `#[pymod
     |        ^^^^^^^-
     |        |      |
     |        |      required by a bound introduced by this call
-    |        the trait `pyo3::impl_::pymodule::PyModuleInitResult` is not implemented for `Result<usize, PyErr>`
+    |        the trait `r2p::impl_::pymodule::PyModuleInitResult` is not implemented for `Result<usize, PyErr>`
     |
     = note: `#[pymodule_init]` functions may return `()` or `Result<(), E>` where `PyErr: From<E>`
-help: the trait `pyo3::impl_::pymodule::PyModuleInitResult` is implemented for `Result<(), E>`
+help: the trait `r2p::impl_::pymodule::PyModuleInitResult` is implemented for `Result<(), E>`
  --> src/impl_/pymodule.rs
   |
   | / impl<E> PyModuleInitResult for Result<(), E>

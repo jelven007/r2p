@@ -14,4 +14,4 @@ def test_example_class() -> None:
 def test_doc() -> None:
     import meson_starter
 
-    assert meson_starter.__doc__ == "An example module implemented in Rust using PyO3."
+    assert meson_starter.__doc__ == "An example module implemented in Rust using r2p."

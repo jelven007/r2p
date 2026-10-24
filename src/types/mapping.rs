@@ -13,7 +13,7 @@ use crate::{Py, Python, err, ffi};
 
 /// Represents a reference to a Python object supporting the mapping protocol.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyMapping>`][crate::Py] or [`Bound<'py, PyMapping>`][Bound].
 ///
 /// For APIs available on mapping objects, see the [`PyMappingMethods`] trait which is implemented for

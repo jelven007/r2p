@@ -1,0 +1,19 @@
+[package]
+name = "r2p-introspection"
+version = "0.30.0"
+description = "Introspect dynamic libraries built with r2p to get metadata about the exported Python types"
+authors.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow = "1"
+goblin = ">=0.9, <0.11"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[lints]
+workspace = true

@@ -1,5 +1,5 @@
-use pyo3::prelude::*;
-use pyo3::types::PyList;
+use r2p::prelude::*;
+use r2p::types::PyList;
 
 #[pyfunction]
 //~^ ERROR: borrowed data escapes outside of function

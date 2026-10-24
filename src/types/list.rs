@@ -21,7 +21,7 @@ use core::num::NonZero;
 
 /// Represents a Python `list`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyList>`][crate::Py] or [`Bound<'py, PyList>`][Bound].
 ///
 /// For APIs available on `list` objects, see the [`PyListMethods`] trait which is implemented for
@@ -65,8 +65,8 @@ impl PyList {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyList;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyList;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| {
@@ -149,7 +149,7 @@ pub trait PyListMethods<'py>: crate::sealed::Sealed {
     /// Gets the list item at the specified index.
     /// # Example
     /// ```
-    /// use pyo3::{prelude::*, types::PyList};
+    /// use r2p::{prelude::*, types::PyList};
     /// Python::attach(|py| {
     ///     let list = PyList::new(py, [2, 3, 5, 7]).unwrap();
     ///     let obj = list.get_item(0);
@@ -280,7 +280,7 @@ impl<'py> PyListMethods<'py> for Bound<'py, PyList> {
     /// Gets the list item at the specified index.
     /// # Example
     /// ```
-    /// use pyo3::{prelude::*, types::PyList};
+    /// use r2p::{prelude::*, types::PyList};
     /// Python::attach(|py| {
     ///     let list = PyList::new(py, [2, 3, 5, 7]).unwrap();
     ///     let obj = list.get_item(0);

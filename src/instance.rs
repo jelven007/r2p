@@ -60,7 +60,7 @@ mod bound_object_sealed {
 ///
 /// This type can be thought of as equivalent to the tuple `(Py<T>, Python<'py>)`. By having the `'py`
 /// lifetime of the [`Python<'py>`] token, this ties the lifetime of the [`Bound<'py, T>`] smart pointer
-/// to the lifetime the thread is attached to the Python interpreter and allows PyO3 to call Python APIs
+/// to the lifetime the thread is attached to the Python interpreter and allows r2p to call Python APIs
 /// at maximum efficiency.
 ///
 /// To access the object in situations where the thread is not attached, convert it to [`Py<T>`]
@@ -82,7 +82,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass]
     /// struct Foo {/* fields omitted */}
@@ -118,8 +118,8 @@ impl<'py, T> Bound<'py, T> {
     /// # Example: Casting to a specific Python object
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::{PyDict, PyList};
+    /// use r2p::prelude::*;
+    /// use r2p::types::{PyDict, PyList};
     ///
     /// Python::attach(|py| {
     ///     let dict = PyDict::new(py);
@@ -136,8 +136,8 @@ impl<'py, T> Bound<'py, T> {
     /// This is useful if you want to mutate a `Py<PyAny>` that might actually be a pyclass.
     ///
     /// ```rust
-    /// # fn main() -> Result<(), pyo3::PyErr> {
-    /// use pyo3::prelude::*;
+    /// # fn main() -> Result<(), r2p::PyErr> {
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass]
     /// struct Class {
@@ -192,8 +192,8 @@ impl<'py, T> Bound<'py, T> {
     /// # Example
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::{PyDict, PyList};
+    /// use r2p::prelude::*;
+    /// use r2p::types::{PyDict, PyList};
     ///
     /// Python::attach(|py| {
     ///     let obj: Bound<'_, PyAny> = PyDict::new(py).into_any();
@@ -243,8 +243,8 @@ impl<'py, T> Bound<'py, T> {
     /// # Example: Casting to a specific Python object but not a subtype
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::{PyBool, PyInt};
+    /// use r2p::prelude::*;
+    /// use r2p::types::{PyBool, PyInt};
     ///
     /// Python::attach(|py| {
     ///     let b = PyBool::new(py, true);
@@ -524,7 +524,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     /// #
     /// #[pyclass]
     /// struct Foo {
@@ -560,7 +560,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     /// #
     /// #[pyclass]
     /// struct Foo {
@@ -624,7 +624,7 @@ where
     ///
     /// ```
     /// use core::sync::atomic::{AtomicUsize, Ordering};
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     ///
     /// #[pyclass(frozen)]
     /// struct FrozenCounter {
@@ -666,7 +666,7 @@ where
     ///
     /// ```rust
     /// # fn main() {
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass(subclass)]
     /// struct BaseClass;
@@ -719,7 +719,7 @@ where
     ///
     /// ```rust
     /// # fn main() {
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass(subclass)]
     /// struct BaseClass;
@@ -859,7 +859,7 @@ impl<'py, T> Bound<'py, T> {
     /// # Safety
     ///
     /// The reference is owned; when finished the caller should either transfer ownership
-    /// of the pointer or decrease the reference count (e.g. with [`pyo3::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
+    /// of the pointer or decrease the reference count (e.g. with [`r2p::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
     #[inline]
     pub fn into_ptr(self) -> *mut ffi::PyObject {
         ManuallyDrop::new(self).as_ptr()
@@ -943,7 +943,7 @@ impl<'py, T> BoundObject<'py, T> for Bound<'py, T> {
 /// reduces one level of pointer indirection, but additionally it removes the implicit lifetime
 /// relation that `'py` has to outlive `'a` (`'py: 'a`). This opens the possibility to borrow from
 /// the underlying Python object without necessarily requiring attachment to the interpreter for
-/// that duration. Within PyO3 this is used for example for the byte slice (`&[u8]`) extraction.
+/// that duration. Within r2p this is used for example for the byte slice (`&[u8]`) extraction.
 ///
 /// [`Borrowed<'a, 'py, T>`] dereferences to [`Bound<'py, T>`], so all methods on [`Bound<'py, T>`]
 /// are available on [`Borrowed<'a, 'py, T>`].
@@ -963,7 +963,7 @@ impl<'a, 'py, T> Borrowed<'a, 'py, T> {
     ///
     /// # Example
     /// ```
-    /// use pyo3::{prelude::*, types::PyTuple};
+    /// use r2p::{prelude::*, types::PyTuple};
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| -> PyResult<()> {
@@ -1084,7 +1084,7 @@ impl<'a, 'py, T> Borrowed<'a, 'py, T> {
     ///
     /// ```
     /// use core::sync::atomic::{AtomicUsize, Ordering};
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     ///
     /// #[pyclass(frozen)]
     /// struct FrozenCounter {
@@ -1308,8 +1308,8 @@ impl<'a, 'py, T> BoundObject<'py, T> for Borrowed<'a, 'py, T> {
 /// For example, this won't compile:
 ///
 /// ```compile_fail
-/// # use pyo3::prelude::*;
-/// # use pyo3::types::PyDict;
+/// # use r2p::prelude::*;
+/// # use r2p::types::PyDict;
 /// #
 /// #[pyclass]
 /// struct Foo<'py> {
@@ -1339,8 +1339,8 @@ impl<'a, 'py, T> BoundObject<'py, T> for Borrowed<'a, 'py, T> {
 /// `Py<T>` can be used to get around this by removing the lifetime from `dict` and with it the proof of attachment.
 ///
 /// ```rust
-/// use pyo3::prelude::*;
-/// use pyo3::types::PyDict;
+/// use r2p::prelude::*;
+/// use r2p::types::PyDict;
 ///
 /// #[pyclass]
 /// struct Foo {
@@ -1360,7 +1360,7 @@ impl<'a, 'py, T> BoundObject<'py, T> for Borrowed<'a, 'py, T> {
 /// #
 /// # fn main() -> PyResult<()> {
 /// #     Python::attach(|py| {
-/// #         let m = pyo3::types::PyModule::new(py, "test")?;
+/// #         let m = r2p::types::PyModule::new(py, "test")?;
 /// #         m.add_class::<Foo>()?;
 /// #
 /// #         let foo: Bound<'_, Foo> = m.getattr("Foo")?.call0()?.cast_into()?;
@@ -1374,7 +1374,7 @@ impl<'a, 'py, T> BoundObject<'py, T> for Borrowed<'a, 'py, T> {
 ///
 /// This can also be done with other pyclasses:
 /// ```rust
-/// use pyo3::prelude::*;
+/// use r2p::prelude::*;
 ///
 /// #[pyclass]
 /// struct Bar {/* ... */}
@@ -1397,7 +1397,7 @@ impl<'a, 'py, T> BoundObject<'py, T> for Borrowed<'a, 'py, T> {
 /// #
 /// # fn main() -> PyResult<()> {
 /// #     Python::attach(|py| {
-/// #         let m = pyo3::types::PyModule::new(py, "test")?;
+/// #         let m = r2p::types::PyModule::new(py, "test")?;
 /// #         m.add_class::<Foo>()?;
 /// #
 /// #         let foo: Bound<'_, Foo> = m.getattr("Foo")?.call0()?.cast_into()?;
@@ -1420,8 +1420,8 @@ impl<'a, 'py, T> BoundObject<'py, T> for Borrowed<'a, 'py, T> {
 /// is not attached to the Python interpreter (and is gated behind the `py-clone` feature flag).
 ///
 /// ```rust
-/// use pyo3::prelude::*;
-/// use pyo3::types::PyDict;
+/// use r2p::prelude::*;
+/// use r2p::types::PyDict;
 ///
 /// # fn main() {
 /// Python::attach(|py| {
@@ -1514,7 +1514,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass]
     /// struct Foo {/* fields omitted */}
@@ -1552,7 +1552,7 @@ impl<T> Py<T> {
     /// # Safety
     ///
     /// The reference is owned; when finished the caller should either transfer ownership
-    /// of the pointer or decrease the reference count (e.g. with [`pyo3::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
+    /// of the pointer or decrease the reference count (e.g. with [`r2p::ffi::Py_DecRef`](crate::ffi::Py_DecRef)).
     #[inline]
     pub fn into_ptr(self) -> *mut ffi::PyObject {
         ManuallyDrop::new(self).0.as_ptr()
@@ -1595,7 +1595,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     /// #
     /// #[pyclass]
     /// struct Foo {
@@ -1633,7 +1633,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     /// #
     /// #[pyclass]
     /// struct Foo {
@@ -1705,7 +1705,7 @@ where
     ///
     /// ```
     /// use core::sync::atomic::{AtomicUsize, Ordering};
-    /// # use pyo3::prelude::*;
+    /// # use r2p::prelude::*;
     ///
     /// #[pyclass(frozen)]
     /// struct FrozenCounter {
@@ -1778,7 +1778,7 @@ impl<T> Py<T> {
     #[inline]
     #[deprecated(
         since = "0.29.0",
-        note = "use `pyo3::ffi::Py_REFCNT(obj.as_ptr())` instead"
+        note = "use `r2p::ffi::Py_REFCNT(obj.as_ptr())` instead"
     )]
     pub fn get_refcnt(&self, py: Python<'_>) -> isize {
         self._get_refcnt(py)
@@ -1799,8 +1799,8 @@ impl<T> Py<T> {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyDict;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyDict;
     ///
     /// # fn main() {
     /// Python::attach(|py| {
@@ -1834,8 +1834,8 @@ impl<T> Py<T> {
     /// # Examples
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::PyDict;
+    /// use r2p::prelude::*;
+    /// use r2p::types::PyDict;
     ///
     /// # fn main() {
     /// Python::attach(|py| {
@@ -1887,7 +1887,7 @@ impl<T> Py<T> {
     /// # Example: `intern!`ing the attribute name
     ///
     /// ```
-    /// # use pyo3::{prelude::*, intern};
+    /// # use r2p::{prelude::*, intern};
     /// #
     /// #[pyfunction]
     /// fn version(sys: Py<PyModule>, py: Python<'_>) -> PyResult<Py<PyAny>> {
@@ -1916,7 +1916,7 @@ impl<T> Py<T> {
     /// # Example: `intern!`ing the attribute name
     ///
     /// ```
-    /// # use pyo3::{intern, pyfunction, types::PyModule, IntoPyObjectExt, Py, PyAny, Python, PyResult};
+    /// # use r2p::{intern, pyfunction, types::PyModule, IntoPyObjectExt, Py, PyAny, Python, PyResult};
     /// #
     /// #[pyfunction]
     /// fn set_answer(ob: Py<PyAny>, py: Python<'_>) -> PyResult<()> {
@@ -2157,9 +2157,9 @@ impl<T> Clone for Py<T> {
 /// on the object by one if the thread is attached to the Python interpreter.
 ///
 /// Otherwise and by default, this registers the underlying pointer to have its reference count
-/// decremented the next time PyO3 attaches to the Python interpreter.
+/// decremented the next time r2p attaches to the Python interpreter.
 ///
-/// However, if the `pyo3_disable_reference_pool` conditional compilation flag
+/// However, if the `r2p_disable_reference_pool` conditional compilation flag
 /// is enabled, it will abort the process.
 impl<T> Drop for Py<T> {
     #[inline]
@@ -2244,8 +2244,8 @@ impl<T> Py<T> {
     /// # Example: Casting to a specific Python object
     ///
     /// ```rust
-    /// use pyo3::prelude::*;
-    /// use pyo3::types::{PyDict, PyList};
+    /// use r2p::prelude::*;
+    /// use r2p::types::{PyDict, PyList};
     ///
     /// Python::attach(|py| {
     ///     let any = PyDict::new(py).into_any().unbind();
@@ -2260,8 +2260,8 @@ impl<T> Py<T> {
     /// This is useful if you want to mutate a `Py<PyAny>` that might actually be a pyclass.
     ///
     /// ```rust
-    /// # fn main() -> Result<(), pyo3::PyErr> {
-    /// use pyo3::prelude::*;
+    /// # fn main() -> Result<(), r2p::PyErr> {
+    /// use r2p::prelude::*;
     ///
     /// #[pyclass]
     /// struct Class {
@@ -2306,7 +2306,7 @@ impl<T> Py<T> {
 /// GC traversal.
 ///
 /// This is intended to be a private type for now as it's unlikely to have much use outside
-/// of PyO3 internals. It also has a horrible name. It comes in useful as a better
+/// of r2p internals. It also has a horrible name. It comes in useful as a better
 /// alternative to `NonNull<ffi::PyObject>` because it carries the lifetime of validity
 /// plus type information.
 #[repr(transparent)]

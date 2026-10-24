@@ -1,8 +1,8 @@
 #![cfg(feature = "macros")]
 
-use pyo3::class::basic::CompareOp;
-use pyo3::py_run;
-use pyo3::{BoundObject, prelude::*};
+use r2p::class::basic::CompareOp;
+use r2p::py_run;
+use r2p::{BoundObject, prelude::*};
 
 mod test_utils;
 
@@ -38,7 +38,7 @@ impl UnaryArithmetic {
         Self::new(self.inner.recip())
     }
 
-    #[pyo3(signature=(_ndigits=None))]
+    #[r2p(signature=(_ndigits=None))]
     fn __round__(&self, _ndigits: Option<u32>) -> Self {
         Self::new(self.inner.round())
     }

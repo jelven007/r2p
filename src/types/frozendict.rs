@@ -19,7 +19,7 @@ use core::ptr;
 
 /// Represents a Python `frozendict`.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyFrozenDict>`][crate::Py] or [`Bound<'py, PyFrozenDict>`][Bound].
 ///
 /// For APIs available on `frozendict` objects, see the [`PyFrozenDictMethods`] trait which is implemented for

@@ -64,7 +64,7 @@ jobs:
       - name: Build the guide
         run: uv run --isolated --only-group nox nox -s ${{ github.event_name == 'release' && 'build-guide' || 'check-guide' }}
         env:
-          PYO3_VERSION_TAG: ${{ github.event_name == 'release' && steps.prepare_tag.outputs.tag_name || 'main' }}
+          R2P_VERSION_TAG: ${{ github.event_name == 'release' && steps.prepare_tag.outputs.tag_name || 'main' }}
           # allows lychee to get better rate limits from github
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -86,10 +86,10 @@ jobs:
           destination_dir: ${{ steps.prepare_tag.outputs.tag_name }}
           full_commit_message: "Upload documentation for ${{ steps.prepare_tag.outputs.tag_name }}"
 
-      - name: Get current PyO3 version
+      - name: Get current r2p version
         run: |
-          PYO3_VERSION=$(cargo search pyo3 --limit 1 | head -1 | tr -s ' ' | cut -d ' ' -f 3 | tr -d '"')
-          echo "PYO3_VERSION=${PYO3_VERSION}" >> $GITHUB_ENV
+          R2P_VERSION=$(python -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')
+          echo "R2P_VERSION=${R2P_VERSION}" >> $GITHUB_ENV
 
       - name: Build the site
         run: uv run --isolated --only-group nox nox -s build-netlify-site -- ${{ (github.ref != 'refs/heads/main' && '--preview') || '' }}

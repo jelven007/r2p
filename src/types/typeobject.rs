@@ -13,7 +13,7 @@ use super::PyString;
 
 /// Represents a reference to a Python `type` object.
 ///
-/// Values of this type are accessed via PyO3's smart pointers, e.g. as
+/// Values of this type are accessed via r2p's smart pointers, e.g. as
 /// [`Py<PyType>`][crate::Py] or [`Bound<'py, PyType>`][Bound].
 ///
 /// For APIs available on `type` objects, see the [`PyTypeMethods`] trait which is implemented for
@@ -263,7 +263,7 @@ mod tests {
     use crate::Python;
     use crate::test_utils::generate_unique_module_name;
     use crate::types::{PyAnyMethods, PyBool, PyInt, PyModule, PyTuple, PyType, PyTypeMethods};
-    use pyo3_ffi::c_str;
+    use r2p_ffi::c_str;
 
     #[test]
     fn test_type_is_subclass() {

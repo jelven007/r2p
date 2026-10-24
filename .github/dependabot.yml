@@ -5,7 +5,7 @@
 
 version: 2
 updates:
-  # main cargo workspace does not include `pyo3-benches` and `pyo3-ffi-check`
+  # main cargo workspace does not include `r2p-benches` and `r2p-ffi-check`
   # as they are not published to crates.io and occasionally depend on
   # compiler functionality newer than MSRV.
 
@@ -23,14 +23,14 @@ updates:
           - "*"
 
   - package-ecosystem: "cargo"
-    directory: "/pyo3-benches/"
+    directory: "/benchmarks/r2p-benches/"
     schedule:
       interval: "weekly"
     cooldown:
       default-days: 3
 
   - package-ecosystem: "cargo"
-    directory: "/pyo3-ffi-check/"
+    directory: "/tools/ffi-check/"
     schedule:
       interval: "weekly"
     cooldown:

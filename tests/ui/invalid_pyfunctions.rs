@@ -1,5 +1,5 @@
-use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyString, PyTuple};
+use r2p::prelude::*;
+use r2p::types::{PyDict, PyString, PyTuple};
 
 #[pyfunction]
 fn generic_function<T>(_value: T) {}
@@ -18,14 +18,14 @@ fn destructured_argument((_a, _b): (i32, i32)) {}
 //~^ ERROR: destructuring in arguments is not supported
 
 #[pyfunction]
-#[pyo3(signature=(*args))]
+#[r2p(signature=(*args))]
 fn function_with_optional_args(args: Option<Bound<'_, PyTuple>>) {
     //~^ ERROR: args cannot be optional
     let _ = args;
 }
 
 #[pyfunction]
-#[pyo3(signature=(**kwargs))]
+#[r2p(signature=(**kwargs))]
 fn function_with_required_kwargs(kwargs: Bound<'_, PyDict>) {
     //~^ ERROR: kwargs must be Option<_>
     let _ = kwargs;
@@ -38,7 +38,7 @@ fn pass_module_but_no_arguments<'py>() {}
 #[pyfunction(pass_module)]
 fn first_argument_not_module<'a, 'py>(
     _string: &str,
-    //~^ ERROR: the trait bound `&str: From<&pyo3::Bound<'_, pyo3::types::PyModule>>` is not satisfied
+    //~^ ERROR: the trait bound `&str: From<&r2p::Bound<'_, r2p::types::PyModule>>` is not satisfied
     module: &'a Bound<'py, PyModule>,
 ) -> PyResult<Bound<'py, PyString>> {
     module.name()

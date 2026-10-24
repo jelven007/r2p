@@ -1,0 +1,44 @@
+[package]
+# Maturin's detection protocol requires this exact name. This is an adapter,
+# not the SDK FFI crate; it is never published.
+name = "pyo3-ffi"
+version = "0.30.0"
+edition = "2024"
+rust-version = "1.85"
+publish = false
+description = "Private Maturin package detection adapter for r2p"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "r2p_maturin_bridge"
+
+[dependencies]
+r2p-ffi = { path = "../../crates/r2p-ffi", version = "=0.30.0" }
+
+[features]
+default = []
+extension-module = ["r2p-ffi/extension-module"]
+generate-import-lib = ["r2p-ffi/generate-import-lib"]
+abi3 = ["r2p-ffi/abi3"]
+abi3-py39 = ["abi3-py310", "r2p-ffi/abi3-py39"]
+abi3-py310 = ["abi3-py311", "r2p-ffi/abi3-py310"]
+abi3-py311 = ["abi3-py312", "r2p-ffi/abi3-py311"]
+abi3-py312 = ["abi3-py313", "r2p-ffi/abi3-py312"]
+abi3-py313 = ["abi3-py314", "r2p-ffi/abi3-py313"]
+abi3-py314 = ["abi3-py315", "r2p-ffi/abi3-py314"]
+abi3-py315 = ["abi3", "r2p-ffi/abi3-py315"]
+abi3t = ["r2p-ffi/abi3t"]
+abi3t-py315 = ["abi3t", "r2p-ffi/abi3t-py315"]
+
+# Keep interpreter bounds aligned with crates/r2p-ffi/Cargo.toml.
+[package.metadata.cpython]
+min-version = "3.9"
+max-version = "3.15"
+
+[package.metadata.pypy]
+min-version = "3.11"
+max-version = "3.12"
+
+[package.metadata.graalpy]
+min-version = "3.12"
+max-version = "3.13"

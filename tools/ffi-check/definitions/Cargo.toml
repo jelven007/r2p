@@ -1,0 +1,13 @@
+[package]
+name = "r2p-ffi-check-definitions"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+r2p-ffi = { path = "../../../crates/r2p-ffi" }
+
+[build-dependencies]
+bindgen = "0.73"
+target-lexicon = "0.13"
+r2p-build-config = { path = "../../../crates/r2p-build-config" }

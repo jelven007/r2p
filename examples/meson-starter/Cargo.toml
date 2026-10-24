@@ -10,11 +10,12 @@ crate-type = ["cdylib"]
 
 [dependencies]
 # The build backend supplies the checkout's crates and lockfile.
-pyo3 = "*"
+# _build_backend.py stages this SDK version into Meson's local subprojects.
+r2p = "*"
 
 [features]
-abi3 = ["pyo3/abi3-py39"]
-hashbrown = ["pyo3/hashbrown"]
-parking_lot = ["pyo3/parking_lot"]
+abi3 = ["r2p/abi3-py39"]
+hashbrown = ["r2p/hashbrown"]
+parking_lot = ["r2p/parking_lot"]
 
 [workspace]

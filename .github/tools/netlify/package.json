@@ -1,5 +1,5 @@
 {
-  "name": "pyo3-netlify",
+  "name": "r2p-netlify",
   "private": true,
   "dependencies": {
     "netlify-cli": "27.5.2"

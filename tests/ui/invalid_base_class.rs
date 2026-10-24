@@ -1,5 +1,5 @@
-use pyo3::prelude::*;
-use pyo3::types::PyBool;
+use r2p::prelude::*;
+use r2p::types::PyBool;
 
 #[pyclass(extends=PyBool)]
 //~^ ERROR: pyclass `PyBool` cannot be subclassed

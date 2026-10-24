@@ -1,8 +1,8 @@
-use pyo3::prelude::*;
+use r2p::prelude::*;
 
 #[pymodule]
 mod module {
-    use pyo3::prelude::*;
+    use r2p::prelude::*;
 
     #[pymodule_init]
     fn init(_m: &Bound<'_, PyModule>, _extra: usize) -> PyResult<()> {
@@ -13,7 +13,7 @@ mod module {
 
 #[pymodule]
 mod module_with_python_last {
-    use pyo3::prelude::*;
+    use r2p::prelude::*;
 
     #[pymodule_init]
     fn init(_m: &Bound<'_, PyModule>, _py: Python<'_>) -> PyResult<()> {

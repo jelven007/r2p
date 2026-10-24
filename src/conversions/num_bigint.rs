@@ -10,11 +10,11 @@
 //! ```toml
 //! [dependencies]
 //! num-bigint = "*"
-#![doc = concat!("pyo3 = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"num-bigint\"] }")]
+#![doc = concat!("r2p = { version = \"", env!("CARGO_PKG_VERSION"),  "\", features = [\"num-bigint\"] }")]
 //! ```
 //!
-//! Note that you must use compatible versions of num-bigint and PyO3.
-//! The required num-bigint version may vary based on the version of PyO3.
+//! Note that you must use compatible versions of num-bigint and r2p.
+//! The required num-bigint version may vary based on the version of r2p.
 //!
 //! ## Examples
 //!
@@ -23,7 +23,7 @@
 //! in which case it will fail its conversion and raise `OverflowError`.
 //! ```rust,no_run
 //! use num_bigint::BigInt;
-//! use pyo3::prelude::*;
+//! use r2p::prelude::*;
 //!
 //! #[pyfunction]
 //! fn add_one(n: BigInt) -> BigInt {
@@ -31,7 +31,7 @@
 //! }
 //!
 //! #[pymodule]
-//! # #[pyo3(name = "example_num_bigint")]
+//! # #[r2p(name = "example_num_bigint")]
 //! fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 //!     m.add_function(wrap_pyfunction!(add_one, m)?)?;
 //!     Ok(())
@@ -529,7 +529,7 @@ mod tests {
     use crate::exceptions::PyTypeError;
     use crate::test_utils::generate_unique_module_name;
     use crate::types::{PyAnyMethods as _, PyDict, PyModule};
-    use pyo3_ffi::c_str;
+    use r2p_ffi::c_str;
 
     fn rust_fib<T>() -> impl Iterator<Item = T>
     where

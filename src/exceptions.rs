@@ -21,7 +21,7 @@ macro_rules! impl_exception_boilerplate {
         impl $name {
             /// Creates a new [`PyErr`] of this type.
             ///
-            /// [`PyErr`]: https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html "PyErr in pyo3"
+            /// [`PyErr`]: https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html "PyErr in r2p"
             #[inline]
             #[allow(dead_code, reason = "user may not call this function")]
             pub fn new_err<A>(args: A) -> $crate::PyErr
@@ -47,16 +47,16 @@ macro_rules! impl_exception_boilerplate {
 ///
 /// # Examples
 /// ```
-/// use pyo3::import_exception;
-/// use pyo3::types::IntoPyDict;
-/// use pyo3::Python;
+/// use r2p::import_exception;
+/// use r2p::types::IntoPyDict;
+/// use r2p::Python;
 ///
 /// import_exception!(socket, gaierror);
 ///
-/// # fn main() -> pyo3::PyResult<()> {
+/// # fn main() -> r2p::PyResult<()> {
 /// Python::attach(|py| {
 ///     let ctx = [("gaierror", py.get_type::<gaierror>())].into_py_dict(py)?;
-///     pyo3::py_run!(py, *ctx, "import socket; assert gaierror is socket.gaierror");
+///     r2p::py_run!(py, *ctx, "import socket; assert gaierror is socket.gaierror");
 /// #   Ok(())
 /// })
 /// # }
@@ -67,10 +67,10 @@ macro_rules! import_exception {
     ($module: expr, $name: ident) => {
         /// A Rust type representing an exception defined in Python code.
         ///
-        /// This type was created by the [`pyo3::import_exception!`] macro - see its documentation
+        /// This type was created by the [`r2p::import_exception!`] macro - see its documentation
         /// for more information.
         ///
-        /// [`pyo3::import_exception!`]: https://docs.rs/pyo3/latest/pyo3/macro.import_exception.html "import_exception in pyo3"
+        /// [`r2p::import_exception!`]: https://docs.rs/pyo3/latest/pyo3/macro.import_exception.html "import_exception in r2p"
         #[repr(transparent)]
         #[allow(non_camel_case_types, reason = "matches imported exception name, e.g. `socket.herror`")]
         pub struct $name($crate::PyAny);
@@ -110,9 +110,9 @@ macro_rules! import_exception {
 /// # Examples
 ///
 /// ```
-/// use pyo3::prelude::*;
-/// use pyo3::create_exception;
-/// use pyo3::exceptions::PyException;
+/// use r2p::prelude::*;
+/// use r2p::create_exception;
+/// use r2p::exceptions::PyException;
 ///
 /// create_exception!(my_module, MyError, PyException, "Some description.");
 ///
@@ -123,7 +123,7 @@ macro_rules! import_exception {
 /// }
 ///
 /// #[pymodule]
-/// # #[pyo3(name = "example_exceptions")]
+/// # #[r2p(name = "example_exceptions")]
 /// fn my_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 ///     m.add("MyError", m.py().get_type::<MyError>())?;
 ///     m.add_function(wrap_pyfunction!(raise_myerror, m)?)?;
@@ -132,7 +132,7 @@ macro_rules! import_exception {
 /// # fn main() -> PyResult<()> {
 /// #     Python::attach(|py| -> PyResult<()> {
 /// #         let fun = wrap_pyfunction!(raise_myerror, py)?;
-/// #         let locals = pyo3::types::PyDict::new(py);
+/// #         let locals = r2p::types::PyDict::new(py);
 /// #         locals.set_item("MyError", py.get_type::<MyError>())?;
 /// #         locals.set_item("raise_myerror", fun)?;
 /// #
@@ -236,12 +236,12 @@ macro_rules! create_exception_type_object {
 
         impl $name {
             #[doc(hidden)]
-            pub const _PYO3_DEF: $crate::impl_::pymodule::AddTypeToModule<Self> =
+            pub const _R2P_DEF: $crate::impl_::pymodule::AddTypeToModule<Self> =
                 $crate::impl_::pymodule::AddTypeToModule::new();
 
             #[allow(dead_code)]
             #[doc(hidden)]
-            pub const _PYO3_INTROSPECTION_ID: &'static str =
+            pub const _R2P_INTROSPECTION_ID: &'static str =
                 concat!(stringify!($module), stringify!($name));
         }
     };
@@ -262,7 +262,7 @@ macro_rules! create_exception_type_hint(
     ($module: expr, $name: ident) => {
         const TYPE_HINT: $crate::inspect::PyStaticExpr = $crate::inspect::PyStaticExpr::PyClass($crate::inspect::PyClassNameStaticExpr::new(
             &$crate::type_hint_identifier!(stringify!($module), stringify!($name)),
-            Self::_PYO3_INTROSPECTION_ID
+            Self::_R2P_INTROSPECTION_ID
         ));
     };
 );
@@ -299,8 +299,8 @@ macro_rules! native_doc(
 This exception can be sent to Python code by converting it into a
 [`PyErr`](crate::PyErr), where Python code can then catch it.
 ```
-use pyo3::prelude::*;
-use pyo3::exceptions::Py", $name, ";
+use r2p::prelude::*;
+use r2p::exceptions::Py", $name, ";
 
 #[pyfunction]
 fn always_throws() -> PyResult<()> {
@@ -309,7 +309,7 @@ fn always_throws() -> PyResult<()> {
 }
 #
 # Python::attach(|py| {
-#     let fun = pyo3::wrap_pyfunction!(always_throws, py).unwrap();
+#     let fun = r2p::wrap_pyfunction!(always_throws, py).unwrap();
 #     let err = fun.call0().expect_err(\"called a function that should always return an error but the return value was Ok\");
 #     assert!(err.is_instance_of::<Py", $name, ">(py))
 # });
@@ -328,8 +328,8 @@ except ", $name, " as e:
 # Example: Catching ", $name, " in Rust
 
 ```
-use pyo3::prelude::*;
-use pyo3::exceptions::Py", $name, ";
+use r2p::prelude::*;
+use r2p::exceptions::Py", $name, ";
 
 Python::attach(|py| {
     let result: PyResult<()> = py.run(c\"raise ", $name, "\", None, None);
@@ -742,8 +742,8 @@ impl PyUnicodeDecodeError {
     /// # Examples
     ///
     /// ```
-    /// use pyo3::prelude::*;
-    /// use pyo3::exceptions::PyUnicodeDecodeError;
+    /// use r2p::prelude::*;
+    /// use r2p::exceptions::PyUnicodeDecodeError;
     ///
     /// # fn main() -> PyResult<()> {
     /// Python::attach(|py| {
@@ -776,8 +776,8 @@ impl PyUnicodeDecodeError {
     /// # Example
     ///
     /// ```
-    /// use pyo3::prelude::*;
-    /// use pyo3::exceptions::PyUnicodeDecodeError;
+    /// use r2p::prelude::*;
+    /// use r2p::exceptions::PyUnicodeDecodeError;
     ///
     /// Python::attach(|py| {
     ///     let invalid_utf8 = b"fo\xd8o";

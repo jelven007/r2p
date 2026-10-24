@@ -1,5 +1,5 @@
-use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyTuple};
+use r2p::prelude::*;
+use r2p::types::{PyDict, PyTuple};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 /// A function decorator that keeps track how often it is called.
@@ -36,7 +36,7 @@ impl PyCounter {
         self.count.load(Ordering::Relaxed)
     }
 
-    #[pyo3(signature = (*args, **kwargs))]
+    #[r2p(signature = (*args, **kwargs))]
     fn __call__(
         &self,
         py: Python<'_>,

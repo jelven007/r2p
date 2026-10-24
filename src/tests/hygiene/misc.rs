@@ -1,23 +1,23 @@
 #[derive(crate::FromPyObject)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 struct Derive1(i32); // newtype case
 
 #[derive(crate::FromPyObject)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 struct Derive2(i32, i32); // tuple case
 
 #[derive(crate::FromPyObject)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 struct Derive3 {
     f: i32,
-    #[pyo3(item(42))]
+    #[r2p(item(42))]
     g: i32,
-    #[pyo3(default)]
+    #[r2p(default)]
     h: i32,
 } // struct case
 
 #[derive(crate::FromPyObject)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 enum Derive4 {
     A(i32),
     B { f: i32 },
@@ -34,7 +34,7 @@ fn intern(py: crate::Python<'_>) {
 #[cfg(not(any(PyPy, GraalPy, all(Py_LIMITED_API, Py_GIL_DISABLED))))]
 fn append_to_inittab() {
     #[crate::pymodule]
-    #[pyo3(crate = "crate")]
+    #[r2p(crate = "crate")]
     mod module_for_inittab {}
 
     crate::append_to_inittab!(module_for_inittab);
@@ -60,31 +60,31 @@ macro_rules! macro_rules_hygiene {
 macro_rules_hygiene!(MyClass1, MyClass2);
 
 #[derive(crate::IntoPyObject, crate::IntoPyObjectRef)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 struct IntoPyObject1(i32); // transparent newtype case
 
 #[derive(crate::IntoPyObject, crate::IntoPyObjectRef)]
-#[pyo3(crate = "crate", transparent)]
+#[r2p(crate = "crate", transparent)]
 struct IntoPyObject2<'a> {
     inner: &'a str, // transparent newtype case
 }
 
 #[derive(crate::IntoPyObject, crate::IntoPyObjectRef)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 struct IntoPyObject3<'py>(i32, crate::Bound<'py, crate::PyAny>); // tuple case
 
 #[derive(crate::IntoPyObject, crate::IntoPyObjectRef)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 struct IntoPyObject4<'a, 'py> {
     callable: &'a crate::Bound<'py, crate::PyAny>, // struct case
     num: usize,
 }
 
 #[derive(crate::IntoPyObject, crate::IntoPyObjectRef)]
-#[pyo3(crate = "crate")]
+#[r2p(crate = "crate")]
 enum IntoPyObject5<'a, 'py> {
     TransparentTuple(i32),
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     TransparentStruct {
         f: crate::Py<crate::PyAny>,
     },

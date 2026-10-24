@@ -1,20 +1,20 @@
 //! Interaction with attachment of the current thread to the Python interpreter.
 
-#[cfg(pyo3_disable_reference_pool)]
+#[cfg(r2p_disable_reference_pool)]
 use crate::impl_::panic::PanicTrap;
 use crate::platform::prelude::*;
 use crate::{Py, PyAny, Python, ffi};
 
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 use crate::platform::sync::nonpoison::Mutex;
 use core::cell::Cell;
-#[cfg_attr(pyo3_disable_reference_pool, allow(unused_imports))]
+#[cfg_attr(r2p_disable_reference_pool, allow(unused_imports))]
 use core::mem;
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 use core::sync::atomic::{AtomicBool, Ordering};
 
 crate::platform::thread_local! {
-    /// This is an internal counter in pyo3 monitoring whether this thread is attached to the interpreter.
+    /// This is an internal counter in r2p monitoring whether this thread is attached to the interpreter.
     ///
     /// It will be incremented whenever an AttachGuard is created, and decremented whenever
     /// they are dropped.
@@ -30,7 +30,7 @@ const ATTACH_FORBIDDEN_DURING_TRAVERSE: isize = -1;
 
 /// Checks whether the thread is attached to the Python interpreter.
 ///
-/// Note: This uses pyo3's internal count rather than PyGILState_Check for two reasons:
+/// Note: This uses r2p's internal count rather than PyGILState_Check for two reasons:
 ///  1) for performance
 ///  2) PyGILState_Check always returns 1 if the sub-interpreter APIs have ever been called,
 ///     which could lead to incorrect conclusions that the thread is attached.
@@ -59,9 +59,9 @@ pub(crate) enum AttachError {
 }
 
 impl AttachGuard {
-    /// PyO3 internal API for attaching to the Python interpreter. The public API is Python::attach.
+    /// r2p internal API for attaching to the Python interpreter. The public API is Python::attach.
     ///
-    /// If the thread was already attached via PyO3, this returns
+    /// If the thread was already attached via r2p, this returns
     /// `AttachGuard::Assumed`. Otherwise, the thread will attach now and
     /// `AttachGuard::Ensured` will be returned.
     pub(crate) fn attach() -> Self {
@@ -104,7 +104,7 @@ impl AttachGuard {
         }
 
         // Py_IsInitialized() can return 1 while Py_InitializeEx is still
-        // running (e.g. importing site.py). Block until any in-progress PyO3
+        // running (e.g. importing site.py). Block until any in-progress r2p
         // initialization has fully completed.
         crate::interpreter_lifecycle::wait_for_initialization();
 
@@ -194,10 +194,10 @@ impl Drop for AttachGuard {
     }
 }
 
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 type PyObjVec = Vec<Py<PyAny>>;
 
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 /// Thread-safe storage for objects which were dec_ref while not attached.
 struct ReferencePool {
     // Whether any decrefs are (or may be) pending. The `Mutex` performs
@@ -207,7 +207,7 @@ struct ReferencePool {
     pending_decrefs: Mutex<PyObjVec>,
 }
 
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 impl ReferencePool {
     const fn new() -> Self {
         Self {
@@ -268,13 +268,13 @@ impl ReferencePool {
     }
 }
 
-#[cfg(not(pyo3_disable_reference_pool))]
+#[cfg(not(r2p_disable_reference_pool))]
 static POOL: ReferencePool = ReferencePool::new();
 
-#[cfg_attr(pyo3_disable_reference_pool, inline(always))]
-#[cfg_attr(pyo3_disable_reference_pool, allow(unused_variables))]
+#[cfg_attr(r2p_disable_reference_pool, inline(always))]
+#[cfg_attr(r2p_disable_reference_pool, allow(unused_variables))]
 fn drop_deferred_references(py: Python<'_>) {
-    #[cfg(not(pyo3_disable_reference_pool))]
+    #[cfg(not(r2p_disable_reference_pool))]
     {
         POOL.drop_deferred_references(py);
     }
@@ -304,7 +304,7 @@ impl Drop for SuspendAttach {
         unsafe { ffi::PyEval_RestoreThread(self.tstate) };
         ATTACH_COUNT.with(|c| c.set(self.count));
         // Update counts of `Py<T>` that were dropped while not attached.
-        #[cfg(not(pyo3_disable_reference_pool))]
+        #[cfg(not(r2p_disable_reference_pool))]
         {
             // SAFETY: just re-attached
             let py = unsafe { Python::assume_attached() };
@@ -348,16 +348,16 @@ impl Drop for ForbidAttaching {
 }
 
 /// Registers a Python object pointer inside the release pool, to have its reference count decreased
-/// the next time the thread is attached in pyo3.
+/// the next time the thread is attached in r2p.
 #[inline]
 pub fn register_decref(obj: Py<PyAny>) {
-    #[cfg(not(pyo3_disable_reference_pool))]
+    #[cfg(not(r2p_disable_reference_pool))]
     {
         POOL.register_decref(obj);
     }
     #[cfg(all(
-        pyo3_disable_reference_pool,
-        not(pyo3_leak_on_drop_without_reference_pool)
+        r2p_disable_reference_pool,
+        not(r2p_leak_on_drop_without_reference_pool)
     ))]
     {
         let _trap = PanicTrap::new("Aborting the process to avoid panic-from-drop.");
@@ -365,7 +365,7 @@ pub fn register_decref(obj: Py<PyAny>) {
     }
 }
 
-/// Private helper function to check if we are currently in a GC traversal (as detected by PyO3).
+/// Private helper function to check if we are currently in a GC traversal (as detected by r2p).
 #[cfg(any(not(Py_LIMITED_API), Py_3_11))]
 #[cfg_attr(not(wip_feature_std), expect(dead_code))] // keep code if not used to minimize refactoring friction
 pub(crate) fn is_in_gc_traversal() -> bool {
@@ -374,7 +374,7 @@ pub(crate) fn is_in_gc_traversal() -> bool {
         .unwrap_or(false)
 }
 
-/// Increments pyo3's internal attach count - to be called whenever an AttachGuard is created.
+/// Increments r2p's internal attach count - to be called whenever an AttachGuard is created.
 #[inline(always)]
 fn increment_attach_count() {
     // Ignores the error in case this function called from `atexit`.
@@ -387,7 +387,7 @@ fn increment_attach_count() {
     });
 }
 
-/// Decrements pyo3's internal attach count - to be called whenever AttachGuard is dropped.
+/// Decrements r2p's internal attach count - to be called whenever AttachGuard is dropped.
 #[inline(always)]
 fn decrement_attach_count() {
     // Ignores the error in case this function called from `atexit`.
@@ -395,7 +395,7 @@ fn decrement_attach_count() {
         let current = c.get();
         debug_assert!(
             current > 0,
-            "Negative attach count detected. Please report this error to the PyO3 repo as a bug."
+            "Negative attach count detected. Please report this error to the r2p repo as a bug."
         );
         c.set(current - 1);
     });
@@ -415,7 +415,7 @@ mod tests {
         py.eval(c"object()", None, None).unwrap().unbind()
     }
 
-    #[cfg(not(pyo3_disable_reference_pool))]
+    #[cfg(not(r2p_disable_reference_pool))]
     fn pool_dec_refs_does_not_contain(obj: &Py<PyAny>) -> bool {
         for _ in 0..100 {
             if !POOL
@@ -436,7 +436,7 @@ mod tests {
 
     // With free-threading, threads can empty the POOL at any time, so this
     // function does not test anything meaningful
-    #[cfg(not(any(pyo3_disable_reference_pool, Py_GIL_DISABLED)))]
+    #[cfg(not(any(r2p_disable_reference_pool, Py_GIL_DISABLED)))]
     fn pool_dec_refs_contains(obj: &Py<PyAny>) -> bool {
         POOL.pending_decrefs
             .lock()
@@ -453,20 +453,20 @@ mod tests {
             let reference = obj.clone_ref(py);
 
             assert_eq!(obj._get_refcnt(py), 2);
-            #[cfg(not(pyo3_disable_reference_pool))]
+            #[cfg(not(r2p_disable_reference_pool))]
             assert!(pool_dec_refs_does_not_contain(&obj));
 
             // While attached, reference count will be decreased immediately.
             drop(reference);
 
             assert_eq!(obj._get_refcnt(py), 1);
-            #[cfg(not(any(pyo3_disable_reference_pool)))]
+            #[cfg(not(any(r2p_disable_reference_pool)))]
             assert!(pool_dec_refs_does_not_contain(&obj));
         });
     }
 
     #[test]
-    #[cfg(all(not(pyo3_disable_reference_pool), not(target_arch = "wasm32")))] // We are building wasm Python with pthreads disabled
+    #[cfg(all(not(r2p_disable_reference_pool), not(target_arch = "wasm32")))] // We are building wasm Python with pthreads disabled
     fn test_pyobject_drop_detached_defers_decref_to_next_attach() {
         let obj = Python::attach(|py| {
             let obj = get_object(py);
@@ -592,7 +592,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(not(pyo3_disable_reference_pool))]
+    #[cfg(not(r2p_disable_reference_pool))]
     fn test_detached_drop_is_collected_on_next_attach() {
         let obj = Python::attach(get_object);
         let obj2 = Python::attach(|py| obj.clone_ref(py));
@@ -605,7 +605,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(not(pyo3_disable_reference_pool))]
+    #[cfg(not(r2p_disable_reference_pool))]
     fn test_drop_deferred_references_does_not_deadlock() {
         // drop_deferred_references can run arbitrary Python code during Py_DECREF.
         // if the locking is implemented incorrectly, it will deadlock.
@@ -646,7 +646,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(not(pyo3_disable_reference_pool))]
+    #[cfg(not(r2p_disable_reference_pool))]
     fn test_attach_guard_drop_deferred_references() {
         Python::attach(|py| {
             let obj = get_object(py);

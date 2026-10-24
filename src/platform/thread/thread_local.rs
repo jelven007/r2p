@@ -7,7 +7,7 @@ use core::sync::atomic::{AtomicBool, AtomicPtr, AtomicU8, Ordering};
 
 use once_cell::sync::{Lazy, OnceCell};
 #[cfg(not(Py_LIMITED_API))]
-use pyo3_ffi::Py_tss_NEEDS_INIT;
+use r2p_ffi::Py_tss_NEEDS_INIT;
 
 use crate::ffi::{
     PyThread_tss_alloc, PyThread_tss_create, PyThread_tss_delete, PyThread_tss_free,

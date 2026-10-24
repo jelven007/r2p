@@ -1,9 +1,9 @@
 #![cfg(feature = "macros")]
 
-use pyo3::exceptions::PyValueError;
-use pyo3::intern;
-use pyo3::prelude::*;
-use pyo3::types::{IntoPyDict, PyDict, PyList, PyString, PyTuple};
+use r2p::exceptions::PyValueError;
+use r2p::intern;
+use r2p::prelude::*;
+use r2p::types::{IntoPyDict, PyDict, PyList, PyString, PyTuple};
 
 extern crate alloc;
 
@@ -25,25 +25,25 @@ fn extract_traceback(py: Python<'_>, mut error: PyErr) -> String {
 
 #[derive(Debug, FromPyObject)]
 pub struct A<'py> {
-    #[pyo3(attribute)]
+    #[r2p(attribute)]
     s: String,
-    #[pyo3(item)]
+    #[r2p(item)]
     t: Bound<'py, PyString>,
-    #[pyo3(attribute("foo"))]
+    #[r2p(attribute("foo"))]
     p: Bound<'py, PyAny>,
 }
 
 #[pyclass]
 pub struct PyA {
-    #[pyo3(get)]
+    #[r2p(get)]
     s: String,
-    #[pyo3(get)]
+    #[r2p(get)]
     foo: Option<String>,
 }
 
 #[pymethods]
 impl PyA {
-    fn __getitem__(&self, key: String) -> pyo3::PyResult<String> {
+    fn __getitem__(&self, key: String) -> r2p::PyResult<String> {
         if key == "t" {
             Ok("bar".into())
         } else {
@@ -70,7 +70,7 @@ fn test_named_fields_struct() {
 }
 
 #[derive(Debug, FromPyObject)]
-#[pyo3(transparent)]
+#[r2p(transparent)]
 pub struct B {
     test: String,
 }
@@ -90,7 +90,7 @@ fn test_transparent_named_field_struct() {
 }
 
 #[derive(Debug, FromPyObject)]
-#[pyo3(transparent)]
+#[r2p(transparent)]
 pub struct D<T> {
     test: T,
 }
@@ -135,9 +135,9 @@ pub struct E<T, T2> {
 #[pyclass]
 #[derive(Clone)]
 pub struct PyE {
-    #[pyo3(get)]
+    #[r2p(get)]
     test: String,
-    #[pyo3(get)]
+    #[r2p(get)]
     test2: usize,
 }
 
@@ -163,7 +163,7 @@ fn test_generic_named_fields_struct() {
 
 #[derive(Debug, FromPyObject)]
 pub struct C {
-    #[pyo3(attribute("test"))]
+    #[r2p(attribute("test"))]
     test: String,
 }
 
@@ -232,9 +232,9 @@ fn test_transparent_tuple_struct() {
 
 #[pyclass]
 struct PyBaz {
-    #[pyo3(get)]
+    #[r2p(get)]
     tup: (String, String),
-    #[pyo3(get)]
+    #[r2p(get)]
     e: PyE,
 }
 
@@ -339,13 +339,13 @@ struct RenameAllCls {}
 #[pymethods]
 impl RenameAllCls {
     #[getter]
-    #[pyo3(name = "someField")]
+    #[r2p(name = "someField")]
     fn some_field(&self) -> &'static str {
         "Foo"
     }
 
     #[getter]
-    #[pyo3(name = "customNumber")]
+    #[r2p(name = "customNumber")]
     fn custom_number(&self) -> i32 {
         42
     }
@@ -353,7 +353,7 @@ impl RenameAllCls {
     fn __getitem__(&self, key: &str) -> PyResult<f32> {
         match key {
             "otherField" => Ok(42.0),
-            _ => Err(pyo3::exceptions::PyKeyError::new_err("foo")),
+            _ => Err(r2p::exceptions::PyKeyError::new_err("foo")),
         }
     }
 }
@@ -361,12 +361,12 @@ impl RenameAllCls {
 #[test]
 fn test_struct_rename_all() {
     #[derive(FromPyObject)]
-    #[pyo3(rename_all = "camelCase")]
+    #[r2p(rename_all = "camelCase")]
     struct RenameAll {
         some_field: String,
-        #[pyo3(item)]
+        #[r2p(item)]
         other_field: f32,
-        #[pyo3(attribute("customNumber"))]
+        #[r2p(attribute("customNumber"))]
         custom_name: i32,
     }
 
@@ -390,13 +390,13 @@ fn test_struct_rename_all() {
 #[test]
 fn test_enum_rename_all() {
     #[derive(FromPyObject)]
-    #[pyo3(rename_all = "camelCase")]
+    #[r2p(rename_all = "camelCase")]
     enum RenameAll {
         Foo {
             some_field: String,
-            #[pyo3(item)]
+            #[r2p(item)]
             other_field: f32,
-            #[pyo3(attribute("customNumber"))]
+            #[r2p(attribute("customNumber"))]
             custom_name: i32,
         },
     }
@@ -424,29 +424,29 @@ pub enum Foo<'py> {
     StructVar {
         test: Bound<'py, PyString>,
     },
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     TransparentTuple(usize),
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     TransparentStructVar {
         a: Option<String>,
     },
     StructVarGetAttrArg {
-        #[pyo3(attribute("bla"))]
+        #[r2p(attribute("bla"))]
         a: bool,
     },
     StructWithGetItem {
-        #[pyo3(item)]
+        #[r2p(item)]
         a: String,
     },
     StructWithGetItemArg {
-        #[pyo3(item("foo"))]
+        #[r2p(item("foo"))]
         a: String,
     },
 }
 
 #[pyclass]
 pub struct PyBool {
-    #[pyo3(get)]
+    #[r2p(get)]
     bla: bool,
 }
 
@@ -572,9 +572,9 @@ TypeError: failed to extract enum Foo ('TupleVar | StructVar | TransparentTuple 
 #[derive(Debug, FromPyObject)]
 enum EnumWithCatchAll<'py> {
     #[expect(dead_code)]
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     Foo(Foo<'py>),
-    #[pyo3(transparent)]
+    #[r2p(transparent)]
     CatchAll(Bound<'py, PyAny>),
 }
 
@@ -597,11 +597,11 @@ fn test_enum_catch_all() {
 
 #[derive(Debug, FromPyObject)]
 pub enum Bar {
-    #[pyo3(annotation = "str")]
+    #[r2p(annotation = "str")]
     A(String),
-    #[pyo3(annotation = "uint")]
+    #[r2p(annotation = "uint")]
     B(usize),
-    #[pyo3(annotation = "int", transparent)]
+    #[r2p(annotation = "int", transparent)]
     C(isize),
 }
 
@@ -624,10 +624,10 @@ TypeError: failed to extract enum Bar ('str | uint | int')
 
 #[derive(Debug, FromPyObject)]
 pub struct Zap {
-    #[pyo3(item)]
+    #[r2p(item)]
     name: String,
 
-    #[pyo3(from_py_with = Bound::<'_, PyAny>::len, item("my_object"))]
+    #[r2p(from_py_with = Bound::<'_, PyAny>::len, item("my_object"))]
     some_object_length: usize,
 }
 
@@ -650,10 +650,7 @@ fn test_from_py_with() {
 }
 
 #[derive(Debug, FromPyObject)]
-pub struct ZapTuple(
-    String,
-    #[pyo3(from_py_with = Bound::<'_, PyAny>::len)] usize,
-);
+pub struct ZapTuple(String, #[r2p(from_py_with = Bound::<'_, PyAny>::len)] usize);
 
 #[test]
 fn test_from_py_with_tuple_struct() {
@@ -688,11 +685,8 @@ fn test_from_py_with_tuple_struct_error() {
 
 #[derive(Debug, FromPyObject, PartialEq, Eq)]
 pub enum ZapEnum {
-    Zip(#[pyo3(from_py_with = Bound::<'_, PyAny>::len)] usize),
-    Zap(
-        String,
-        #[pyo3(from_py_with = Bound::<'_, PyAny>::len)] usize,
-    ),
+    Zip(#[r2p(from_py_with = Bound::<'_, PyAny>::len)] usize),
+    Zap(String, #[r2p(from_py_with = Bound::<'_, PyAny>::len)] usize),
 }
 
 #[test]
@@ -710,9 +704,9 @@ fn test_from_py_with_enum() {
 }
 
 #[derive(Debug, FromPyObject, PartialEq, Eq)]
-#[pyo3(transparent)]
+#[r2p(transparent)]
 pub struct TransparentFromPyWith {
-    #[pyo3(from_py_with = Bound::<'_, PyAny>::len)]
+    #[r2p(from_py_with = Bound::<'_, PyAny>::len)]
     len: usize,
 }
 
@@ -736,7 +730,7 @@ pub struct WithKeywordAttr {
 
 #[pyclass]
 pub struct WithKeywordAttrC {
-    #[pyo3(get)]
+    #[r2p(get)]
     r#box: usize,
 }
 
@@ -752,7 +746,7 @@ fn test_with_keyword_attr() {
 
 #[derive(Debug, FromPyObject, PartialEq, Eq)]
 pub struct WithKeywordItem {
-    #[pyo3(item)]
+    #[r2p(item)]
     r#box: usize,
 }
 
@@ -769,9 +763,9 @@ fn test_with_keyword_item() {
 
 #[derive(Debug, FromPyObject, PartialEq, Eq)]
 pub struct WithDefaultItem {
-    #[pyo3(item, default)]
+    #[r2p(item, default)]
     opt: Option<usize>,
-    #[pyo3(item)]
+    #[r2p(item)]
     value: usize,
 }
 
@@ -791,9 +785,9 @@ fn test_with_default_item() {
 
 #[derive(Debug, FromPyObject, PartialEq, Eq)]
 pub struct WithExplicitDefaultItem {
-    #[pyo3(item, default = 1)]
+    #[r2p(item, default = 1)]
     opt: usize,
-    #[pyo3(item)]
+    #[r2p(item)]
     value: usize,
 }
 
@@ -810,9 +804,9 @@ fn test_with_explicit_default_item() {
 
 #[derive(Debug, FromPyObject, PartialEq, Eq)]
 pub struct WithDefaultItemAndConversionFunction {
-    #[pyo3(item, default, from_py_with = Bound::<'_, PyAny>::len)]
+    #[r2p(item, default, from_py_with = Bound::<'_, PyAny>::len)]
     opt: usize,
-    #[pyo3(item)]
+    #[r2p(item)]
     value: usize,
 }
 
@@ -851,10 +845,10 @@ fn test_with_default_item_and_conversion_function() {
 
 #[derive(Debug, FromPyObject, PartialEq, Eq)]
 pub enum WithDefaultItemEnum {
-    #[pyo3(from_item_all)]
+    #[r2p(from_item_all)]
     Foo {
         a: usize,
-        #[pyo3(default)]
+        #[r2p(default)]
         b: usize,
     },
     NeverUsedA {
@@ -899,13 +893,13 @@ fn test_from_py_object_interns_keys() {
 
     #[derive(Debug, FromPyObject)]
     pub struct InternedKeys<'py> {
-        #[pyo3(attribute)]
+        #[r2p(attribute)]
         attribute: Bound<'py, PyString>,
-        #[pyo3(attribute("attribute_renamed"))]
+        #[r2p(attribute("attribute_renamed"))]
         attribute_r: Bound<'py, PyString>,
-        #[pyo3(item)]
+        #[r2p(item)]
         item: Bound<'py, PyString>,
-        #[pyo3(item("item_renamed"))]
+        #[r2p(item("item_renamed"))]
         item_r: Bound<'py, PyString>,
     }
 

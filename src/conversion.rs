@@ -36,7 +36,7 @@ use core::marker::PhantomData;
     message = "`{Self}` cannot be converted to a Python object",
     note = "`IntoPyObject` is automatically implemented by the `#[pyclass]` macro",
     note = "if you do not wish to have a corresponding Python type, implement it manually",
-    note = "if you do not own `{Self}` you can perform a manual conversion to one of the types in `pyo3::types::*`"
+    note = "if you do not own `{Self}` you can perform a manual conversion to one of the types in `r2p::types::*`"
 )]
 pub trait IntoPyObject<'py>: Sized {
     /// The Python output type
@@ -264,8 +264,8 @@ impl<'py, T> IntoPyObjectExt<'py> for T where T: IntoPyObject<'py> {}
 /// # Examples
 ///
 /// ```rust
-/// use pyo3::prelude::*;
-/// use pyo3::types::PyString;
+/// use r2p::prelude::*;
+/// use r2p::types::PyString;
 ///
 /// # fn main() -> PyResult<()> {
 /// Python::attach(|py| {
@@ -296,7 +296,7 @@ impl<'py, T> IntoPyObjectExt<'py> for T where T: IntoPyObject<'py> {}
 /// macro.
 /// ```rust,no_run
 /// # #![allow(dead_code)]
-/// use pyo3::prelude::*;
+/// use r2p::prelude::*;
 ///
 /// #[derive(FromPyObject)]
 /// struct MyObject {
@@ -319,7 +319,7 @@ impl<'py, T> IntoPyObjectExt<'py> for T where T: IntoPyObject<'py> {}
 /// the lifetimes of [`FromPyObject`] can be elided:
 /// ```rust,no_run
 /// # #![allow(dead_code)]
-/// use pyo3::prelude::*;
+/// use r2p::prelude::*;
 ///
 /// struct MyObject {
 ///     msg: String,
@@ -344,12 +344,12 @@ impl<'py, T> IntoPyObjectExt<'py> for T where T: IntoPyObject<'py> {}
 /// ## Manual implementation for types with lifetime parameters
 /// For types that contain lifetimes, these lifetimes need to be bound to the corresponding
 /// [`FromPyObject`] lifetime. This is roughly how the extraction of a typed [`Bound`] is
-/// implemented within PyO3.
+/// implemented within r2p.
 ///
 /// ```rust,no_run
 /// # #![allow(dead_code)]
-/// use pyo3::prelude::*;
-/// use pyo3::types::PyString;
+/// use r2p::prelude::*;
+/// use r2p::types::PyString;
 ///
 /// struct MyObject<'py>(Bound<'py, PyString>);
 ///
@@ -454,7 +454,7 @@ mod from_py_object_sequence {
     }
 }
 
-// Only reachable / implementable inside PyO3 itself.
+// Only reachable / implementable inside r2p itself.
 pub(crate) use from_py_object_sequence::FromPyObjectSequence;
 
 /// A data structure that can be extracted without borrowing any data from the input.
@@ -470,7 +470,7 @@ pub(crate) use from_py_object_sequence::FromPyObjectSequence;
 /// below.
 ///
 /// ```,no_run
-/// # use pyo3::prelude::*;
+/// # use r2p::prelude::*;
 /// # #[allow(dead_code)]
 /// pub struct MyWrapper<T>(T);
 ///
@@ -559,7 +559,7 @@ impl<'py> IntoPyObject<'py> for () {
 }
 
 /// ```rust,compile_fail
-/// use pyo3::prelude::*;
+/// use r2p::prelude::*;
 ///
 /// #[pyclass]
 /// struct TestClass {
