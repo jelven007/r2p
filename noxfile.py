@@ -22,6 +22,13 @@ from urllib.request import urlopen
 
 import nox.command
 
+from tools.engineering.environment import digest, isolated_source
+from tools.engineering.matrix import (
+    RustTestOptions,
+    feature_sets,
+    select_test_features,
+)
+
 try:
     import tomllib as toml
 except ImportError:
@@ -107,9 +114,15 @@ def test(session: nox.Session) -> None:
 
 @nox.session(name="test-rust", venv_backend="none")
 def test_rust(session: nox.Session):
-    _run_cargo_test(session, package="r2p-build-config")
-    _run_cargo_test(session, package="r2p-macros-backend")
-    _run_cargo_test(session, package="r2p-macros")
+    try:
+        options = RustTestOptions.parse(session.posargs)
+    except ValueError as error:
+        session.error(str(error))
+
+    if options.scope in ("all", "components"):
+        _run_cargo_test(session, package="r2p-build-config")
+        _run_cargo_test(session, package="r2p-macros-backend")
+        _run_cargo_test(session, package="r2p-macros")
 
     extra_flags = []
     # pypy and graalpy don't have Py_Initialize APIs, so we can only
@@ -117,7 +130,8 @@ def test_rust(session: nox.Session):
     if sys.implementation.name in ("pypy", "graalpy"):
         extra_flags.append("--no-run")
 
-    _run_cargo_test(session, package="r2p-ffi", extra_flags=extra_flags)
+    if options.scope in ("all", "components"):
+        _run_cargo_test(session, package="r2p-ffi", extra_flags=extra_flags)
 
     env = os.environ.copy()
     extra_flags.append("--no-default-features")
@@ -132,7 +146,7 @@ def test_rust(session: nox.Session):
             env.get("RUSTDOCFLAGS", "") + " -Z unstable-options --merge-doctests=yes"
         )
 
-    for feature_set in _get_feature_sets():
+    for feature_set in select_test_features(_get_feature_sets(), options):
         flags = extra_flags.copy()
 
         if feature_set is None or "full" not in feature_set:
@@ -145,7 +159,8 @@ def test_rust(session: nox.Session):
         # We need to pass the feature set to the test command
         # so that it can be used in the test code
         # (e.g. for `#[cfg(feature = "abi3-py39")]`)
-        _run_cargo_test(session, features=feature_set, extra_flags=flags, env=env)
+        if options.scope != "ui":
+            _run_cargo_test(session, features=feature_set, extra_flags=flags, env=env)
 
         if feature_set is not None and "full" in feature_set:
             # UI tests can have different output depending on features enabled, but
@@ -160,6 +175,7 @@ def test_rust(session: nox.Session):
 
         if (
             feature_set
+            and options.scope != "ui"
             and "abi3" in feature_set
             and "abi3t" not in feature_set
             and "full" in feature_set
@@ -176,6 +192,7 @@ def test_rust(session: nox.Session):
 
         if (
             feature_set
+            and options.scope != "ui"
             and "abi3t" in feature_set
             and "full" in feature_set
             and sys.version_info >= (3, 16)
@@ -211,7 +228,13 @@ def test_py(session: nox.Session) -> None:
 def coverage(session: nox.Session) -> None:
     session.env.update(_get_coverage_env())
     _run_cargo(session, "llvm-cov", "clean", "--workspace")
-    test(session)
+    # Coverage arguments belong to report generation, not Rust test selection.
+    report_args = session.posargs[:]
+    session.posargs.clear()
+    try:
+        test(session)
+    finally:
+        session.posargs[:] = report_args
     generate_coverage_report(session)
 
 
@@ -284,6 +307,16 @@ def rumdl(session: nox.Session):
 def repository_check(session: nox.Session):
     """Validate Cargo paths and local engineering-document references."""
     _run(session, "python", "tools/check_repository.py")
+    _run(
+        session,
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/tests",
+        external=True,
+    )
 
 
 @nox.session(name="typos", venv_backend="none")
@@ -1334,15 +1367,56 @@ def check_changelog(session: nox.Session):
 
 @nox.session(name="set-msrv-package-versions", venv_backend="none")
 def set_msrv_package_versions(session: nox.Session):
+    """Resolve dependencies in a retained snapshot; optional posargs are sessions."""
+    checkout = isolated_source(R2P_DIR, R2P_TARGET / "msrv")
+    session.log(f"MSRV source and locks retained at {checkout}")
+    evidence = {
+        "source": str(R2P_DIR),
+        "checkout": str(checkout),
+        "rust": list(_get_rust_info()),
+        "source_lock_sha256": digest(R2P_DIR / "Cargo.lock"),
+        "sessions": session.posargs,
+        "result": "failed",
+    }
+    try:
+        with session.chdir(checkout):
+            _prepare_msrv_package_versions(session, checkout)
+            if session.posargs:
+                _run(
+                    session,
+                    sys.executable,
+                    "-m",
+                    "nox",
+                    "-f",
+                    str(checkout / "noxfile.py"),
+                    "-s",
+                    *session.posargs,
+                    external=True,
+                )
+        evidence["result"] = "success"
+    finally:
+        evidence["locks"] = {
+            str(path.relative_to(checkout)): digest(path)
+            for path in checkout.rglob("Cargo.lock")
+            if "target" not in path.relative_to(checkout).parts
+        }
+        (checkout / "msrv-evidence.json").write_text(
+            json.dumps(evidence, indent=2) + "\n"
+        )
+        if digest(R2P_DIR / "Cargo.lock") != evidence["source_lock_sha256"]:
+            session.error("source Cargo.lock changed while preparing MSRV snapshot")
+
+
+def _prepare_msrv_package_versions(session: nox.Session, checkout: Path) -> None:
     projects = (
-        R2P_DIR,
+        checkout,
         # Meson's backend stages local SDK packages and requires Rust >= 1.87.
         *(
-            Path(p).parent
-            for p in glob("examples/*/Cargo.toml")
-            if Path(p).parent.name != "meson-starter"
+            p.parent
+            for p in checkout.glob("examples/*/Cargo.toml")
+            if p.parent.name != "meson-starter"
         ),
-        *(Path(p).parent for p in glob("crates/r2p-ffi/examples/*/Cargo.toml")),
+        *(p.parent for p in checkout.glob("crates/r2p-ffi/examples/*/Cargo.toml")),
     )
 
     # run cargo update first to ensure that everything is at highest
@@ -1937,50 +2011,17 @@ def _get_feature_sets(
     *,
     version: tuple[int, int] | None = None,
     free_threaded: bool = FREE_THREADED_BUILD,
-) -> tuple[str | None, ...]:
+) -> tuple[str, ...]:
     """Returns feature sets to use for Rust jobs"""
     if version is None:
         version = sys.version_info[:2]
 
-    cargo_target = os.getenv("CARGO_BUILD_TARGET", "")
-
-    required = ",".join(_REQUIRED_FOR_NO_STD) if _is_no_std() else ""
-
-    features = "full"
-
-    if "wasm32-wasip1" not in cargo_target:
-        # multiple-pymethods not supported on wasm
-        features += ",multiple-pymethods"
-
-    if is_rust_nightly():
-        features += ",nightly"
-
-    if free_threaded:
-        if version >= (3, 15):
-            return (
-                required,
-                f"abi3t,{required}",
-                f"{features},{required}",
-                f"abi3t,{features},{required}",
-            )
-        else:
-            return (required, f"{features},{required}")
-
-    # do fewer abi3t builds?
-    if version >= (3, 15):
-        return (
-            required,
-            f"abi3,{required}",
-            f"abi3t,{required}",
-            f"{features},{required}",
-            f"abi3,{features},{required}",
-            f"abi3t,{features},{required}",
-        )
-    return (
-        required,
-        f"abi3,{required}",
-        f"{features},{required}",
-        f"abi3,{features},{required}",
+    return feature_sets(
+        version=version,
+        free_threaded=free_threaded,
+        cargo_target=os.getenv("CARGO_BUILD_TARGET", ""),
+        nightly=is_rust_nightly(),
+        required=tuple(_REQUIRED_FOR_NO_STD) if _is_no_std() else (),
     )
 
 

@@ -13,7 +13,9 @@
 | 阶段 | 文档 | 回答的问题 |
 | --- | --- | --- |
 | 分析 | [项目分析与现状](governance/project-assessment.md) | 现有代码是什么、证据在哪里、缺口是什么 |
-| 优化 | [全面优化评估与建议](governance/optimization-assessment.md) | 下一步优先改什么、收益与完成条件是什么 |
+| 当前优化 | [2026-10-25 项目分析与优化方案](governance/optimization-plan-2026-10-25.md) | 当前 main 的具体缺口、优先级、工作量与验收标准是什么 |
+| 优化实施 | [实施记录](governance/optimization-execution-2026-10-25.md)、[测试入口与环境验证](testing/reports/tooling-optimization-2026-10-25.md) | 哪些已实现和验证、哪些仍在执行 |
+| 历史优化 | [初次优化评估与建议](governance/optimization-assessment.md) | 上一阶段发现了什么、哪些已经交付 |
 | 需求 | [系统需求规格](requirements/system-requirements.md) | 服务谁、实现什么、如何验收 |
 | 用户场景 | [采用与升级旅程](requirements/user-journeys.md) | 每条链路的输入、成功条件和失败处理 |
 | 需求追踪 | [追踪矩阵 CSV](requirements/traceability.csv) | 需求对应哪段实现、哪个测试、哪个准入条件 |
