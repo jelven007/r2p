@@ -9,4 +9,4 @@ name = "setuptools_rust_starter"
 crate-type = ["cdylib"]
 
 [dependencies]
-r2p = "{{R2P_VERSION}}"
+r2p = { git = "https://github.com/jelven007/r2p", rev = "3a24917eb2766aa8ded8c04fefde1c1d4b133c00" }

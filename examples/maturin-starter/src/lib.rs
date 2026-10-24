@@ -18,10 +18,19 @@ impl ExampleClass {
     }
 }
 
+/// Divide two integers, reporting invalid input as a Python exception.
+#[pyfunction]
+fn divide(numerator: i32, denominator: i32) -> PyResult<i32> {
+    numerator.checked_div(denominator).ok_or_else(|| {
+        r2p::exceptions::PyValueError::new_err("division by zero or integer overflow")
+    })
+}
+
 /// An example module implemented in Rust using r2p.
 #[pymodule]
 fn maturin_starter(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<ExampleClass>()?;
+    m.add_function(wrap_pyfunction!(divide, m)?)?;
     m.add_wrapped(wrap_pymodule!(submodule::submodule))?;
 
     // Inserting to sys.modules allows importing submodules nicely from Python

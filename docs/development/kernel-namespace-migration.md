@@ -44,7 +44,9 @@ abi3 = ["r2p/abi3-py39", "r2p-maturin-bridge/abi3-py39"]
 ```
 
 稳定 ABI 特性必须同时传给适配器，保证 wheel 标签与实际 ABI 一致。
-生成模板自带私有适配器；模板的注册表依赖需待 r2p 正式发布后使用，当前消费源码使用 path 依赖。
+生成模板自带私有适配器；2026-10-25 起默认将 SDK 和适配器固定到 `product.toml` 中同一已验证 Git SHA。
+`tools/new_project.py` 支持显式 Git、本地 path 及已验证注册表版本三种来源，当前注册表准入列表为空。
+仓库外生成、sdist/wheel 和嵌入验证入口见 [SDK 入门](../sdk/README.md)；迁移时使用的 path 方式仍适合本地开发。
 setuptools-rust 示例使用 `binding = "NoBinding"` 与显式 `features = ["r2p/extension-module"]`，避免其默认绑定自动传入 `pyo3/extension-module`；应用 Rust 代码使用 `r2p`。
 
 构建配置优先读取 `R2P_*`，值为空时也视为明确设置；未设置时才回退到外部打包工具传入的 `PYO3_*`。

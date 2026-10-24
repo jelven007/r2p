@@ -13,7 +13,7 @@ pip install maturin
 To build and test use `maturin develop`:
 
 ```shell
-pip install -r requirements-dev.txt
+pip install pytest
 maturin develop && pytest
 ```
 
@@ -25,11 +25,19 @@ nox
 
 ## Copying this example
 
-Use [`cargo-generate`](https://crates.io/crates/cargo-generate):
+From an SDK checkout, generate a standalone project with a fixed Git revision:
 
-```bash
-$ cargo install cargo-generate
-$ cargo generate --path /path/to/r2p examples/maturin-starter
+```sh
+python tools/new_project.py ../my-extension --example maturin-starter
 ```
 
-(`cargo generate` will take a little while to clone the r2p repo first; be patient when waiting for the command to run.)
+The SDK and the bundled private Maturin adapter use the same source.
+The generated distribution is named `my-extension`; import it as `maturin_starter`.
+See the [SDK guide](https://github.com/jelven007/r2p/blob/main/docs/sdk/README.md) for source selection and isolated build verification.
+
+Alternatively, use [`cargo-generate`](https://crates.io/crates/cargo-generate):
+
+```bash
+cargo install cargo-generate
+cargo generate --path /path/to/r2p/examples/maturin-starter
+```

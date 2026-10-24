@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 r2p-maturin-bridge = { package = "pyo3-ffi", path = "maturin-bridge" }
-r2p = "{{R2P_VERSION}}"
+r2p = { git = "https://github.com/jelven007/r2p", rev = "3a24917eb2766aa8ded8c04fefde1c1d4b133c00" }
 
 [features]
 abi3 = ["r2p/abi3-py39", "r2p-maturin-bridge/abi3-py39"]

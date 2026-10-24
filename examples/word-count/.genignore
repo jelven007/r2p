@@ -1,0 +1,11 @@
+.nox
+.venv
+.pytest_cache
+__pycache__
+*.pyc
+.DS_Store
+Cargo.lock
+target
+dist
+build
+subprojects

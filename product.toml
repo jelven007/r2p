@@ -19,3 +19,5 @@ default_branch = "main"
 history_manifest = "docs/releases/history.json"
 history_count = 2
 registry_publication = "not-enabled"
+verified_git_revision = "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+verified_registry_versions = []

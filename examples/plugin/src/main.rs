@@ -12,7 +12,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     //do useful work
     Python::attach(|py| {
         //add the current directory to import path of Python (do not use this in production!)
-        let syspath: Bound<PyList> = py.import("sys")?.getattr("path")?.extract().map_err(PyErr::from)?;
+        let syspath: Bound<PyList> = py
+            .import("sys")?
+            .getattr("path")?
+            .extract()
+            .map_err(PyErr::from)?;
         syspath.insert(0, &path)?;
         println!("Import path is: {:?}", syspath);
 
@@ -27,7 +31,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         {
             //this scope will have mutable access to the gadget instance, which will be dropped on
             //scope exit so Python can access it again.
-            let mut gadget_rs: PyRefMut<'_, plugin_api::Gadget> = gadget.extract().map_err( PyErr::from)?;
+            let mut gadget_rs: PyRefMut<'_, plugin_api::Gadget> =
+                gadget.extract().map_err(PyErr::from)?;
             // we can now modify it as if it was a native rust struct
             gadget_rs.prop = 42;
             //which includes access to rust-only fields that are not visible to python
@@ -37,7 +42,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         //any modifications we make to rust object are reflected on Python object as well
         let res: usize = gadget.getattr("prop")?.extract()?;
-        println!("{res}");
+        assert_eq!(res, 42);
+
+        // Python exceptions remain typed Rust errors; handling one does not poison the interpreter.
+        let error = py
+            .run(
+                r2p::ffi::c_str!("raise ValueError('plugin input rejected')"),
+                None,
+                None,
+            )
+            .expect_err("the Python snippet must raise");
+        assert!(error.is_instance_of::<r2p::exceptions::PyValueError>(py));
+        assert_eq!(error.value(py).str()?.to_str()?, "plugin input rejected");
+        let answer: usize = py.eval(r2p::ffi::c_str!("6 * 7"), None, None)?.extract()?;
+        assert_eq!(answer, 42);
+        println!("r2p embedding: class, exception, and recovery passed");
         Ok(())
     })
 }

@@ -350,6 +350,34 @@ def check_sdk_identity() -> list[str]:
     return errors
 
 
+def check_template_sources() -> list[str]:
+    product = tomllib.loads((ROOT / "product.toml").read_text())
+    version = tomllib.loads((ROOT / "Cargo.toml").read_text())["package"]["version"]
+    expected = {
+        "git": product["source"]["repository"],
+        "rev": product["delivery"]["verified_git_revision"],
+    }
+    errors = []
+    if not re.fullmatch(r"[0-9a-f]{40}", expected["rev"]):
+        errors.append("product.toml: template Git revision must be a full SHA")
+    directories = [
+        *ROOT.glob("examples/*/.template"),
+        *ROOT.glob("crates/r2p-ffi/examples/*/.template"),
+    ]
+    for directory in directories:
+        hook = directory / "pre-script.rhai"
+        if f'variable::set("R2P_VERSION", "{version}");' not in hook.read_text():
+            errors.append(f"{hook.relative_to(ROOT)}: template SDK version differs")
+        for manifest in directory.rglob("Cargo.toml"):
+            data = tomllib.loads(manifest.read_text())
+            for name, dependency in data.get("dependencies", {}).items():
+                if name in {"r2p", "r2p-ffi"} and dependency != expected:
+                    errors.append(
+                        f"{manifest.relative_to(ROOT)}: {name} must use the verified Git source"
+                    )
+    return errors
+
+
 def main() -> int:
     cargo_paths = manifests()
     doc_paths = engineering_docs()
@@ -361,6 +389,7 @@ def main() -> int:
     errors.extend(check_product_identity())
     errors.extend(check_history())
     errors.extend(check_sdk_identity())
+    errors.extend(check_template_sources())
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
