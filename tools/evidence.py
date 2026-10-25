@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from tools.candidate_artifacts import digest, verify_manifest
+from tools.performance import validate_work
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "docs/testing/evidence.json"
@@ -371,17 +372,48 @@ def import_performance(path: Path) -> list[dict]:
     records = []
     for snapshot in json.loads(path.read_text())["datasets"]:
         mode = snapshot["samples"][0]["python_mode"]
+        calibration = snapshot.get("schema_version") == 2
         if (
             not snapshot.get("finished_at")
-            or len(snapshot["samples"]) != 102
-            or len(snapshot["builds"]) != 27
+            or not calibration
+            and (len(snapshot["samples"]) != 102 or len(snapshot["builds"]) != 27)
         ):
             raise ValueError(
                 "performance evidence requires completed independent samples"
             )
+        if calibration:
+            repeats = snapshot["runtime_samples"]
+            cases = 16 if snapshot["threaded_only"] else 25
+            expected_gil = mode == "gil"
+            if (
+                repeats < 3
+                or len(snapshot["samples"]) != 2 * repeats * cases
+                or len(snapshot["processes"]) != 2 * repeats
+                or any(
+                    process["environment"]["gil_enabled"] != expected_gil
+                    for process in snapshot["processes"]
+                )
+                or len(snapshot["builds"]) != 9 * snapshot["build_samples"]
+                or snapshot["locks"][f"{mode}-baseline"]
+                != snapshot["locks"][f"{mode}-candidate"]
+            ):
+                raise ValueError(
+                    "performance calibration source/environment/samples differ"
+                )
+            for variant in ("baseline", "candidate"):
+                for repeat in range(repeats):
+                    validate_work(
+                        [
+                            row
+                            for row in snapshot["samples"]
+                            if row["variant"] == variant and row["repeat"] == repeat
+                        ],
+                        snapshot["iterations"],
+                        snapshot["threaded_only"],
+                    )
         records.append(
             {
-                "id": f"performance-{mode}-20261025",
+                "id": f"performance-{'calibration-' if calibration else ''}{mode}-20261025",
                 "source_sha": snapshot["candidate"],
                 "baseline_sha": snapshot["baseline"],
                 "source_state": "committed",
@@ -390,15 +422,26 @@ def import_performance(path: Path) -> list[dict]:
                 "python": "CPython " + ".".join(map(str, snapshot[mode]["version"])),
                 "gil": "enabled" if mode == "gil" else "disabled",
                 "abi": "native",
-                "features": ["minimal", "full-sdk build profile", "1/2/4/8 threads"],
+                "features": [
+                    "minimal",
+                    "fixed_total",
+                    "fixed_per_thread",
+                    "1/2/4/8 threads",
+                ]
+                if calibration
+                else ["minimal", "full-sdk build profile", "1/2/4/8 threads"],
                 "commands": [
                     "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode "
                     + mode
                 ],
                 "result": "success",
                 "level": "run",
-                "limitations": "102 walltime and 27 build samples per mode; three processes cannot establish P95 or a 5% gate; noisy free-threaded scaling is not an optimization claim",
-                "log": "docs/testing/reports/performance-baseline-2026-10-25.md",
+                "limitations": snapshot["limitations"]
+                if calibration
+                else "102 walltime and 27 build samples per mode; three processes cannot establish P95 or a 5% gate; noisy free-threaded scaling is not an optimization claim",
+                "log": "docs/testing/reports/performance-calibration-2026-10-25.md"
+                if calibration
+                else "docs/testing/reports/performance-baseline-2026-10-25.md",
                 "verified_at": snapshot["finished_at"],
                 "lock_sha256": snapshot["locks"],
                 "harness_sha256": snapshot["harness_sha256"],
@@ -406,6 +449,52 @@ def import_performance(path: Path) -> list[dict]:
             }
         )
     return records
+
+
+def import_runtime_replay(path: Path) -> list[dict]:
+    snapshot = json.loads(path.read_text())
+    replay = snapshot["replay"]
+    if (
+        replay.get("result") != "success"
+        or replay.get("upstream_sha") != "5619fedbca3ad1baca82869b57df54afd0432a0b"
+        or replay.get("source_invariants") != "unchanged"
+        or [
+            (row["variant"], row["repeat"], row["exit_code"])
+            for row in replay["results"]
+        ]
+        != [("broken", i, 101) for i in range(3)]
+        + [("replayed", i, 0) for i in range(3)]
+        or snapshot.get("full_gc", {}).get("result") != "success"
+        or snapshot["full_gc"].get("passed") != 26
+    ):
+        raise ValueError(
+            "runtime replay requires observed negative, repaired and complete GC results"
+        )
+    return [
+        {
+            "id": "upstream-runtime-gc-replay-20261025",
+            "source_sha": replay["source_sha"],
+            "source_state": "committed",
+            "target": replay["python"]["platform"],
+            "rust": snapshot["rust"].splitlines()[0],
+            "python": "CPython " + ".".join(map(str, replay["python"]["version"])),
+            "gil": gil_state(replay["python"]),
+            "abi": "native",
+            "features": ["macros", "controlled GC lookup reversal/replay"],
+            "commands": [
+                "python -m tools.upstream_runtime --sha <recorded SHA> --target-python <CPython 3.14> --output <new directory>"
+            ],
+            "result": "success",
+            "level": "check",
+            "limitations": replay["scope"]
+            + "; #6404 finalization negative not reproduced; no complete remote matrix",
+            "log": "docs/testing/reports/upstream-runtime-2026-10-25.md",
+            "verified_at": snapshot["verified_at"],
+            "data": str(path.relative_to(ROOT)),
+            "upstream_sha": replay["upstream_sha"],
+            "mapped_patch_sha256": replay["mapped_patch_sha256"],
+        }
+    ]
 
 
 def import_candidate(path: Path) -> list[dict]:
@@ -517,6 +606,7 @@ def main() -> int:
             "import-local",
             "import-consumer",
             "import-performance",
+            "import-runtime-replay",
             "import-candidate",
             "import-environment",
         ),
@@ -565,6 +655,10 @@ def main() -> int:
         if not args.snapshot:
             parser.error("--snapshot is required")
         additions = import_candidate(args.snapshot.resolve())
+    elif args.command == "import-runtime-replay":
+        if not args.snapshot:
+            parser.error("--snapshot is required")
+        additions = import_runtime_replay(args.snapshot.resolve())
     elif args.command == "import-environment":
         if not args.snapshot:
             parser.error("--snapshot is required")
@@ -588,6 +682,7 @@ def main() -> int:
             "import-local",
             "import-consumer",
             "import-performance",
+            "import-runtime-replay",
             "import-candidate",
             "import-environment",
         }

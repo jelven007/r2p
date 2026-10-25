@@ -33,6 +33,9 @@
 | 支持矩阵 | [兼容性证据与状态](testing/support-matrix.md) | 已配置、已编译、已运行和支持等级 |
 | 当前验证 | [结构化摘要](testing/evidence-summary.md)、[实际环境与失败等级](testing/reports/evidence-environment-2026-10-25.md) | 各 SHA 实际执行了什么、结果和限制是什么 |
 | 持续发行验证 | [跨版本恢复与上传续发](testing/reports/continuous-release-2026-10-25.md) | 各 SHA 版本、原始制品和本地 HTTP 失败恢复如何核验 |
+| 工程与资源验证 | [Nox 拆分、保留和取回](testing/reports/nox-resources-2026-10-25.md) | 会话/命令契约和原始制品生命周期如何核验 |
+| 性能与成本 | [两种工作量与扩大采样](testing/reports/performance-calibration-2026-10-25.md) | 本地测量说明什么、真实用户负载和连续 CI 成本还缺什么 |
+| 上游运行时 | [历史 GC 修复映射与回归](testing/reports/upstream-runtime-2026-10-25.md) | 原始来源、上下文冲突和受控正负例如何复现 |
 | 历史验证 | [生产工程基线](testing/reports/production-baseline-validation.md)、[原目录基线](testing/reports/validation-report.md)、[MSRV/汇总修正](testing/reports/ci-fixes-validation.md) | 保留各阶段的原始命令与结果 |
 | SDK 内核迁移 | [迁移规则](development/kernel-namespace-migration.md)、[验证报告](testing/reports/kernel-migration-validation.md) | crate、宏、构建变量、Python 模块与打包如何迁移到 r2p |
 | 运营 | [运营计划](operations/operating-plan.md) | 采用、反馈、支持、指标如何形成闭环 |

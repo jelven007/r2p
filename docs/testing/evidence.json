@@ -1763,6 +1763,74 @@
       "verified_at": "2026-10-25T00:28:26.793522+00:00"
     },
     {
+      "id": "performance-calibration-free-threaded-20261025",
+      "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "disabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "fixed_total",
+        "fixed_per_thread",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode free-threaded"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "Warm local dependency cache, offline native release builds. ABBA order and untimed thread initialization; no CPU pinning or exclusive machine. CV>10% is an investigation signal, not a release gate. Synthetic embedding workload, not external adoption; no calibrated 5% gate. Build peak RSS is largest child, not simultaneous memory.",
+      "log": "docs/testing/reports/performance-calibration-2026-10-25.md",
+      "verified_at": "2026-10-25T05:05:53.879078+00:00",
+      "lock_sha256": {
+        "free-threaded-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "free-threaded-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "2b1b4d83968050a331af90bbf546602cc886064f7d267859038f8089f4033284"
+      },
+      "data": "docs/testing/data/performance-calibration-2026-10-25.json"
+    },
+    {
+      "id": "performance-calibration-gil-20261025",
+      "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "fixed_total",
+        "fixed_per_thread",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode gil"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "Warm local dependency cache, offline native release builds. ABBA order and untimed thread initialization; no CPU pinning or exclusive machine. CV>10% is an investigation signal, not a release gate. Synthetic embedding workload, not external adoption; no calibrated 5% gate. Build peak RSS is largest child, not simultaneous memory.",
+      "log": "docs/testing/reports/performance-calibration-2026-10-25.md",
+      "verified_at": "2026-10-25T04:59:04.464941+00:00",
+      "lock_sha256": {
+        "gil-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "gil-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "2b1b4d83968050a331af90bbf546602cc886064f7d267859038f8089f4033284"
+      },
+      "data": "docs/testing/data/performance-calibration-2026-10-25.json"
+    },
+    {
       "id": "performance-free-threaded-20261025",
       "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
       "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
@@ -1827,6 +1895,31 @@
         "src/main.rs": "69e6e0024b4487861a42048a175d7ef4879e9dd60e37dfa41b59f80f5336826c"
       },
       "data": "docs/testing/data/performance-2026-10-25.json"
+    },
+    {
+      "id": "upstream-runtime-gc-replay-20261025",
+      "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+      "source_state": "committed",
+      "target": "macosx-11.0-arm64",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "macros",
+        "controlled GC lookup reversal/replay"
+      ],
+      "commands": [
+        "python -m tools.upstream_runtime --sha <recorded SHA> --target-python <CPython 3.14> --output <new directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "limitations": "controlled reversal/replay of type-data lookup delta from inherited #6453; preserves GC guard/dependencies; no new upstream runtime update; #6404 finalization negative not reproduced; no complete remote matrix",
+      "log": "docs/testing/reports/upstream-runtime-2026-10-25.md",
+      "verified_at": "2026-10-25T05:37:13.639413+00:00",
+      "data": "docs/testing/data/upstream-runtime-2026-10-25.json",
+      "upstream_sha": "5619fedbca3ad1baca82869b57df54afd0432a0b",
+      "mapped_patch_sha256": "81cb50a1f9d70361d9c5c9d6f162e0b1d4ba42c61b9ec948ac054acdf2d4ffae"
     }
   ]
 }

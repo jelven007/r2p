@@ -20,6 +20,8 @@ from tools.evidence import (
     gil_state,
     import_actions_data,
     import_local,
+    import_performance,
+    import_runtime_replay,
     render,
     validate,
 )
@@ -207,6 +209,70 @@ class EvidenceTests(unittest.TestCase):
         self.assertTrue(
             status_errors(rows, self.data["records"], implementation, changed_runtime)
         )
+
+    def test_calibration_requires_every_thread_model_and_observed_gil(self):
+        # Synthetic records validate rejection rules; never imported as evidence.
+        snapshot = {
+            "schema_version": 2,
+            "finished_at": "2026-10-25T12:00:00Z",
+            "runtime_samples": 3,
+            "threaded_only": True,
+            "build_samples": 0,
+            "builds": [],
+            "iterations": 1001,
+            "locks": {"gil-baseline": "same", "gil-candidate": "same"},
+            "processes": [{"environment": {"gil_enabled": True}} for _ in range(6)],
+            "samples": [
+                {
+                    "python_mode": "gil",
+                    "variant": variant,
+                    "repeat": repeat,
+                    "case": case,
+                    "threads": threads,
+                    "work_model": model,
+                    "units": 1001
+                    * (64 if case.endswith("_64") else 1)
+                    * (threads if model == "fixed_per_thread" else 1),
+                    "elapsed_ns": 100,
+                }
+                for variant in ("baseline", "candidate")
+                for repeat in range(3)
+                for case in ("threaded_call_attach_detach", "threaded_deferred_drop_64")
+                for threads in (1, 2, 4, 8)
+                for model in ("fixed_total", "fixed_per_thread")
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "calibration.json"
+            snapshot["processes"][0]["environment"]["gil_enabled"] = False
+            path.write_text(json.dumps({"datasets": [snapshot]}))
+            with self.assertRaisesRegex(ValueError, "calibration"):
+                import_performance(path)
+            snapshot["processes"][0]["environment"]["gil_enabled"] = True
+            snapshot["samples"][-1]["units"] += 1
+            path.write_text(json.dumps({"datasets": [snapshot]}))
+            with self.assertRaisesRegex(ValueError, "accounting"):
+                import_performance(path)
+
+    def test_runtime_replay_cannot_hide_missing_negative_or_failed_repair(self):
+        source = DATA.parent / "data/upstream-runtime-2026-10-25.json"
+        observed = json.loads(source.read_text())
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "replay.json"
+            for variant in ("missing-negative", "failed-repair", "incomplete-gc"):
+                changed = copy.deepcopy(observed)
+                if variant == "missing-negative":
+                    changed["replay"]["results"][0]["exit_code"] = 0
+                elif variant == "failed-repair":
+                    changed["replay"]["results"][-1]["exit_code"] = 101
+                else:
+                    changed["full_gc"]["passed"] = 25
+                path.write_text(json.dumps(changed))
+                with (
+                    self.subTest(variant=variant),
+                    self.assertRaisesRegex(ValueError, "runtime replay"),
+                ):
+                    import_runtime_replay(path)
 
 
 if __name__ == "__main__":

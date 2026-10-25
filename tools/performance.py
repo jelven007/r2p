@@ -191,6 +191,14 @@ def main() -> int:
     for sha in (args.baseline, args.candidate):
         if not re.fullmatch("[0-9a-f]{40}", sha):
             parser.error("source revisions must be full immutable Git SHAs")
+        available = subprocess.run(
+            ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+            cwd=ROOT,
+            capture_output=True,
+            check=False,
+        )
+        if available.returncode:
+            parser.error("source revision is not an available local commit")
     destination = args.output.resolve()
     if destination.exists():
         parser.error(

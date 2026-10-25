@@ -16,6 +16,7 @@
 | `performance.py`、`performance_report.py` | 同环境独立进程采样、编译/RSS/大小成本、描述统计与原始数据报告 | 明确基线/候选 SHA 和解释器；样本报告不自动判定 5% 门限 |
 | `ci_cost.py` | 汇总真实 Actions 导出的排队时间、执行时间与任务占用，核验单工作流连续 20 次样本完整性 | `--input <run/jobs JSON> --output <新 JSON>`；不推导账单金额、缓存命中或节省比例 |
 | `upstream_sync.py` | 固定上游修订、映射变更、隔离重放和本地差异清单 | 本地 Git 历史、清晰来源；不改主工作区或历史标签 |
+| `upstream_runtime.py` | 隔离撤销/映射/重放历史运行时修复；默认 #6453 GC 查找回归，另有 #6404 终结实验 | 本地原始 Git 历史、Rust、明确目标解释器；失败现场保留，不将已继承补丁标为新运行时更新 |
 | `verify_environment.py` | 实测 FT GIL 开/关、旧 C 扩展导入后的状态、旧解释器及安装失败 | macOS、clang、uv，显式提供普通/FT/旧 Python；不代表 SDK 全矩阵 |
 | `inspect_windows_imports.py` | 读取 PE 导入表，调查 Windows Python/PyPy 动态库缺失 | Python、pefile；目标 DLL/EXE 原始文件 |
 | `ci_policy.py` | 根据真实变更/事件选择检查，汇总阻断异常跳过和遗漏 | `python -m tools.ci_policy check`；CI select/conclude 使用事件与 needs JSON |

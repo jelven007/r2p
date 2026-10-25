@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-25T05:37:13.639413+00:00",
+  "input_sha256": "c9aa611d00bf70e9528b5c168a93ad7bbfc75746df5b1650d589836aa6bfd0f8",
+  "execution_tool_sha256": "8cf4f60c3eece0e7c0012a95c59b660acebfd11c382bb2c2d747ca78141512b7",
+  "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1\n",
+  "replay": {
+    "schema_version": 1,
+    "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+    "upstream_sha": "5619fedbca3ad1baca82869b57df54afd0432a0b",
+    "upstream_parent": "3260c4835f33d3c05d39715c2b729dfdb5e31e35",
+    "source_patch_sha256": "5eaf43f317e93fa582380af72b2822f12bfb806b483cc90ee024d1d1683c4db3",
+    "mapped_patch_sha256": "81cb50a1f9d70361d9c5c9d6f162e0b1d4ba42c61b9ec948ac054acdf2d4ffae",
+    "full_reverse_exit_code": 1,
+    "full_reverse_conflicts": "error: patch failed: tests/test_gc.rs:422\nerror: tests/test_gc.rs: patch does not apply\nerror: patch failed: src/pyclass/gc.rs:2\nerror: src/pyclass/gc.rs: patch does not apply\nerror: patch failed: src/pycell/impl_.rs:185\nerror: src/pycell/impl_.rs: patch does not apply\nerror: patch failed: src/instance.rs:2424\nerror: src/instance.rs: patch does not apply\nerror: patch failed: src/impl_/pymethods.rs:11\nerror: src/impl_/pymethods.rs: patch does not apply\nerror: newsfragments/6453.fixed.md: No such file or directory\n",
+    "python": {
+      "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+      "implementation": "cpython",
+      "version": [
+        3,
+        14,
+        9
+      ],
+      "free_threaded": false,
+      "gil_enabled": true,
+      "platform": "macosx-11.0-arm64",
+      "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none",
+      "modules": [],
+      "gil_after_imports": true
+    },
+    "scope": "controlled reversal/replay of type-data lookup delta from inherited #6453; preserves GC guard/dependencies; no new upstream runtime update",
+    "runtime_before_sha256": "0817b337757e42f2ca9bc61ae312818857a0d29b68152dc108de1eacf90e1e15",
+    "runtime_after_sha256": "a8f11b704d664e452273ca21080639b8e27cdb784bd619d562e7f4a0674e3cb6",
+    "regression_source_sha256": "2f54a495948ff3b90da739849cd75eb0772413d3aada09b5639351d50a6a9a2b",
+    "results": [
+      {
+        "variant": "broken",
+        "repeat": 0,
+        "exit_code": 101,
+        "log_sha256": "e89597d8fc4acf2d73d7d3286517944e2605ef4026dc77acc03b6d2dee7c187e",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-default-features",
+          "--features",
+          "macros",
+          "--test",
+          "test_gc",
+          "test_gc_during_classattr_initialization",
+          "--",
+          "--exact",
+          "--nocapture"
+        ]
+      },
+      {
+        "variant": "broken",
+        "repeat": 1,
+        "exit_code": 101,
+        "log_sha256": "b91d3c6d6ff1464e836cbc76d0c651f6b488ecea97422be8d0bc79fbd8d105b2",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-default-features",
+          "--features",
+          "macros",
+          "--test",
+          "test_gc",
+          "test_gc_during_classattr_initialization",
+          "--",
+          "--exact",
+          "--nocapture"
+        ]
+      },
+      {
+        "variant": "broken",
+        "repeat": 2,
+        "exit_code": 101,
+        "log_sha256": "26ea77ebeab82f50401cac08d796b4380cc7cceee6993a5d9e8751b50b4c79ae",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-default-features",
+          "--features",
+          "macros",
+          "--test",
+          "test_gc",
+          "test_gc_during_classattr_initialization",
+          "--",
+          "--exact",
+          "--nocapture"
+        ]
+      },
+      {
+        "variant": "replayed",
+        "repeat": 0,
+        "exit_code": 0,
+        "log_sha256": "d9862a54d7140df4053cc66a7298de93e48c40131a45cd5a089e87f7befd2e53",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-default-features",
+          "--features",
+          "macros",
+          "--test",
+          "test_gc",
+          "test_gc_during_classattr_initialization",
+          "--",
+          "--exact",
+          "--nocapture"
+        ]
+      },
+      {
+        "variant": "replayed",
+        "repeat": 1,
+        "exit_code": 0,
+        "log_sha256": "16b9e399f35a02f403d8b9face1c8eb3ee198d44ccce53fee282f8f8d5148ac6",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-default-features",
+          "--features",
+          "macros",
+          "--test",
+          "test_gc",
+          "test_gc_during_classattr_initialization",
+          "--",
+          "--exact",
+          "--nocapture"
+        ]
+      },
+      {
+        "variant": "replayed",
+        "repeat": 2,
+        "exit_code": 0,
+        "log_sha256": "54e58b8b063ecfa40c0df38f471704e54aae9c069dbe4ef320796c5fc87f9cfe",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-default-features",
+          "--features",
+          "macros",
+          "--test",
+          "test_gc",
+          "test_gc_during_classattr_initialization",
+          "--",
+          "--exact",
+          "--nocapture"
+        ]
+      }
+    ],
+    "result": "success",
+    "cargo_target": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/upstream-gc-runtime-20261025/build",
+    "source_invariants": "unchanged"
+  },
+  "full_gc": {
+    "result": "success",
+    "passed": 26,
+    "log_sha256": "5880b2b49e82e166aa487cd9a6703eb1c82d08a534a069560f19d6d9321b963b"
+  },
+  "finalization_attempt": {
+    "schema_version": 1,
+    "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+    "upstream_sha": "7ed9ac01341592cfaa631e592bd816c88b620aad",
+    "upstream_parent": "6a930e9de1fa7eb3783bfdbb4f7df6e4207cb08e",
+    "source_patch_sha256": "0f34c2f3c3cbc77f249e4a1b99ea826b0e566e114e09044a7343deabf67e56ea",
+    "mapped_patch_sha256": "5a959fc3c934e2fca82b25981924c644eeb0e070e4a499531c5fa1db5be63ea4",
+    "original_conflict_exit_code": 1,
+    "original_conflicts": "error: pytests/src/misc.rs: No such file or directory\nerror: patch failed: src/internal/state.rs:300\nerror: src/internal/state.rs: patch does not apply\n",
+    "replay_hashes": {
+      "src/internal/state.rs": "243c3ee12cfd576d7d191e0d6f5450b26b141f7dc73414f090eda4eab84782db",
+      "tests/python/src/misc.rs": "1befd00346a37f800803ba19599d8b4fb569ecfd55616ec8690856c5652fa6c5"
+    },
+    "python": {
+      "executable": "/Users/bytedance/Documents/trae_projects/p2r/.venv/bin/python",
+      "implementation": "cpython",
+      "version": [
+        3,
+        9,
+        6
+      ],
+      "free_threaded": false,
+      "gil_enabled": null,
+      "platform": "macosx-10.9-universal2",
+      "base_prefix": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9",
+      "modules": [],
+      "gil_after_imports": null
+    },
+    "lock_sha256": "74dbbff19ff1d9cead4519b408eacfaa2b68a5c98ecd7778524b5044142a8821",
+    "regression_source_sha256": "1c79a04993bbf9b95415d12a07275bf3f209dbff9b517ed2067031ca7c1538e2",
+    "scope": "controlled reverse/replay of an already inherited historical runtime fix; no new upstream runtime change",
+    "result": "incomplete",
+    "results": [
+      {
+        "variant": "broken",
+        "repeat": 0,
+        "exit_code": 0,
+        "binary_sha256": "6a945e626d9781204979cbdbc1f1492d995b3beed6ebfc5667556fa85cf3e8c2"
+      }
+    ]
+  }
+}
