@@ -1881,6 +1881,7 @@ def update_ui_tests(session: nox.Session):
 
 @nox.session(name="test-introspection")
 def test_introspection(session: nox.Session):
+    _run_cargo(session, "test", "-p", "r2p-introspection", "--locked")
     with tempfile.TemporaryDirectory() as stub_dir:
         session.install("maturin")
         session.install("ruff")

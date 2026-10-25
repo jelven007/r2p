@@ -10,16 +10,31 @@ use goblin::elf::{Elf, Sym};
 use goblin::mach::symbols::{N_SECT, NO_SECT};
 use goblin::mach::{Mach, MachO, SingleArch};
 use goblin::pe::PE;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
+use std::io::Read;
 use std::path::Path;
 use std::{fs, str};
 
+// Bound allocation before reading, deserializing, or recursively expanding metadata.
+const MAX_BINARY_BYTES: u64 = 512 * 1024 * 1024;
+const MAX_CHUNK_BYTES: usize = 1024 * 1024;
+const MAX_METADATA_BYTES: usize = 64 * 1024 * 1024;
+const MAX_CHUNKS: usize = 16_384;
+const MAX_STRUCTURE_NODES: usize = 65_536;
+const MAX_DEPTH: usize = 64;
+
 /// Introspect a cdylib built with r2p and returns the definition of a Python module.
 ///
-/// This function currently supports the ELF (most *nix including Linux), Match-O (macOS) and PE (Windows) formats.
+/// This function currently supports ELF (most *nix including Linux), Mach-O (macOS) and PE (Windows).
+///
+/// Inputs are limited to 512 MiB per binary, 1 MiB per chunk, 64 MiB of metadata,
+/// 16,384 chunks, 65,536 JSON nodes per chunk and expanded members, and 64 levels
+/// of nesting. Expanded metadata (serialized bytes times containment depth) is
+/// conservatively limited to 64 MiB. Invalid offsets, duplicate IDs and
+/// containment cycles return errors.
 pub fn introspect_cdylib(library_path: impl AsRef<Path>, main_module_name: &str) -> Result<Module> {
     let chunks = find_introspection_chunks_in_binary_object(library_path.as_ref())?;
     parse_chunks(&chunks, main_module_name)
@@ -27,6 +42,10 @@ pub fn introspect_cdylib(library_path: impl AsRef<Path>, main_module_name: &str)
 
 /// Parses the introspection chunks found in the binary
 fn parse_chunks(chunks: &[Chunk], main_module_name: &str) -> Result<Module> {
+    ensure!(
+        chunks.len() <= MAX_CHUNKS,
+        "Introspection chunk count exceeds limit"
+    );
     let mut chunks_by_id = HashMap::<&str, &Chunk>::new();
     let mut chunks_by_parent = HashMap::<&str, Vec<&Chunk>>::new();
     for chunk in chunks {
@@ -38,12 +57,24 @@ fn parse_chunks(chunks: &[Chunk], main_module_name: &str) -> Result<Module> {
             }
         };
         if let Some(id) = id {
-            chunks_by_id.insert(id, chunk);
+            ensure!(
+                chunks_by_id.insert(id, chunk).is_none(),
+                "Duplicate introspection ID: {id}"
+            );
         }
         if let Some(parent) = parent {
             chunks_by_parent.entry(parent).or_default().push(chunk);
         }
     }
+    validate_containment(chunks, &chunks_by_id, &chunks_by_parent)?;
+    ensure!(
+        chunks
+            .iter()
+            .filter(|chunk| matches!(chunk, Chunk::Module { name, .. } if name == main_module_name))
+            .count()
+            <= 1,
+        "Multiple root modules named {main_module_name}"
+    );
     // We look for the root chunk
     for chunk in chunks {
         if let Chunk::Module {
@@ -74,6 +105,106 @@ fn parse_chunks(chunks: &[Chunk], main_module_name: &str) -> Result<Module> {
         }
     }
     bail!("No module named {main_module_name} found")
+}
+
+/// Check the entire graph iteratively, before either recursive conversion pass.
+/// Memoized subtree costs also bound repeated expansion of shared DAG members.
+fn validate_containment<'a>(
+    chunks: &'a [Chunk],
+    chunks_by_id: &HashMap<&'a str, &'a Chunk>,
+    chunks_by_parent: &HashMap<&str, Vec<&Chunk>>,
+) -> Result<()> {
+    let mut edges = HashMap::<&str, Vec<&str>>::new();
+    let mut sizes = HashMap::<&str, usize>::new();
+    let weights = chunks
+        .iter()
+        .map(|chunk| Ok((chunk as *const Chunk, serde_json::to_vec(chunk)?.len())))
+        .collect::<Result<HashMap<_, _>>>()?;
+    let mut bytes_by_id = HashMap::<&str, usize>::new();
+    let mut own_bytes = HashMap::<&str, usize>::new();
+    let mut edge_count = 0usize;
+    for chunk in chunks {
+        let (id, members) = match chunk {
+            Chunk::Module { id, members, .. } => (id.as_str(), members.as_slice()),
+            Chunk::Class { id, .. } => (id.as_str(), [].as_slice()),
+            _ => continue,
+        };
+        let children = chunks_by_parent
+            .get(id)
+            .into_iter()
+            .flatten()
+            .copied()
+            .chain(
+                members
+                    .iter()
+                    .filter_map(|member| chunks_by_id.get(member.as_str()).copied()),
+            );
+        let mut container_children = Vec::new();
+        let mut size = 1usize;
+        let mut bytes = weights[&(chunk as *const Chunk)];
+        own_bytes.insert(id, bytes);
+        for child in children {
+            size += 1;
+            bytes = bytes.saturating_add(weights[&(child as *const Chunk)]);
+            edge_count += 1;
+            ensure!(
+                edge_count <= MAX_STRUCTURE_NODES,
+                "Introspection member count exceeds limit"
+            );
+            if let Chunk::Module { id, .. } | Chunk::Class { id, .. } = child {
+                container_children.push(id.as_str());
+            }
+        }
+        edges.insert(id, container_children);
+        sizes.insert(id, size);
+        bytes_by_id.insert(id, bytes);
+    }
+    let mut visiting = HashSet::new();
+    let mut completed = HashMap::<&str, (usize, usize, usize)>::new();
+    for chunk in chunks {
+        let (Chunk::Module { id, .. } | Chunk::Class { id, .. }) = chunk else {
+            continue;
+        };
+        let mut stack = vec![(id.as_str(), false)];
+        while let Some((id, finish)) = stack.pop() {
+            if completed.contains_key(id) {
+                continue;
+            }
+            if !finish {
+                ensure!(
+                    visiting.insert(id),
+                    "Introspection containment cycle at ID: {id}"
+                );
+                stack.push((id, true));
+                stack.extend(edges[id].iter().rev().map(|child| (*child, false)));
+            } else {
+                let mut depth = 1;
+                let mut size = sizes[id];
+                let mut bytes = bytes_by_id[id];
+                for child in &edges[id] {
+                    let (child_depth, child_size, child_bytes) = completed[child];
+                    depth = depth.max(child_depth + 1);
+                    size = size.saturating_add(child_size - 1);
+                    bytes = bytes.saturating_add(child_bytes - own_bytes[child]);
+                }
+                ensure!(
+                    depth <= MAX_DEPTH,
+                    "Introspection containment depth exceeds limit"
+                );
+                ensure!(
+                    size <= MAX_STRUCTURE_NODES,
+                    "Introspection expanded member count exceeds limit"
+                );
+                ensure!(
+                    bytes.saturating_mul(depth) <= MAX_METADATA_BYTES,
+                    "Introspection expanded metadata size exceeds limit"
+                );
+                visiting.remove(id);
+                completed.insert(id, (depth, size, bytes));
+            }
+        }
+    }
+    Ok(())
 }
 
 #[expect(clippy::too_many_arguments)]
@@ -531,14 +662,34 @@ fn introspection_id_to_type_hint_for_root_module(
 }
 
 fn find_introspection_chunks_in_binary_object(path: &Path) -> Result<Vec<Chunk>> {
-    let library_content =
-        fs::read(path).with_context(|| format!("Failed to read {}", path.display()))?;
-    match Object::parse(&library_content)
+    let file =
+        fs::File::open(path).with_context(|| format!("Failed to read {}", path.display()))?;
+    ensure!(
+        file.metadata()?.len() <= MAX_BINARY_BYTES,
+        "Binary size exceeds introspection limit"
+    );
+    let mut library_content = Vec::new();
+    // A bounded read also covers files which grow after the metadata check.
+    file.take(MAX_BINARY_BYTES + 1)
+        .read_to_end(&mut library_content)?;
+    ensure!(
+        library_content.len() as u64 <= MAX_BINARY_BYTES,
+        "Binary size exceeds introspection limit"
+    );
+    find_introspection_chunks_in_binary_content(&library_content)
+}
+
+fn find_introspection_chunks_in_binary_content(library_content: &[u8]) -> Result<Vec<Chunk>> {
+    ensure!(
+        library_content.len() as u64 <= MAX_BINARY_BYTES,
+        "Binary size exceeds introspection limit"
+    );
+    match Object::parse(library_content)
         .context("The built library is not valid or not supported by our binary parser")?
     {
-        Object::Elf(elf) => find_introspection_chunks_in_elf(&elf, &library_content),
+        Object::Elf(elf) => find_introspection_chunks_in_elf(&elf, library_content),
         Object::Mach(Mach::Binary(macho)) => {
-            find_introspection_chunks_in_macho(&macho, &library_content)
+            find_introspection_chunks_in_macho(&macho, library_content)
         }
         Object::Mach(Mach::Fat(multi_arch)) => {
             for (arch, fat_arch) in multi_arch.into_iter().zip(multi_arch.iter_arches()) {
@@ -547,7 +698,7 @@ fn find_introspection_chunks_in_binary_object(path: &Path) -> Result<Vec<Chunk>>
                         // Mach-O offsets are relative to the beginning of the architecture slice
                         return find_introspection_chunks_in_macho(
                             &macho,
-                            fat_arch?.slice(&library_content),
+                            fat_arch?.slice(library_content),
                         );
                     }
                     SingleArch::Archive(_) => (),
@@ -555,12 +706,9 @@ fn find_introspection_chunks_in_binary_object(path: &Path) -> Result<Vec<Chunk>>
             }
             bail!("No Mach-o chunk found in the multi-arch Mach-o container")
         }
-        Object::PE(pe) => find_introspection_chunks_in_pe(&pe, &library_content),
+        Object::PE(pe) => find_introspection_chunks_in_pe(&pe, library_content),
         other => {
-            bail!(
-                "Only ELF, Mach-o and PE containers can be introspected, got {other:?} from file {path:?}",
-                path = path.display()
-            )
+            bail!("Only ELF, Mach-o and PE containers can be introspected, got {other:?}")
         }
     }
 }
@@ -579,7 +727,7 @@ fn find_introspection_chunks_in_elf(elf: &Elf<'_>, library_content: &[u8]) -> Re
                 .map(|sym| (sym, elf.strtab.get_at(sym.st_name))),
         );
     let mut seen_names = HashSet::new();
-    let mut chunks = Vec::new();
+    let mut chunks = ChunkCollector::default();
     for (sym, sym_name) in symbols {
         let Some(sym_name) = sym_name else {
             continue;
@@ -593,15 +741,15 @@ fn find_introspection_chunks_in_elf(elf: &Elf<'_>, library_content: &[u8]) -> Re
         let data_offset = elf_symbol_file_offset(elf, &sym).with_context(|| {
             format!("Failed to locate the introspection symbol {sym_name} in the ELF file")
         })?;
-        chunks.push(deserialize_chunk(
+        chunks.push(
             sym_name,
             library_content
                 .get(data_offset..)
                 .context("The introspection symbol is outside of the ELF file")?,
             elf.little_endian,
-        )?);
+        )?;
     }
-    Ok(chunks)
+    Ok(chunks.chunks)
 }
 
 /// Maps the virtual address of a symbol to its offset in the file using the loadable segments.
@@ -641,7 +789,7 @@ fn find_introspection_chunks_in_macho(
         .flatten()
         .map(|t| t.map(|s| s.0))
         .collect::<Result<Vec<_>, _>>()?;
-    let mut chunks = Vec::new();
+    let mut chunks = ChunkCollector::default();
     for symbol in macho.symbols() {
         let (name, nlist) = symbol?;
         if nlist.is_global()
@@ -655,48 +803,85 @@ fn find_introspection_chunks_in_macho(
             let data_offset = nlist
                 .n_value
                 .checked_sub(section.addr)
+                .filter(|offset| *offset < section.size)
                 .and_then(|offset| offset.checked_add(section.offset.into()))
                 .context("The introspection symbol is outside of its section")?;
-            chunks.push(deserialize_chunk(
+            chunks.push(
                 name,
                 library_content
                     .get(usize::try_from(data_offset).context("File offset overflow")?..)
                     .context("The introspection symbol is outside of the Mach-O file")?,
                 macho.little_endian,
-            )?);
+            )?;
         }
     }
-    Ok(chunks)
+    Ok(chunks.chunks)
 }
 
 fn find_introspection_chunks_in_pe(pe: &PE<'_>, library_content: &[u8]) -> Result<Vec<Chunk>> {
-    let mut chunks = Vec::new();
+    let mut chunks = ChunkCollector::default();
     for export in &pe.exports {
         if is_introspection_symbol(export.name.unwrap_or_default()) {
-            chunks.push(deserialize_chunk(
+            chunks.push(
                 export.name.unwrap_or_default(),
                 library_content
                     .get(export.offset.context("No symbol offset")?..)
                     .context("The introspection symbol is outside of the PE file")?,
                 true,
-            )?);
+            )?;
         }
     }
-    Ok(chunks)
+    Ok(chunks.chunks)
 }
 
+#[derive(Default)]
+struct ChunkCollector {
+    chunks: Vec<Chunk>,
+    bytes: usize,
+}
+
+impl ChunkCollector {
+    fn push(&mut self, name: &str, content: &[u8], little_endian: bool) -> Result<()> {
+        ensure!(
+            self.chunks.len() < MAX_CHUNKS,
+            "Introspection chunk count exceeds limit"
+        );
+        let payload = chunk_payload(name, content, little_endian)?;
+        self.bytes = self.bytes.saturating_add(payload.len());
+        ensure!(
+            self.bytes <= MAX_METADATA_BYTES,
+            "Introspection metadata size exceeds limit"
+        );
+        self.chunks.push(deserialize_payload(payload)?);
+        Ok(())
+    }
+}
+
+#[cfg(test)]
 fn deserialize_chunk(
     symbol_name: &str,
     content_with_chunk_at_the_beginning: &[u8],
     is_little_endian: bool,
 ) -> Result<Chunk> {
+    deserialize_payload(chunk_payload(
+        symbol_name,
+        content_with_chunk_at_the_beginning,
+        is_little_endian,
+    )?)
+}
+
+fn chunk_payload<'a>(
+    symbol_name: &str,
+    content: &'a [u8],
+    is_little_endian: bool,
+) -> Result<&'a [u8]> {
     let symbol_version = introspection_symbol_version(symbol_name).unwrap_or_default();
     ensure!(
         symbol_version == "1",
         "The introspection format version '{symbol_version}' is not supported by this version of r2p-introspection. Please upgrade your build tool like maturin or downgrade r2p"
     );
 
-    let length = content_with_chunk_at_the_beginning
+    let length = content
         .get(..4)
         .and_then(|length| length.try_into().ok())
         .context("The introspection chunk must contain a length")?;
@@ -705,17 +890,43 @@ fn deserialize_chunk(
     } else {
         u32::from_be_bytes(length)
     };
-    let chunk = content_with_chunk_at_the_beginning
-        .get(4..4 + length as usize)
-        .ok_or_else(|| {
-            anyhow!("The introspection chunk length {length} is greater that the binary size")
-        })?;
-    serde_json::from_slice(chunk).with_context(|| {
-        format!(
-            "Failed to parse introspection chunk: {:?}",
-            String::from_utf8_lossy(chunk)
-        )
+    ensure!(
+        length as usize <= MAX_CHUNK_BYTES,
+        "Introspection chunk size exceeds limit"
+    );
+    let end = 4usize
+        .checked_add(length as usize)
+        .context("Introspection chunk length overflow")?;
+    content.get(4..end).ok_or_else(|| {
+        anyhow!("The introspection chunk length {length} is greater than the binary size")
     })
+}
+
+fn deserialize_payload(chunk: &[u8]) -> Result<Chunk> {
+    let value: serde_json::Value = serde_json::from_slice(chunk).with_context(|| {
+        format!(
+            "Failed to parse introspection chunk (first 160 bytes): {:?}",
+            String::from_utf8_lossy(&chunk[..chunk.len().min(160)])
+        )
+    })?;
+    let mut stack = vec![(&value, 1usize)];
+    let mut count = 0;
+    while let Some((node, depth)) = stack.pop() {
+        count += 1;
+        ensure!(
+            count <= MAX_STRUCTURE_NODES,
+            "Introspection JSON node count exceeds limit"
+        );
+        ensure!(depth <= MAX_DEPTH, "Introspection JSON depth exceeds limit");
+        match node {
+            serde_json::Value::Array(items) => stack.extend(items.iter().map(|v| (v, depth + 1))),
+            serde_json::Value::Object(items) => {
+                stack.extend(items.values().map(|v| (v, depth + 1)))
+            }
+            _ => (),
+        }
+    }
+    serde_json::from_value(value).context("Invalid introspection chunk structure")
 }
 
 fn is_introspection_symbol(name: &str) -> bool {
@@ -730,7 +941,7 @@ fn introspection_symbol_version(name: &str) -> Option<&str> {
     Some(name.split_once('_').unwrap_or((name, "")).0)
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 enum Chunk {
     Module {
@@ -785,7 +996,7 @@ enum Chunk {
     },
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 struct ChunkArguments {
     #[serde(default)]
     posonlyargs: Vec<ChunkArgument>,
@@ -799,7 +1010,7 @@ struct ChunkArguments {
     kwarg: Option<ChunkArgument>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 struct ChunkArgument {
     name: String,
     #[serde(default)]
@@ -808,7 +1019,7 @@ struct ChunkArgument {
     annotation: Option<ChunkExpr>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 enum ChunkExpr {
     /// A constant like `None` or `123`
@@ -836,7 +1047,7 @@ enum ChunkExpr {
     Id { id: String },
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum ChunkConstant {
     None,
@@ -847,8 +1058,11 @@ pub enum ChunkConstant {
     Ellipsis,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ChunkOperator {
     BitOr,
 }
+
+#[cfg(test)]
+mod tests;

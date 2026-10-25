@@ -634,6 +634,29 @@
         "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
         "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
       }
+    },
+    {
+      "id": "local-introspection-boundaries-20261025",
+      "source_sha": "36e76e56807c327c3840905feff8d77902667725",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": ["experimental-inspect", "experimental-async", "full (lifecycle tests)"],
+      "commands": [
+        "cargo test -p r2p-introspection --locked",
+        "cargo clippy -p r2p-introspection --all-targets --locked -- -D warnings",
+        "python tools/dev.py -- -r -s test-introspection",
+        "cargo test -p r2p --locked --features full --lib internal::state::tests",
+        "cargo test -p r2p --locked --features full --test test_gc --test test_exceptions --test test_init_race --test test_pybuffer_drop_without_interpreter --test test_pyerr_debug_unformattable"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "24 parser/stub unit tests, 4096 bounded mutations, three Mach-O forms, 16 Python stub tests and 43 lifecycle/GC/exception tests; two existing stub skips; final ELF/PE/free-threaded CI pending",
+      "log": "docs/testing/reports/introspection-boundaries-2026-10-25.md",
+      "verified_at": "2026-10-25T00:18:09.014833+00:00"
     }
   ]
 }
