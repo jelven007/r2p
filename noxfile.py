@@ -22,6 +22,10 @@ from urllib.request import urlopen
 
 import nox.command
 
+# Nox's console entry point loads this file without adding its directory to
+# sys.path. Resolve project helpers from the noxfile, including isolated copies.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from tools.engineering.environment import digest, isolated_source
 from tools.engineering.matrix import (
     RustTestOptions,

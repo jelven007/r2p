@@ -41,3 +41,12 @@ MSRV build 改为在已准备的隔离副本中实际运行 docs/test-rust/test-
 可应用的[保护配置](../../governance/main-protection.json)要求稳定 `conclusion`、最新 base、禁止强推/删除及解决 review 对话。
 当前只有已核实的一名维护者，不设虚构的第二审阅人要求。
 远端强制尚未生效，不能宣称 O-05 远端验收完成。
+
+## 首次 PR 运行与修复
+
+[PR #2 首次 CI](https://github.com/jelven007/r2p/actions/runs/40144858837)准确阻断了 Nox console 入口的工程模块导入失败；changelog 等同入口工作流也失败。
+日志显示 `ModuleNotFoundError: No module named 'tools'`，本地 `python -m nox` 的路径与 console script 不同。
+Nox 现在按自身文件位置添加工程根路径，隔离副本亦适用。
+从仓库外、清除 PYTHONPATH 后分别运行两个入口，40 个会话均可载入；CI 相同 console 入口的 repository-check 也成功。
+本地实际 full doctest 为 488+14 通过、96+3 ignored，包含 compile-fail；原始日志保存上述路径。
+首次失败保留原结果，不回填为成功；修复后的远端运行单独登记。
