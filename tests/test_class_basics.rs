@@ -697,7 +697,9 @@ fn drop_unsendable_elsewhere() {
     }
 
     Python::attach(|py| {
-        let (err, object) = UnraisableCapture::enter(py, |capture| {
+        const EXPECTED: &str = "RuntimeError: test_class_basics::drop_unsendable_elsewhere::Unsendable is unsendable, but is being dropped on another thread";
+        // Other free-threaded tests can report delayed unsendable drops during this GC.
+        let (err, object) = UnraisableCapture::enter_expected(py, EXPECTED, |capture| {
             let dropped = Arc::new(AtomicBool::new(false));
 
             let unsendable = Py::new(
@@ -728,11 +730,25 @@ fn drop_unsendable_elsewhere() {
             capture.take_capture().unwrap()
         });
 
-        assert_eq!(
-            err.to_string(),
-            "RuntimeError: test_class_basics::drop_unsendable_elsewhere::Unsendable is unsendable, but is being dropped on another thread"
-        );
+        assert_eq!(err.to_string(), EXPECTED);
         assert!(object.is_none());
+    });
+}
+
+#[test]
+fn unraisable_capture_preserves_expected_error() {
+    use r2p::exceptions::{PyRuntimeError, PyValueError};
+    use test_utils::UnraisableCapture;
+
+    Python::attach(|py| {
+        const EXPECTED: &str = "RuntimeError: expected unsendable drop";
+        UnraisableCapture::enter_expected(py, EXPECTED, |capture| {
+            PyRuntimeError::new_err("expected unsendable drop").write_unraisable(py, None);
+            PyValueError::new_err("unrelated delayed drop").write_unraisable(py, None);
+            let (err, _) = capture.take_capture().unwrap();
+            assert_eq!(err.to_string(), EXPECTED);
+            assert!(capture.take_capture().is_none());
+        });
     });
 }
 

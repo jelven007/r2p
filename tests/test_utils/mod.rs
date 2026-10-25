@@ -149,13 +149,30 @@ mod inner {
         ///
         /// `f`
         pub fn enter<R>(py: Python<'py>, f: impl FnOnce(&Self) -> R) -> R {
+            Self::enter_inner(py, None, f)
+        }
+
+        /// Capture one expected error message and forward unrelated errors to the old hook.
+        pub fn enter_expected<R>(
+            py: Python<'py>,
+            expected: &'static str,
+            f: impl FnOnce(&Self) -> R,
+        ) -> R {
+            Self::enter_inner(py, Some(expected), f)
+        }
+
+        fn enter_inner<R>(
+            py: Python<'py>,
+            expected: Option<&'static str>,
+            f: impl FnOnce(&Self) -> R,
+        ) -> R {
             // unraisablehook is a global, so only one thread can be using this struct at a time.
             static UNRAISABLE_HOOK_MUTEX: Mutex<()> = Mutex::new(());
 
             let mutex_guard = UNRAISABLE_HOOK_MUTEX.lock_py_attached(py);
 
             let guard = Self {
-                hook: UnraisableCaptureHook::install(py),
+                hook: UnraisableCaptureHook::install(py, expected),
             };
 
             let result = f(&guard);
@@ -186,6 +203,7 @@ mod inner {
     struct UnraisableCaptureHook {
         pub capture: Mutex<Option<(PyErr, Py<PyAny>)>>,
         old_hook: Py<PyAny>,
+        expected: Option<&'static str>,
     }
 
     #[cfg(feature = "macros")]
@@ -193,6 +211,16 @@ mod inner {
     impl UnraisableCaptureHook {
         pub fn hook(&self, unraisable: Bound<'_, PyAny>) {
             let err = PyErr::from_value(unraisable.getattr("exc_value").unwrap());
+            if self
+                .expected
+                .is_some_and(|expected| err.to_string() != expected)
+            {
+                self.old_hook
+                    .bind(unraisable.py())
+                    .call1((&unraisable,))
+                    .unwrap();
+                return;
+            }
             let instance = unraisable.getattr("object").unwrap();
             self.capture.lock().replace((err, instance.into()));
         }
@@ -200,13 +228,21 @@ mod inner {
 
     #[cfg(feature = "macros")]
     impl UnraisableCaptureHook {
-        fn install(py: Python<'_>) -> Bound<'_, Self> {
+        fn install<'py>(py: Python<'py>, expected: Option<&'static str>) -> Bound<'py, Self> {
             let sys = py.import("sys").unwrap();
 
             let old_hook = sys.getattr("unraisablehook").unwrap().into();
             let capture = Mutex::new(None);
 
-            let capture = Bound::new(py, UnraisableCaptureHook { capture, old_hook }).unwrap();
+            let capture = Bound::new(
+                py,
+                UnraisableCaptureHook {
+                    capture,
+                    old_hook,
+                    expected,
+                },
+            )
+            .unwrap();
 
             sys.setattr("unraisablehook", capture.getattr("hook").unwrap())
                 .unwrap();
