@@ -47,6 +47,7 @@ JOBS = (
         "test-introspection-pr",
         "sdk-docs",
         "consumer-smoke",
+        "candidate-acceptance",
     }
     | CORE_JOBS
     | FULL_JOBS
@@ -155,6 +156,10 @@ def make_plan(paths: list[str], event: str, labels: list[str] = ()) -> dict:
     if core:
         require(CORE_JOBS, "SDK/tooling compatibility checks")
         require({"zizmor"}, "SDK/tooling workflow validation")
+        require(
+            {"candidate-acceptance"},
+            "isolated registry and candidate artifact acceptance",
+        )
         jobs["check-nightly"] = {
             "status": "optional",
             "reason": "nightly toolchain is forward-looking, outside stable support",

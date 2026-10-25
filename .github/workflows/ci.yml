@@ -836,6 +836,40 @@ jobs:
           path: target/consumer-check
           if-no-files-found: error
 
+  candidate-acceptance:
+    needs: [fmt, resolve]
+    if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['candidate-acceptance'].status != 'not-applicable' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ needs.resolve.outputs.coverage-sha }}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          enable-cache: false
+      - run: rustup toolchain install stable --profile minimal --no-self-update
+      - name: Accept registry packages, extension wheels, CLI and retained restoration
+        run: python -m tools.candidate --sha "$SDK_REVISION" --output target/candidate-check
+        env:
+          SDK_REVISION: ${{ needs.resolve.outputs.coverage-sha }}
+          LD_LIBRARY_PATH: ${{ env.pythonLocation }}/lib
+      - name: Preserve immutable candidate evidence and artifacts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: candidate-check
+          path: |
+            target/candidate-check/manifest.json
+            target/candidate-check/*.log
+            target/candidate-check/candidate
+            target/candidate-check/baseline
+          if-no-files-found: error
+
   conclusion:
     needs:
       - resolve
@@ -865,6 +899,7 @@ jobs:
       - engineering
       - sdk-docs
       - consumer-smoke
+      - candidate-acceptance
     if: always()
     runs-on: ubuntu-latest
     steps:
