@@ -2,8 +2,10 @@
 
 `r2p` 是基于 PyO3 的 Rust/Python 互操作工程，提供类型转换、安全对象访问、原生扩展和解释器嵌入能力。
 SDK 内核、包名和宏属性统一为 `r2p`，产品元数据见 [product.toml](product.toml)。
-当前交付仓库为 `jelven007/r2p`，按固定 Git SHA 消费；本次完成生产研发目录和全生命周期文档基线。
-本地回归已通过，平台和外部发行的证据边界见[最新验证报告](docs/testing/reports/production-baseline-validation.md)。
+当前交付仓库为 `jelven007/r2p`，按已验证的固定 Git SHA 消费。
+已有本地回归、候选消费和性能样本；结果限定各自源码与环境，见[当前结构化证据](docs/testing/evidence-summary.md)。
+固定实施提交 `b04b79e7` 的候选/恢复、GIL/FT、内省和本机 CLI 验收通过，见[本机报告](docs/testing/reports/local-acceptance-2026-10-25.md)。
+当前优化分支的最终 SHA 完整远端验收仍待完成，进度见[持续优化记录](docs/governance/optimization-continuation-2026-10-25.md)。
 
 | 项目 | 基线 |
 | --- | --- |
@@ -38,7 +40,7 @@ r2p/
 ├── Cargo.lock, uv.lock       # 已跟踪的工程依赖解析
 ├── src/                     # 核心安全 API、类型、转换与运行时实现
 ├── crates/                  # FFI、构建配置、过程宏、内省组件
-├── python/                  # 独立 Python 运行时包
+├── python/                  # Python runtime 预留目录，尚无独立运行时功能
 ├── tests/                   # Rust 集成测试、UI 测试、python/ 跨语言测试
 ├── benchmarks/              # 隔离工作区中的性能基准
 ├── examples/                # 扩展、嵌入、打包示例和模板
@@ -62,9 +64,9 @@ r2p/
 cargo metadata --no-deps --format-version 1
 cargo check -p r2p --locked
 cargo test -p r2p --lib --locked
-uv run --isolated --only-group nox nox -s repository-check
-uv run --isolated --only-group nox nox -s test-rust -- skip-full
-uv run --isolated --only-group nox nox -s test-py
+python tools/dev.py --target-python <目标解释器路径> -- -s repository-check
+python tools/dev.py --target-python <目标解释器路径> -- -s test-rust -- skip-full
+python tools/dev.py --target-python <目标解释器路径> -- -s test-py
 ```
 
 指南构建还需要 mdBook 和 mdbook-tabs。
@@ -80,7 +82,7 @@ uv run --isolated --only-group nox nox -s test-py
 | 需求和验收 | [需求规格](docs/requirements/system-requirements.md)、[追踪矩阵](docs/requirements/traceability.csv) |
 | 技术方案 | [总体架构](docs/architecture/system-design.md)、[接口与兼容性](docs/architecture/interfaces-and-compatibility.md) |
 | 开发与目录 | [开发指南](docs/development/developer-guide.md)、[目录规范](docs/development/repository-layout.md) |
-| 测试与本次验证 | [测试策略](docs/testing/test-strategy.md)、[支持矩阵](docs/testing/support-matrix.md)、[当前验证](docs/testing/reports/production-baseline-validation.md) |
+| 测试与本次验证 | [测试策略](docs/testing/test-strategy.md)、[支持矩阵](docs/testing/support-matrix.md)、[当前证据](docs/testing/evidence-summary.md)、[环境修正](docs/testing/reports/evidence-environment-2026-10-25.md) |
 | 运营 | [运营方案](docs/operations/operating-plan.md)、[支持政策](docs/operations/support-policy.md) |
 | 运维与发布 | [故障手册](docs/runbooks/incident-response.md)、[发布与回退](docs/releases/release-and-rollback.md)、[版本政策](docs/releases/version-policy.md) |
 | 计划与治理 | [交付计划](docs/governance/delivery-plan.md)、[文档治理](docs/governance/document-management.md) |
@@ -91,6 +93,6 @@ uv run --isolated --only-group nox nox -s test-py
 SDK 技术标识已迁移为 `r2p`；上游历史、版权与许可证按来源保留。
 官方 PyO3 网站、徽章、包索引页面属于上游资料，不代表 `r2p` 已独立运营这些资源。
 源码交付和两个历史快照按[交付记录](docs/releases/records/2026-10-24-production-baseline.md)追溯。
-注册表和站点发行尚未启用；复现/修复反馈通过 [PR](https://github.com/jelven007/r2p/pulls) 进入尽力维护流程，Issues 当前关闭。
+注册表和站点发行尚未启用；问题通过 [Issues](https://github.com/jelven007/r2p/issues/new/choose) 反馈，修复通过 [PR](https://github.com/jelven007/r2p/pulls) 提交，按[支持政策](docs/operations/support-policy.md)尽力维护。
 
 本仓库协作方式见 [Contributing.md](Contributing.md)，行为规范见 [Code-of-Conduct.md](Code-of-Conduct.md)，历史发布说明见 [CHANGELOG.md](CHANGELOG.md)。

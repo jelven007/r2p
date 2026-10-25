@@ -7,6 +7,8 @@ description = "源自 PyO3、内核身份统一为 r2p 的 Rust/Python 互操作
 [implementation]
 rust_package = "r2p"
 python_runtime_package = "r2p-runtime"
+python_runtime_status = "reserved"
+python_runtime_publication = "not-enabled"
 
 [source]
 repository = "https://github.com/jelven007/r2p"
@@ -19,3 +21,5 @@ default_branch = "main"
 history_manifest = "docs/releases/history.json"
 history_count = 2
 registry_publication = "not-enabled"
+verified_git_revision = "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+verified_registry_versions = []

@@ -7,6 +7,39 @@ It is derived from PyO3; upstream copyrights, licenses, and historical records r
 Requires Rust 1.85 or later and CPython 3.9 or later.
 PyPy, GraalPy, stable ABI, and free-threaded support depend on the selected interpreter and features.
 
+## Generate a standalone project
+
+From a checkout, run the generator with Python 3.11+:
+
+```sh
+python tools/new_project.py ../my-extension --example maturin-starter
+cd ../my-extension
+uv venv --python 3.14
+uv pip install maturin==1.15.0
+uv run --no-project maturin develop
+uv run --no-project python -c "import maturin_starter; assert maturin_starter.divide(84, 2) == 42"
+```
+
+The distribution name follows the destination; the Python import name remains `maturin_starter`.
+The default source is the full Git revision recorded in `product.toml`.
+Both the SDK and the bundled private Maturin adapter use that same revision.
+The generated `r2p-source.json` records the source; keep `Cargo.lock` to retain the resolved dependency set.
+Use `--revision <40-character-SHA>` to select another immutable commit.
+For local development, use `--source path --checkout /absolute/path/to/r2p`.
+Registry mode accepts only versions with recorded publication and installation evidence; none are enabled yet.
+
+Use `--example plugin` for a Rust executable that loads Python, exchanges a class instance, catches a `ValueError`, and resumes execution:
+
+```sh
+python tools/new_project.py ../my-plugin --example plugin
+cd ../my-plugin
+cargo run
+```
+
+Select an installed Python with `R2P_PYTHON` when needed.
+To validate all template dependency graphs and the two consumer flows, run `python -m tools.consumer_smoke --output target/consumer-check` from the SDK checkout with Python 3.14, Rust, and uv available.
+This builds a source distribution, builds native and abi3 wheels from the extracted source, installs each in a fresh environment, and runs the embedded Python example outside the SDK workspace.
+
 ## Calling Python from Rust
 
 For a checkout of this repository, use a path dependency:

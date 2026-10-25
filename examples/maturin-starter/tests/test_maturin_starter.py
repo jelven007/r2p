@@ -1,6 +1,17 @@
 from maturin_starter import ExampleClass, PythonClass
 
 
+def test_divide() -> None:
+    import pytest
+    from maturin_starter import divide
+
+    assert divide(84, 2) == 42
+    for numerator, denominator in ((1, 0), (-(2**31), -1)):
+        with pytest.raises(ValueError, match="division by zero or integer overflow"):
+            divide(numerator, denominator)
+    assert divide(6, 2) == 3
+
+
 def test_python_class() -> None:
     py_class = PythonClass(value=10)
     assert py_class.value == 10

@@ -10,7 +10,7 @@ import sys
 import sysconfig
 import tempfile
 from collections.abc import Iterable, Iterator
-from contextlib import ExitStack, contextmanager
+from contextlib import contextmanager
 from difflib import unified_diff
 from functools import lru_cache
 from glob import glob
@@ -21,6 +21,21 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 import nox.command
+
+# Nox's console entry point loads this file without adding its directory to
+# sys.path. Resolve project helpers from the noxfile, including isolated copies.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from tools.engineering.documentation import build_redirects, rustdoc_arguments
+from tools.engineering.environment import digest, isolated_source
+from tools.engineering.matrix import (
+    RustTestOptions,
+    feature_sets,
+    select_test_features,
+)
+from tools.engineering.packaging import library_variants
+from tools.engineering.platforms import EmscriptenInfo, WasiInfo
+from tools.engineering.resources import compact_msrv_snapshot
 
 try:
     import tomllib as toml
@@ -107,9 +122,15 @@ def test(session: nox.Session) -> None:
 
 @nox.session(name="test-rust", venv_backend="none")
 def test_rust(session: nox.Session):
-    _run_cargo_test(session, package="r2p-build-config")
-    _run_cargo_test(session, package="r2p-macros-backend")
-    _run_cargo_test(session, package="r2p-macros")
+    try:
+        options = RustTestOptions.parse(session.posargs)
+    except ValueError as error:
+        session.error(str(error))
+
+    if options.scope in ("all", "components"):
+        _run_cargo_test(session, package="r2p-build-config")
+        _run_cargo_test(session, package="r2p-macros-backend")
+        _run_cargo_test(session, package="r2p-macros")
 
     extra_flags = []
     # pypy and graalpy don't have Py_Initialize APIs, so we can only
@@ -117,7 +138,8 @@ def test_rust(session: nox.Session):
     if sys.implementation.name in ("pypy", "graalpy"):
         extra_flags.append("--no-run")
 
-    _run_cargo_test(session, package="r2p-ffi", extra_flags=extra_flags)
+    if options.scope in ("all", "components"):
+        _run_cargo_test(session, package="r2p-ffi", extra_flags=extra_flags)
 
     env = os.environ.copy()
     extra_flags.append("--no-default-features")
@@ -132,7 +154,7 @@ def test_rust(session: nox.Session):
             env.get("RUSTDOCFLAGS", "") + " -Z unstable-options --merge-doctests=yes"
         )
 
-    for feature_set in _get_feature_sets():
+    for feature_set in select_test_features(_get_feature_sets(), options):
         flags = extra_flags.copy()
 
         if feature_set is None or "full" not in feature_set:
@@ -145,7 +167,8 @@ def test_rust(session: nox.Session):
         # We need to pass the feature set to the test command
         # so that it can be used in the test code
         # (e.g. for `#[cfg(feature = "abi3-py39")]`)
-        _run_cargo_test(session, features=feature_set, extra_flags=flags, env=env)
+        if options.scope != "ui":
+            _run_cargo_test(session, features=feature_set, extra_flags=flags, env=env)
 
         if feature_set is not None and "full" in feature_set:
             # UI tests can have different output depending on features enabled, but
@@ -160,6 +183,7 @@ def test_rust(session: nox.Session):
 
         if (
             feature_set
+            and options.scope != "ui"
             and "abi3" in feature_set
             and "abi3t" not in feature_set
             and "full" in feature_set
@@ -176,6 +200,7 @@ def test_rust(session: nox.Session):
 
         if (
             feature_set
+            and options.scope != "ui"
             and "abi3t" in feature_set
             and "full" in feature_set
             and sys.version_info >= (3, 16)
@@ -211,7 +236,13 @@ def test_py(session: nox.Session) -> None:
 def coverage(session: nox.Session) -> None:
     session.env.update(_get_coverage_env())
     _run_cargo(session, "llvm-cov", "clean", "--workspace")
-    test(session)
+    # Coverage arguments belong to report generation, not Rust test selection.
+    report_args = session.posargs[:]
+    session.posargs.clear()
+    try:
+        test(session)
+    finally:
+        session.posargs[:] = report_args
     generate_coverage_report(session)
 
 
@@ -284,6 +315,17 @@ def rumdl(session: nox.Session):
 def repository_check(session: nox.Session):
     """Validate Cargo paths and local engineering-document references."""
     _run(session, "python", "tools/check_repository.py")
+    _run(session, "python", "-m", "tools.evidence", "check")
+    _run(
+        session,
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/tests",
+        external=True,
+    )
 
 
 @nox.session(name="typos", venv_backend="none")
@@ -466,27 +508,9 @@ def contributors(session: nox.Session) -> None:
         print(f"@{author}")
 
 
-class EmscriptenInfo:
-    def __init__(self):
-        self.emscripten_dir = R2P_DIR / "infrastructure" / "wasm" / "emscripten"
-        self.builddir = R2P_DIR / ".nox/emscripten"
-        self.builddir.mkdir(exist_ok=True, parents=True)
-
-        self.pyversion = sys.version.split()[0]
-        self.pymajor, self.pyminor, self.pymicro = self.pyversion.split(".")
-        self.pymicro, self.pydev = re.match(
-            "([0-9]*)([^0-9].*)?", self.pymicro
-        ).groups()
-        if self.pydev is None:
-            self.pydev = ""
-
-        self.pymajorminor = f"{self.pymajor}.{self.pyminor}"
-        self.pymajorminormicro = f"{self.pymajorminor}.{self.pymicro}"
-
-
 @nox.session(name="build-emscripten", venv_backend="none")
 def build_emscripten(session: nox.Session):
-    info = EmscriptenInfo()
+    info = EmscriptenInfo(R2P_DIR, sys.version)
     _run(
         session,
         "make",
@@ -502,7 +526,7 @@ def build_emscripten(session: nox.Session):
 
 @nox.session(name="test-emscripten", venv_backend="none")
 def test_emscripten(session: nox.Session):
-    info = EmscriptenInfo()
+    info = EmscriptenInfo(R2P_DIR, sys.version)
 
     libdir = info.builddir / f"install/Python-{info.pyversion}/lib"
     pythonlibdir = libdir / f"python{info.pymajorminor}"
@@ -549,27 +573,6 @@ def test_emscripten(session: nox.Session):
     )
 
 
-class WasiInfo:
-    def __init__(self):
-        self.wasi_dir = R2P_DIR / "infrastructure" / "wasm" / "wasi"
-        self.builddir = R2P_DIR / ".nox/wasi"
-        self.builddir.mkdir(exist_ok=True, parents=True)
-
-        self.pyversion = sys.version.split()[0]
-        self.pymajor, self.pyminor = self.pyversion.split(".")[:2]
-        self.pymajorminor = f"{self.pymajor}.{self.pyminor}"
-
-        # In CI the WASI SDK is installed by setup-wasi-sdk-action (sets WASI_SDK_PATH);
-        # otherwise the Makefile downloads it into the build dir.
-        wasi_sdk_env = os.environ.get("WASI_SDK_PATH")
-        self.wasi_sdk = (
-            Path(wasi_sdk_env) if wasi_sdk_env else self.builddir / "wasi-sdk"
-        )
-        self.cpython_dir = self.builddir / "build" / f"Python-{self.pyversion}"
-        crossbuild_dir = self.cpython_dir / "cross-build" / "wasm32-wasip1"
-        self.libdir = crossbuild_dir / "build" / f"lib.wasi-wasm32-{self.pymajorminor}"
-
-
 def _make_wasm(session: nox.Session, info: WasiInfo, *targets: str):
     _run(
         session,
@@ -588,7 +591,7 @@ def _make_wasm(session: nox.Session, info: WasiInfo, *targets: str):
 def prepare_wasm(session: nox.Session):
     import tomllib
 
-    info = WasiInfo()
+    info = WasiInfo(R2P_DIR, sys.version, os.environ)
     _make_wasm(session, info, "prepare")
 
     with (info.cpython_dir / "Platforms/WASI/config.toml").open("rb") as config_file:
@@ -602,12 +605,12 @@ def prepare_wasm(session: nox.Session):
 
 @nox.session(name="build-wasm", venv_backend="none")
 def build_wasm(session: nox.Session):
-    _make_wasm(session, WasiInfo())
+    _make_wasm(session, WasiInfo(R2P_DIR, sys.version, os.environ))
 
 
 @nox.session(name="test-wasm", venv_backend="none")
 def test_wasm(session: nox.Session):
-    info = WasiInfo()
+    info = WasiInfo(R2P_DIR, sys.version, os.environ)
 
     target = "wasm32-wasip1"
 
@@ -709,48 +712,14 @@ def test_cross_compilation_windows(session: nox.Session):
 
 @nox.session(venv_backend="none")
 def docs(session: nox.Session, nightly: bool = False, internal: bool = False) -> None:
-    rustdoc_flags = ["-Dwarnings"]
-    toolchain_flags = []
-    cargo_flags = []
-
-    nightly = nightly or ("nightly" in session.posargs)
-    internal = internal or ("internal" in session.posargs)
-
-    if "open" in session.posargs:
-        cargo_flags.append("--open")
-
-    if nightly:
-        rustdoc_flags.append("--cfg docsrs")
-        toolchain_flags.append("+nightly")
-        cargo_flags.extend(["-Z", "unstable-options", "-Z", "rustdoc-scrape-examples"])
-
-    if internal:
-        rustdoc_flags.append("--Z unstable-options")
-        rustdoc_flags.append("--document-hidden-items")
-        rustdoc_flags.extend(
-            ("--html-after-content", "infrastructure/netlify/internal_banner.html")
-        )
-        cargo_flags.append("--document-private-items")
-    else:
-        cargo_flags.extend(["--exclude=r2p-macros", "--exclude=r2p-macros-backend"])
-
-    rustdoc_flags.append(session.env.get("RUSTDOCFLAGS", ""))
-    session.env["RUSTDOCFLAGS"] = " ".join(rustdoc_flags)
-
-    features = "full"
-
-    shutil.rmtree(R2P_DOCS_TARGET, ignore_errors=True)
-    _run_cargo(
-        session,
-        *toolchain_flags,
-        "doc",
-        "--lib",
-        "--no-default-features",
-        f"--features={features}",
-        "--no-deps",
-        "--workspace",
-        *cargo_flags,
+    arguments, session.env["RUSTDOCFLAGS"] = rustdoc_arguments(
+        session.posargs,
+        session.env.get("RUSTDOCFLAGS", ""),
+        nightly=nightly,
+        internal=internal,
     )
+    shutil.rmtree(R2P_DOCS_TARGET, ignore_errors=True)
+    _run_cargo(session, *arguments)
 
 
 @nox.session(name="build-guide", venv_backend="none")
@@ -820,94 +789,12 @@ def build_netlify_site(session: nox.Session):
 
 
 def _build_netlify_redirects(preview: bool) -> None:
-    current_version = os.environ.get("R2P_VERSION")
-    site_url = os.environ.get("R2P_SITE_URL", "").rstrip("/")
-
-    with ExitStack() as stack:
-        redirects_file = stack.enter_context(open("netlify_build/_redirects", "w"))
-        headers_file = stack.enter_context(open("netlify_build/_headers", "w"))
-        for d in glob("netlify_build/v*"):
-            version = d.removeprefix("netlify_build/v")
-            redirects_file.write(f"/v{version}/doc/* /main/doc/:splat 302\n")
-
-            # for versions other than the current version, set noindex
-            if version != current_version:
-                headers_file.write(f"/v{version}/*\n  X-Robots-Tag: noindex\n")
-                continue
-
-            # for the current version, index all files and set canonical links where possible
-            for file in glob(f"{d}/**", recursive=True):
-                file_path = file.removeprefix("netlify_build")
-                url_path = _url_path_from_file_path(file_path)
-
-                for path in _url_and_file_paths(url_path, file_path):
-                    if site_url:
-                        headers_file.write(
-                            f'{path}\n  Link: <{site_url}{url_path}>; rel="canonical"\n'
-                        )
-
-        # main files should be indexed and canonical
-        for file in glob("netlify_build/main/**", recursive=True):
-            file_path = file.removeprefix("netlify_build")
-            url_path = _url_path_from_file_path(file_path)
-
-            for path in _url_and_file_paths(url_path, file_path):
-                if site_url:
-                    headers_file.write(
-                        f'{path}\n  Link: <{site_url}{url_path}>; rel="canonical"\n'
-                    )
-
-        # for internal docs, set noindex for all files
-        headers_file.write("/internal/*\n  X-Robots-Tag: noindex\n")
-
-        # Add latest redirect
-        if (
-            current_version is not None
-            and (Path("netlify_build") / f"v{current_version}").is_dir()
-        ):
-            redirects_file.write(f"/latest/* /v{current_version}/:splat 302\n")
-        else:
-            redirects_file.write("/latest/* /main/:splat 302\n")
-
-        # some backwards compatbiility redirects
-        redirects_file.write(
-            """\
-/latest/building_and_distribution/* /latest/building-and-distribution/:splat 302
-/latest/building_and_distribution/multiple_python_versions/* /latest/building-and-distribution/multiple-python-versions:splat 302
-/latest/function/error_handling/* /latest/function/error-handling/:splat 302
-/latest/getting_started/* /latest/getting-started/:splat 302
-/latest/python_from_rust/* /latest/python-from-rust/:splat 302
-/latest/python_typing_hints/* /latest/python-typing-hints/:splat 302
-/latest/trait_bounds/* /latest/trait-bounds/:splat 302
-"""
-        )
-
-        # Add landing page redirect
-        if preview or not (Path("netlify_build") / f"v{current_version}").is_dir():
-            redirects_file.write("/ /main/ 302\n")
-        else:
-            redirects_file.write(f"/ /v{current_version}/ 302\n")
-
-        # Add main doc redirect
-        redirects_file.write("/main/doc /main/doc/r2p")
-
-
-def _url_path_from_file_path(file_path: str) -> str:
-    """Removes index.html and/or .html suffix to match the page URL on the final netlify site"""
-    url_path = file_path
-    if url_path.endswith("index.html"):
-        url_path = url_path[: -len("index.html")]
-    elif url_path.endswith(".html"):
-        url_path = url_path[: -len(".html")]
-    return url_path
-
-
-def _url_and_file_paths(url_path: str, file_path: str) -> tuple[str, str]:
-    """Returns all combinations of url and file paths with and without index.html suffix"""
-    if url_path == file_path:
-        return (url_path,)
-    else:
-        return (url_path, file_path)
+    build_redirects(
+        Path("netlify_build"),
+        preview=preview,
+        version=os.environ.get("R2P_VERSION"),
+        site_url=os.environ.get("R2P_SITE_URL", ""),
+    )
 
 
 @nox.session(name="check-guide")
@@ -1308,7 +1195,7 @@ def check_changelog(session: nox.Session):
 
     issue_number = event["pull_request"]["number"]
 
-    newsfragments = R2P_DIR / "newsfragments"
+    newsfragments = R2P_DIR / "r2p-newsfragments"
 
     fragments = tuple(
         filter(
@@ -1322,9 +1209,9 @@ def check_changelog(session: nox.Session):
 
     if not fragments:
         session.error(
-            "Changelog entry not found, please add one (or more) to the `newsfragments` directory.\n"
+            "Changelog entry not found, please add one (or more) to the `r2p-newsfragments` directory.\n"
             "Alternatively, start the PR title with `docs:`, `refactor:`, or `internal:` if applicable.\n"
-            "See https://github.com/PyO3/pyo3/blob/main/Contributing.md#documenting-changes for more information."
+            "See https://github.com/jelven007/r2p/blob/main/r2p-newsfragments/README.md for more information."
         )
 
     print("Found newsfragments:")
@@ -1334,15 +1221,61 @@ def check_changelog(session: nox.Session):
 
 @nox.session(name="set-msrv-package-versions", venv_backend="none")
 def set_msrv_package_versions(session: nox.Session):
+    """Resolve dependencies in a retained snapshot; optional posargs are sessions."""
+    checkout = isolated_source(R2P_DIR, R2P_TARGET / "msrv")
+    session.log(f"MSRV source and locks retained at {checkout}")
+    evidence = {
+        "source": str(R2P_DIR),
+        "checkout": str(checkout),
+        "rust": list(_get_rust_info()),
+        "source_lock_sha256": digest(R2P_DIR / "Cargo.lock"),
+        "sessions": session.posargs,
+        "result": "failed",
+    }
+    try:
+        with session.chdir(checkout):
+            _prepare_msrv_package_versions(session, checkout)
+            if session.posargs:
+                _run(
+                    session,
+                    sys.executable,
+                    "-m",
+                    "nox",
+                    "-f",
+                    str(checkout / "noxfile.py"),
+                    "-s",
+                    *session.posargs,
+                    external=True,
+                )
+        evidence["result"] = "success"
+    finally:
+        evidence["locks"] = {
+            str(path.relative_to(checkout)): digest(path)
+            for path in checkout.rglob("Cargo.lock")
+            if "target" not in path.relative_to(checkout).parts
+        }
+        (checkout / "msrv-evidence.json").write_text(
+            json.dumps(evidence, indent=2) + "\n"
+        )
+        if digest(R2P_DIR / "Cargo.lock") != evidence["source_lock_sha256"]:
+            session.error("source Cargo.lock changed while preparing MSRV snapshot")
+    if session.posargs:
+        retained = compact_msrv_snapshot(checkout)
+        session.log(
+            f"Successful MSRV source cleaned; locks/evidence retained at {retained}"
+        )
+
+
+def _prepare_msrv_package_versions(session: nox.Session, checkout: Path) -> None:
     projects = (
-        R2P_DIR,
+        checkout,
         # Meson's backend stages local SDK packages and requires Rust >= 1.87.
         *(
-            Path(p).parent
-            for p in glob("examples/*/Cargo.toml")
-            if Path(p).parent.name != "meson-starter"
+            p.parent
+            for p in checkout.glob("examples/*/Cargo.toml")
+            if p.parent.name != "meson-starter"
         ),
-        *(Path(p).parent for p in glob("crates/r2p-ffi/examples/*/Cargo.toml")),
+        *(p.parent for p in checkout.glob("crates/r2p-ffi/examples/*/Cargo.toml")),
     )
 
     # run cargo update first to ensure that everything is at highest
@@ -1802,6 +1735,7 @@ def update_ui_tests(session: nox.Session):
 
 @nox.session(name="test-introspection")
 def test_introspection(session: nox.Session):
+    _run_cargo(session, "test", "-p", "r2p-introspection", "--locked")
     with tempfile.TemporaryDirectory() as stub_dir:
         session.install("maturin")
         session.install("ruff")
@@ -1855,26 +1789,7 @@ def _introspection_library_variants(
     session: nox.Session, lib_file: Path, work_dir: Path
 ) -> list[Path]:
     """Returns the built library and copies of it post-processed like release wheels can be."""
-    variants = [lib_file]
-
-    def variant(name: str, *command: str) -> None:
-        output = work_dir / f"{name}{lib_file.suffix}"
-        shutil.copy(lib_file, output)
-        session.run(*command, str(output), external=True)
-        variants.append(output)
-
-    if sys.platform == "linux":
-        # Removes .symtab: the introspection symbols are only left in .dynsym
-        variant("stripped", "strip", "--strip-all")
-    elif sys.platform == "darwin":
-        variant("stripped", "strip", "-x")
-        # Universal2 wheels contain a fat Mach-O binary
-        fat_file = work_dir / f"fat{lib_file.suffix}"
-        session.run(
-            "lipo", "-create", str(lib_file), "-output", str(fat_file), external=True
-        )
-        variants.append(fat_file)
-    return variants
+    return library_variants(session.run, lib_file, work_dir, sys.platform)
 
 
 def _ensure_directory_equals(expected_dir: Path, actual_dir: Path):
@@ -1937,50 +1852,17 @@ def _get_feature_sets(
     *,
     version: tuple[int, int] | None = None,
     free_threaded: bool = FREE_THREADED_BUILD,
-) -> tuple[str | None, ...]:
+) -> tuple[str, ...]:
     """Returns feature sets to use for Rust jobs"""
     if version is None:
         version = sys.version_info[:2]
 
-    cargo_target = os.getenv("CARGO_BUILD_TARGET", "")
-
-    required = ",".join(_REQUIRED_FOR_NO_STD) if _is_no_std() else ""
-
-    features = "full"
-
-    if "wasm32-wasip1" not in cargo_target:
-        # multiple-pymethods not supported on wasm
-        features += ",multiple-pymethods"
-
-    if is_rust_nightly():
-        features += ",nightly"
-
-    if free_threaded:
-        if version >= (3, 15):
-            return (
-                required,
-                f"abi3t,{required}",
-                f"{features},{required}",
-                f"abi3t,{features},{required}",
-            )
-        else:
-            return (required, f"{features},{required}")
-
-    # do fewer abi3t builds?
-    if version >= (3, 15):
-        return (
-            required,
-            f"abi3,{required}",
-            f"abi3t,{required}",
-            f"{features},{required}",
-            f"abi3,{features},{required}",
-            f"abi3t,{features},{required}",
-        )
-    return (
-        required,
-        f"abi3,{required}",
-        f"{features},{required}",
-        f"abi3,{features},{required}",
+    return feature_sets(
+        version=version,
+        free_threaded=free_threaded,
+        cargo_target=os.getenv("CARGO_BUILD_TARGET", ""),
+        nightly=is_rust_nightly(),
+        required=tuple(_REQUIRED_FOR_NO_STD) if _is_no_std() else (),
     )
 
 

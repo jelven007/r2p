@@ -22,6 +22,10 @@ AI 辅助生成内容仍由贡献者核验源码、正确性和测试，不将�
 
 从根目录运行 `uv run --isolated --only-group nox nox -s fmt` 和受影响测试；完整命令、工具依赖和限制见开发指南。
 PR 描述包含问题、最终行为、需求编号、兼容影响、验证及回退方式。
+新增 r2p 发行片段使用 [r2p-newsfragments](r2p-newsfragments/README.md)，预览命令为 `uvx towncrier build --draft --config r2p-towncrier.toml`。
+继承的 PyO3 片段和 CHANGELOG 保留原来源，不将其问题编号改指本仓库。
+环境与运行证据按 [evidence.json](docs/testing/evidence.json) 登记，维护职责见[维护者清单](docs/governance/maintainers.toml)。
 
-贡献与复现/修复反馈通过 [r2p PR](https://github.com/jelven007/r2p/pulls) 提交；Issues 当前关闭，启用后使用仓库问题模板。
+复现和建议使用 [r2p 问题模板](https://github.com/jelven007/r2p/issues/new/choose)，修复通过 [r2p PR](https://github.com/jelven007/r2p/pulls) 提交并关联问题。
+可能敏感的报告先查看 [SECURITY.md](SECURITY.md) 的实际渠道状态。
 源码交付与两个历史版本依[发行方案](docs/releases/release-and-rollback.md)和[版本政策](docs/releases/version-policy.md)执行。

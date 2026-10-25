@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/PyO3/pyo3",
+  "observed_at": "2026-10-25",
+  "source_parent": "424149e8a1c42128b05a090941673008fc46c478",
+  "source_sha": "fda3c5846d30042c9352885f415435c06f2e4985",
+  "source_patch_sha256": "abafb1bed41840b8f4424917db4b8996d9338720379b48b120764e0d3e1cc495",
+  "r2p_before": "25bf6fde2c074b0fd54804ffa4e16cc74462145d",
+  "owner": "jelven007",
+  "scope": "The single upstream commit after the retained baseline updates Actions dependencies; no new SDK runtime fix was available at observation time.",
+  "conflict_policy": "Replay original patch first; replace only verified pins where local CI layout prevents contextual application. Preserve CI selection, disabled uploads and publication switches.",
+  "replaced_local_patches": [],
+  "changes": [
+    {
+      "old": "taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27",
+      "new": "taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2.87.28",
+      "files": {
+        ".github/workflows/benches.yml": 1,
+        ".github/workflows/ci.yml": 5,
+        ".github/workflows/netlify-build.yml": 1
+      },
+      "decision": "Include the two additional r2p installer uses introduced by CI layering."
+    },
+    {
+      "old": "CodSpeedHQ/action@f842b9a3ffe213dbb81768fd7f7eeb4dfcf1c369 # v5.4.2",
+      "new": "CodSpeedHQ/action@821a40cd6c80e3cfe387caf55668287addd808da # v5.5.0",
+      "files": {
+        ".github/workflows/benches.yml": 1
+      },
+      "decision": "Keep simulation and CODSPEED_SKIP_UPLOAD configuration."
+    },
+    {
+      "old": "# Runner v5.4.2 supports this flag; keep collecting measurements when",
+      "new": "# The pinned runner supports this flag; keep collecting measurements when",
+      "files": {
+        ".github/workflows/benches.yml": 1
+      },
+      "decision": "Update the local explanation of the upload switch."
+    }
+  ],
+  "patch_owners": {
+    "identity-and-layout": "jelven007",
+    "packaging-adapters": "jelven007",
+    "local-functionality-and-engineering": "jelven007",
+    "documentation-and-assets": "jelven007"
+  }
+}

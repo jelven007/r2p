@@ -1,22 +1,22 @@
-use codspeed_criterion_compat::{criterion_group, criterion_main, Criterion};
+use codspeed_criterion_compat::{Criterion, criterion_group, criterion_main};
 
-// Attaching drains the deferred-decref pool behind a process-global mutex, which serializes
-// attaches across threads.
+// A dirty deferred-decref pool is drained behind a process-global mutex.
+// The empty pool uses the dirty flag fast path without locking.
 #[cfg(Py_GIL_DISABLED)]
 mod scaling {
     use codspeed_criterion_compat::{BenchmarkId, Criterion, Throughput};
 
     use std::sync::{
+        Arc,
         atomic::{AtomicBool, Ordering},
         mpsc::channel,
-        Arc,
     };
-    use std::thread::{sleep, spawn, JoinHandle};
+    use std::thread::{JoinHandle, sleep, spawn};
     use std::time::{Duration, Instant};
 
     use r2p::prelude::*;
 
-    const THREADS: [usize; 3] = [1, 2, 4];
+    const THREADS: [usize; 4] = [1, 2, 4, 8];
 
     // Nested attaches, so that each iteration is a pool drain rather than a `PyGILState_Ensure`.
     fn bench_nested_attach(c: &mut Criterion, name: &str) {

@@ -1,0 +1,2422 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "actions-40112259362-120926350793",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-24.04-arm/arm64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350793",
+      "verified_at": "2026-10-24T16:51:06Z"
+    },
+    {
+      "id": "actions-40112259362-120926350798",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350798",
+      "verified_at": "2026-10-24T16:58:50Z"
+    },
+    {
+      "id": "actions-40112259362-120926350833",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "windows-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350833",
+      "verified_at": "2026-10-24T16:49:43Z"
+    },
+    {
+      "id": "actions-40112259362-120926350841",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.15 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350841",
+      "verified_at": "2026-10-24T16:54:21Z"
+    },
+    {
+      "id": "actions-40112259362-120926350872",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14t (patch version in logs)",
+      "gil": "disabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350872",
+      "verified_at": "2026-10-24T16:48:51Z"
+    },
+    {
+      "id": "actions-40112259362-120926350886",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "windows-latest/x86",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350886",
+      "verified_at": "2026-10-24T16:58:15Z"
+    },
+    {
+      "id": "actions-40112259362-120926350891",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "windows-11-arm/arm64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350891",
+      "verified_at": "2026-10-24T16:56:44Z"
+    },
+    {
+      "id": "actions-40112259362-120926350892",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.15t (patch version in logs)",
+      "gil": "disabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350892",
+      "verified_at": "2026-10-24T16:59:30Z"
+    },
+    {
+      "id": "actions-40112259362-120926350893",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "macos-latest/arm64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350893",
+      "verified_at": "2026-10-24T16:48:27Z"
+    },
+    {
+      "id": "actions-40112259362-120926350914",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "nightly (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350914",
+      "verified_at": "2026-10-24T16:58:53Z"
+    },
+    {
+      "id": "candidate-9bdbaeba-abi3",
+      "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "candidate_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "consumer_template_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "tool_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "abi3",
+      "features": [
+        "abi3-py39"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/candidate-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T02:03:19.399808+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "72aef754b323f9bebe7e4daef3c964ea8098b24836b8a3f0387fe573165a67f0",
+        "embedding-candidate.lock": "3d7cf0af7926635d0daaaf009ecc434736679d1c06852da34ff7247e438dae6f",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "978cb7b552370dbd607e1a16f0944ad85ae10b4fef49e86c085f979d9aa4053f",
+      "data": "docs/testing/data/candidate-2026-10-25.json",
+      "artifacts": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "dcce6c61d3b2950e7c8a0851207e45494574a719c2b91eef2c661ac87f2f7ad7",
+          "bytes": 43451,
+          "path": "candidate/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "88c970fc91b4ea0f488403f42bd75ac975df031feb2d8265b3a0edf2ffffa960",
+          "bytes": 97132,
+          "path": "candidate/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "8bc62a2a2b8cbe8590b5023004c31a71cb3c058735dc7571dd1f82114a4a5e0c",
+          "bytes": 93342,
+          "path": "candidate/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "c7cbbdfd398b8e7e6c9415a66265879c901be8be35beaea445e3560d10089d27",
+          "bytes": 8499,
+          "path": "candidate/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "4da30a2cd3752f09d2abbe205cbcff59ab5b32a9e1a2c863ad418873d8fdf0cf",
+          "bytes": 1339197,
+          "path": "candidate/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "51c2f103dd6cb238a1ddfd2baef10b52b0fc4afa505d7b62d556c049898c171e",
+          "bytes": 26960,
+          "path": "candidate/r2p-introspection-0.30.0.crate"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "f21794de37560bc96c708346aadc1ab2e1b56cd7ee7ed59b836f673672848cf4",
+          "bytes": 234492,
+          "path": "candidate/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "5feecde6690a4190a605afaf3dc910cb26736a940af015b22972d8de2cf65da4",
+          "bytes": 241793,
+          "path": "candidate/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "2cedcf61629001443c973c99951d88f68a2adcfa56027219842933be14774ae8",
+          "bytes": 643591,
+          "path": "candidate/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        }
+      ]
+    },
+    {
+      "id": "candidate-9bdbaeba-cli",
+      "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "candidate_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "consumer_template_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "tool_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "cli",
+      "features": [
+        "introspection"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/candidate-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T02:03:19.399808+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "72aef754b323f9bebe7e4daef3c964ea8098b24836b8a3f0387fe573165a67f0",
+        "embedding-candidate.lock": "3d7cf0af7926635d0daaaf009ecc434736679d1c06852da34ff7247e438dae6f",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "978cb7b552370dbd607e1a16f0944ad85ae10b4fef49e86c085f979d9aa4053f",
+      "data": "docs/testing/data/candidate-2026-10-25.json",
+      "artifacts": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "dcce6c61d3b2950e7c8a0851207e45494574a719c2b91eef2c661ac87f2f7ad7",
+          "bytes": 43451,
+          "path": "candidate/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "88c970fc91b4ea0f488403f42bd75ac975df031feb2d8265b3a0edf2ffffa960",
+          "bytes": 97132,
+          "path": "candidate/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "8bc62a2a2b8cbe8590b5023004c31a71cb3c058735dc7571dd1f82114a4a5e0c",
+          "bytes": 93342,
+          "path": "candidate/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "c7cbbdfd398b8e7e6c9415a66265879c901be8be35beaea445e3560d10089d27",
+          "bytes": 8499,
+          "path": "candidate/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "4da30a2cd3752f09d2abbe205cbcff59ab5b32a9e1a2c863ad418873d8fdf0cf",
+          "bytes": 1339197,
+          "path": "candidate/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "51c2f103dd6cb238a1ddfd2baef10b52b0fc4afa505d7b62d556c049898c171e",
+          "bytes": 26960,
+          "path": "candidate/r2p-introspection-0.30.0.crate"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "f21794de37560bc96c708346aadc1ab2e1b56cd7ee7ed59b836f673672848cf4",
+          "bytes": 234492,
+          "path": "candidate/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "5feecde6690a4190a605afaf3dc910cb26736a940af015b22972d8de2cf65da4",
+          "bytes": 241793,
+          "path": "candidate/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "2cedcf61629001443c973c99951d88f68a2adcfa56027219842933be14774ae8",
+          "bytes": 643591,
+          "path": "candidate/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        }
+      ]
+    },
+    {
+      "id": "candidate-9bdbaeba-embedding",
+      "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "candidate_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "consumer_template_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "tool_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "embedding",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/candidate-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T02:03:19.399808+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "72aef754b323f9bebe7e4daef3c964ea8098b24836b8a3f0387fe573165a67f0",
+        "embedding-candidate.lock": "3d7cf0af7926635d0daaaf009ecc434736679d1c06852da34ff7247e438dae6f",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "978cb7b552370dbd607e1a16f0944ad85ae10b4fef49e86c085f979d9aa4053f",
+      "data": "docs/testing/data/candidate-2026-10-25.json",
+      "artifacts": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "dcce6c61d3b2950e7c8a0851207e45494574a719c2b91eef2c661ac87f2f7ad7",
+          "bytes": 43451,
+          "path": "candidate/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "88c970fc91b4ea0f488403f42bd75ac975df031feb2d8265b3a0edf2ffffa960",
+          "bytes": 97132,
+          "path": "candidate/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "8bc62a2a2b8cbe8590b5023004c31a71cb3c058735dc7571dd1f82114a4a5e0c",
+          "bytes": 93342,
+          "path": "candidate/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "c7cbbdfd398b8e7e6c9415a66265879c901be8be35beaea445e3560d10089d27",
+          "bytes": 8499,
+          "path": "candidate/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "4da30a2cd3752f09d2abbe205cbcff59ab5b32a9e1a2c863ad418873d8fdf0cf",
+          "bytes": 1339197,
+          "path": "candidate/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "51c2f103dd6cb238a1ddfd2baef10b52b0fc4afa505d7b62d556c049898c171e",
+          "bytes": 26960,
+          "path": "candidate/r2p-introspection-0.30.0.crate"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "f21794de37560bc96c708346aadc1ab2e1b56cd7ee7ed59b836f673672848cf4",
+          "bytes": 234492,
+          "path": "candidate/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "5feecde6690a4190a605afaf3dc910cb26736a940af015b22972d8de2cf65da4",
+          "bytes": 241793,
+          "path": "candidate/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "2cedcf61629001443c973c99951d88f68a2adcfa56027219842933be14774ae8",
+          "bytes": 643591,
+          "path": "candidate/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        }
+      ]
+    },
+    {
+      "id": "candidate-9bdbaeba-native",
+      "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "candidate_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "consumer_template_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "tool_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/candidate-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T02:03:19.399808+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "72aef754b323f9bebe7e4daef3c964ea8098b24836b8a3f0387fe573165a67f0",
+        "embedding-candidate.lock": "3d7cf0af7926635d0daaaf009ecc434736679d1c06852da34ff7247e438dae6f",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "978cb7b552370dbd607e1a16f0944ad85ae10b4fef49e86c085f979d9aa4053f",
+      "data": "docs/testing/data/candidate-2026-10-25.json",
+      "artifacts": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "dcce6c61d3b2950e7c8a0851207e45494574a719c2b91eef2c661ac87f2f7ad7",
+          "bytes": 43451,
+          "path": "candidate/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "88c970fc91b4ea0f488403f42bd75ac975df031feb2d8265b3a0edf2ffffa960",
+          "bytes": 97132,
+          "path": "candidate/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "8bc62a2a2b8cbe8590b5023004c31a71cb3c058735dc7571dd1f82114a4a5e0c",
+          "bytes": 93342,
+          "path": "candidate/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "c7cbbdfd398b8e7e6c9415a66265879c901be8be35beaea445e3560d10089d27",
+          "bytes": 8499,
+          "path": "candidate/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "4da30a2cd3752f09d2abbe205cbcff59ab5b32a9e1a2c863ad418873d8fdf0cf",
+          "bytes": 1339197,
+          "path": "candidate/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "51c2f103dd6cb238a1ddfd2baef10b52b0fc4afa505d7b62d556c049898c171e",
+          "bytes": 26960,
+          "path": "candidate/r2p-introspection-0.30.0.crate"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "f21794de37560bc96c708346aadc1ab2e1b56cd7ee7ed59b836f673672848cf4",
+          "bytes": 234492,
+          "path": "candidate/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "5feecde6690a4190a605afaf3dc910cb26736a940af015b22972d8de2cf65da4",
+          "bytes": 241793,
+          "path": "candidate/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "2cedcf61629001443c973c99951d88f68a2adcfa56027219842933be14774ae8",
+          "bytes": 643591,
+          "path": "candidate/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        }
+      ]
+    },
+    {
+      "id": "candidate-9bdbaeba-restoration",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "candidate_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "consumer_template_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "tool_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "restoration",
+      "features": [
+        "retained baseline",
+        "native",
+        "abi3",
+        "CLI"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/candidate-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T02:03:19.399808+00:00",
+      "lock_sha256": {
+        "extension-baseline.lock": "ecef6fa6df828f94a771832c77a17b44d6dedd1a42e2922a241b1da10815e0c5",
+        "embedding-baseline.lock": "8c5554c02b80061d3d8e866a3133f7cf59c28408d2fa178efcb9d9367a83e8eb",
+        "cli-baseline.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "978cb7b552370dbd607e1a16f0944ad85ae10b4fef49e86c085f979d9aa4053f",
+      "data": "docs/testing/data/candidate-2026-10-25.json",
+      "artifacts": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "da0f97281a08b8ad7036f40cfc09dc852659d26a1f8d9aaf35ee23e3e1a1cbe8",
+          "bytes": 42962,
+          "path": "baseline/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "08c7fd7a6d8bcb01ddcb69fce8a4937b396d1d22fd9922a39a057f0ff0ac2454",
+          "bytes": 97133,
+          "path": "baseline/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "0ca658238c635573914b913d582c7f157d7196d30f7105c8a7bd395699e0df4f",
+          "bytes": 93342,
+          "path": "baseline/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "058412945a77763f8162dd986001c0b1b8e492c79d6fbeadd86750138f1b95ec",
+          "bytes": 8500,
+          "path": "baseline/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "3e94ac7696bcab85b5feb54b21da08b59259d26793917852772df6d27834ce1d",
+          "bytes": 1336652,
+          "path": "baseline/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "199260c363a01c1142a46613f813cd8918f237964cb357dc6cc5fcaa47e9edda",
+          "bytes": 23089,
+          "path": "baseline/r2p-introspection-0.30.0.crate"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "d079b90030981e2c88c385234aed68310e102b177d96951e7667c0a2afc8c557",
+          "bytes": 234468,
+          "path": "baseline/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "4838f12082c5fb5d5a0f67278acb4a63aa2fd879426999b7ac8bdc8e34b1ee1e",
+          "bytes": 241799,
+          "path": "baseline/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "7f42bda2c1318dbe21128b16b03004d6d4903e55d09a153c947e15171c907772",
+          "bytes": 624699,
+          "path": "baseline/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        }
+      ]
+    },
+    {
+      "id": "ci-40112259362",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "Actions workflow aggregate",
+      "rust": "job-specific",
+      "python": "job-specific",
+      "gil": "not-applicable",
+      "abi": "job-specific",
+      "features": [
+        "selected jobs"
+      ],
+      "commands": [
+        "Actions CI / 40112259362"
+      ],
+      "result": "success",
+      "level": "check",
+      "skip_reason": "",
+      "limitations": "aggregate check is not a new interpreter/ABI behavior result",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362",
+      "verified_at": "2026-10-24T16:59:37Z"
+    },
+    {
+      "id": "consumer-3a24917e-2026-10-24-abi3",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "3.14.9",
+      "gil": "enabled",
+      "abi": "abi3",
+      "features": [
+        "abi3-py39"
+      ],
+      "commands": [
+        "python -m tools.consumer_smoke --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "SDK pinned to committed SHA; consumer templates were worktree changes at generator_sha; only recorded interpreter/target ran, wheel tags do not prove others",
+      "generator_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "artifacts": [
+        {
+          "path": "meson-starter.lock",
+          "sha256": "f87c810ae706cd2e2a2a7a7d51e852da49ad46f703a83afbd9956f88e4e222a6",
+          "size": 3331
+        },
+        {
+          "path": "setuptools-rust-starter.lock",
+          "sha256": "583513a98ce251ba001d0b66a46f1185fd55343b7be4543efb9ed944bb814ff9",
+          "size": 3341
+        },
+        {
+          "path": "word-count.lock",
+          "sha256": "9a903ee7caddaab646d33d4d868a73e70174d8f7de2ae14518404ac7b38294c1",
+          "size": 4809
+        },
+        {
+          "path": "decorator.lock",
+          "sha256": "165f6bf485fe4651c2df1738d0a98b4fdb0076859f99c99eb27f3bbfeac2f037",
+          "size": 3421
+        },
+        {
+          "path": "sequential.lock",
+          "sha256": "5e106364066e6c87d1f4f4aad042cb8f1d3b4c0965f5d663d1208f563cdb7801",
+          "size": 1130
+        },
+        {
+          "path": "plugin.lock",
+          "sha256": "60eb8d5367416fdadb7b2d93d3574f305452eed0dde3cc846524cfdcf6ff6a54",
+          "size": 3511
+        },
+        {
+          "path": "getitem.lock",
+          "sha256": "98b73892f2f3f8e08ad2a602a6b85c9c72a5b370727ee969d9286a471d395b5a",
+          "size": 3419
+        },
+        {
+          "path": "maturin-starter.lock",
+          "sha256": "23c4252c874be65b66b3ef8155289d5cbffd5da3a67576741797fc710312ed1b",
+          "size": 3427
+        },
+        {
+          "path": "string-sum.lock",
+          "sha256": "26ed5e6662337d0a95ed0bae4e8726ef80623c8356755709499f9776d57e4b98",
+          "size": 1130
+        },
+        {
+          "path": "native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "sha256": "d19a33751d555784937c4d0eae4c83b6e2a02074ef40bf8ca36c3fbdfa08c3ce",
+          "size": 234305
+        },
+        {
+          "path": "sdist/maturin_starter-0.1.0.tar.gz",
+          "sha256": "8ccd18e8e6cc0276101e258df2875b3b677941f9f2bc29e8737837bdd46ad919",
+          "size": 8012
+        },
+        {
+          "path": "abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "sha256": "a7521ef3cada6fe2c2b0c054a1319bd242b633151eeb45a452e597db1644b45d",
+          "size": 241603
+        }
+      ],
+      "log": "docs/testing/reports/consumer-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:24:33.573352+00:00"
+    },
+    {
+      "id": "consumer-3a24917e-2026-10-24-embedding",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "3.14.9",
+      "gil": "enabled",
+      "abi": "embedding",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.consumer_smoke --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "SDK pinned to committed SHA; consumer templates were worktree changes at generator_sha; only recorded interpreter/target ran, wheel tags do not prove others",
+      "generator_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "artifacts": [
+        {
+          "path": "meson-starter.lock",
+          "sha256": "f87c810ae706cd2e2a2a7a7d51e852da49ad46f703a83afbd9956f88e4e222a6",
+          "size": 3331
+        },
+        {
+          "path": "setuptools-rust-starter.lock",
+          "sha256": "583513a98ce251ba001d0b66a46f1185fd55343b7be4543efb9ed944bb814ff9",
+          "size": 3341
+        },
+        {
+          "path": "word-count.lock",
+          "sha256": "9a903ee7caddaab646d33d4d868a73e70174d8f7de2ae14518404ac7b38294c1",
+          "size": 4809
+        },
+        {
+          "path": "decorator.lock",
+          "sha256": "165f6bf485fe4651c2df1738d0a98b4fdb0076859f99c99eb27f3bbfeac2f037",
+          "size": 3421
+        },
+        {
+          "path": "sequential.lock",
+          "sha256": "5e106364066e6c87d1f4f4aad042cb8f1d3b4c0965f5d663d1208f563cdb7801",
+          "size": 1130
+        },
+        {
+          "path": "plugin.lock",
+          "sha256": "60eb8d5367416fdadb7b2d93d3574f305452eed0dde3cc846524cfdcf6ff6a54",
+          "size": 3511
+        },
+        {
+          "path": "getitem.lock",
+          "sha256": "98b73892f2f3f8e08ad2a602a6b85c9c72a5b370727ee969d9286a471d395b5a",
+          "size": 3419
+        },
+        {
+          "path": "maturin-starter.lock",
+          "sha256": "23c4252c874be65b66b3ef8155289d5cbffd5da3a67576741797fc710312ed1b",
+          "size": 3427
+        },
+        {
+          "path": "string-sum.lock",
+          "sha256": "26ed5e6662337d0a95ed0bae4e8726ef80623c8356755709499f9776d57e4b98",
+          "size": 1130
+        },
+        {
+          "path": "native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "sha256": "d19a33751d555784937c4d0eae4c83b6e2a02074ef40bf8ca36c3fbdfa08c3ce",
+          "size": 234305
+        },
+        {
+          "path": "sdist/maturin_starter-0.1.0.tar.gz",
+          "sha256": "8ccd18e8e6cc0276101e258df2875b3b677941f9f2bc29e8737837bdd46ad919",
+          "size": 8012
+        },
+        {
+          "path": "abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "sha256": "a7521ef3cada6fe2c2b0c054a1319bd242b633151eeb45a452e597db1644b45d",
+          "size": 241603
+        }
+      ],
+      "log": "docs/testing/reports/consumer-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:24:33.573352+00:00"
+    },
+    {
+      "id": "consumer-3a24917e-2026-10-24-native",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.consumer_smoke --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "SDK pinned to committed SHA; consumer templates were worktree changes at generator_sha; only recorded interpreter/target ran, wheel tags do not prove others",
+      "generator_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "artifacts": [
+        {
+          "path": "meson-starter.lock",
+          "sha256": "f87c810ae706cd2e2a2a7a7d51e852da49ad46f703a83afbd9956f88e4e222a6",
+          "size": 3331
+        },
+        {
+          "path": "setuptools-rust-starter.lock",
+          "sha256": "583513a98ce251ba001d0b66a46f1185fd55343b7be4543efb9ed944bb814ff9",
+          "size": 3341
+        },
+        {
+          "path": "word-count.lock",
+          "sha256": "9a903ee7caddaab646d33d4d868a73e70174d8f7de2ae14518404ac7b38294c1",
+          "size": 4809
+        },
+        {
+          "path": "decorator.lock",
+          "sha256": "165f6bf485fe4651c2df1738d0a98b4fdb0076859f99c99eb27f3bbfeac2f037",
+          "size": 3421
+        },
+        {
+          "path": "sequential.lock",
+          "sha256": "5e106364066e6c87d1f4f4aad042cb8f1d3b4c0965f5d663d1208f563cdb7801",
+          "size": 1130
+        },
+        {
+          "path": "plugin.lock",
+          "sha256": "60eb8d5367416fdadb7b2d93d3574f305452eed0dde3cc846524cfdcf6ff6a54",
+          "size": 3511
+        },
+        {
+          "path": "getitem.lock",
+          "sha256": "98b73892f2f3f8e08ad2a602a6b85c9c72a5b370727ee969d9286a471d395b5a",
+          "size": 3419
+        },
+        {
+          "path": "maturin-starter.lock",
+          "sha256": "23c4252c874be65b66b3ef8155289d5cbffd5da3a67576741797fc710312ed1b",
+          "size": 3427
+        },
+        {
+          "path": "string-sum.lock",
+          "sha256": "26ed5e6662337d0a95ed0bae4e8726ef80623c8356755709499f9776d57e4b98",
+          "size": 1130
+        },
+        {
+          "path": "native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "sha256": "d19a33751d555784937c4d0eae4c83b6e2a02074ef40bf8ca36c3fbdfa08c3ce",
+          "size": 234305
+        },
+        {
+          "path": "sdist/maturin_starter-0.1.0.tar.gz",
+          "sha256": "8ccd18e8e6cc0276101e258df2875b3b677941f9f2bc29e8737837bdd46ad919",
+          "size": 8012
+        },
+        {
+          "path": "abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "sha256": "a7521ef3cada6fe2c2b0c054a1319bd242b633151eeb45a452e597db1644b45d",
+          "size": 241603
+        }
+      ],
+      "log": "docs/testing/reports/consumer-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:24:33.573352+00:00"
+    },
+    {
+      "id": "environment-r02-ft-auto-import",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [
+          {
+            "name": "legacy_gil",
+            "result": "success",
+            "path": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/environment-r02-final/legacy_gil.cpython-314t-darwin.so",
+            "gil_before": false,
+            "gil_after": true
+          }
+        ],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-ft-off",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-ft-on",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-gil",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-import-failure",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [
+          {
+            "name": "r2p_missing_module_for_probe",
+            "result": "failure",
+            "error": "ModuleNotFoundError: No module named 'r2p_missing_module_for_probe'",
+            "gil_before": false,
+            "gil_after": false
+          }
+        ],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-install-failure",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "unrecorded",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "uv pip install --no-index r2p-missing-package-for-evidence"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "expected real offline installation failure; no SDK execution",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-legacy",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.9.6",
+      "gil": "unrecorded",
+      "python_environment": {
+        "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9",
+        "implementation": "cpython",
+        "version": [
+          3,
+          9,
+          6
+        ],
+        "free_threaded": false,
+        "gil_enabled": null,
+        "platform": "macosx-10.9-universal2",
+        "base_prefix": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9",
+        "modules": [],
+        "gil_after_imports": null
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "failure-ci-40150316493-engineering-install",
+      "source_sha": "d874da8e66ff30a133bb6d659354f09b29b6608c",
+      "source_state": "committed",
+      "target": "Ubuntu x64",
+      "rust": "unrecorded",
+      "python": "unrecorded",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "not exercised",
+      "features": [
+        "not exercised"
+      ],
+      "commands": [
+        "Install actionlint"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "actual saved CI setup failure; no SDK execution or new remote verification; source is the actual logged checkout",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "data": "docs/testing/data/ci-failures-2026-10-25.json",
+      "verified_at": "2026-10-25T01:22:04.4366262+00:00"
+    },
+    {
+      "id": "failure-ci-40150316493-graalpy-binding",
+      "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "source_state": "committed",
+      "target": "Windows x64",
+      "rust": "unrecorded",
+      "python": "unrecorded",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "not exercised",
+      "features": [
+        "not exercised"
+      ],
+      "commands": [
+        "Bind selected interpreter"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "actual saved CI setup failure; no SDK execution or new remote verification; source is the actual logged checkout",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "data": "docs/testing/data/ci-failures-2026-10-25.json",
+      "verified_at": "2026-10-25T01:48:31.4691884+00:00"
+    },
+    {
+      "id": "local-docs-20261025",
+      "source_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "full"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s docs build-guide"
+      ],
+      "result": "success",
+      "level": "check",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report",
+      "log": "docs/testing/reports/ci-policy-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:55:53.234728+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      }
+    },
+    {
+      "id": "local-full-20261025",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "abi3",
+        "abi3-py39",
+        "strict-ui"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s test-rust"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report",
+      "log": "docs/testing/reports/tooling-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:15:23.141757+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      }
+    },
+    {
+      "id": "local-introspection-boundaries-20261025",
+      "source_sha": "36e76e56807c327c3840905feff8d77902667725",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "experimental-inspect",
+        "experimental-async",
+        "full (lifecycle tests)"
+      ],
+      "commands": [
+        "cargo test -p r2p-introspection --locked",
+        "cargo clippy -p r2p-introspection --all-targets --locked -- -D warnings",
+        "python tools/dev.py -- -r -s test-introspection",
+        "cargo test -p r2p --locked --features full --lib internal::state::tests",
+        "cargo test -p r2p --locked --features full --test test_gc --test test_exceptions --test test_init_race --test test_pybuffer_drop_without_interpreter --test test_pyerr_debug_unformattable"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "24 parser/stub unit tests, 4096 bounded mutations, three Mach-O forms, 16 Python stub tests and 43 lifecycle/GC/exception tests; two existing stub skips; final ELF/PE/free-threaded CI pending",
+      "log": "docs/testing/reports/introspection-boundaries-2026-10-25.md",
+      "verified_at": "2026-10-25T00:18:09.014833+00:00"
+    },
+    {
+      "id": "local-msrv-20261025",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.85.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "simulated-interpreters"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s set-msrv-package-versions -- check-all"
+      ],
+      "result": "success",
+      "level": "compiled",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report",
+      "log": "docs/testing/reports/tooling-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:16:45.784977+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      }
+    },
+    {
+      "id": "local-pypy-bound-20261025",
+      "source_sha": "25bf6fde2c074b0fd54804ffa4e16cc74462145d",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "PyPy 3.12.15 (tool CPython 3.14.9)",
+      "gil": "enabled",
+      "abi": "abi3 targeting PyPy 3.12",
+      "features": [
+        "abi3",
+        "no-default-features"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <PyPy> -- -s test-rust -- scope=abi skip-full"
+      ],
+      "result": "success",
+      "level": "compiled",
+      "limitations": "five test executables compiled with --no-run; PyPy cannot run standalone embedding tests; Windows and extension behavior pending final CI",
+      "log": "docs/testing/reports/ci-interpreter-binding-2026-10-25.md",
+      "verified_at": "2026-10-25T00:21:26.813326+00:00"
+    },
+    {
+      "id": "local-upstream-replay-20261025",
+      "source_sha": "25bf6fde2c074b0fd54804ffa4e16cc74462145d",
+      "source_state": "worktree-changes",
+      "target": "isolated Git checkout on macOS arm64",
+      "rust": "not-applicable (workflow patch)",
+      "python": "CPython 3.14.9",
+      "gil": "not-applicable",
+      "abi": "not-applicable",
+      "features": [
+        "tooling-only"
+      ],
+      "commands": [
+        "python tools/upstream_sync.py --patch upstream.patch --output target/upstream-replay"
+      ],
+      "result": "success",
+      "level": "check",
+      "limitations": "real upstream fda3c584 Action update, contextual conflicts and exact mapped replay; 1166 path-level differences; no runtime fix or SDK upgrade; remote installers/simulation pending",
+      "log": "docs/testing/reports/upstream-sync-2026-10-25.md",
+      "verified_at": "2026-10-25T00:28:26.793522+00:00"
+    },
+    {
+      "id": "performance-calibration-free-threaded-20261025",
+      "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "disabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "fixed_total",
+        "fixed_per_thread",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode free-threaded"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "Warm local dependency cache, offline native release builds. ABBA order and untimed thread initialization; no CPU pinning or exclusive machine. CV>10% is an investigation signal, not a release gate. Synthetic embedding workload, not external adoption; no calibrated 5% gate. Build peak RSS is largest child, not simultaneous memory.",
+      "log": "docs/testing/reports/performance-calibration-2026-10-25.md",
+      "verified_at": "2026-10-25T05:05:53.879078+00:00",
+      "lock_sha256": {
+        "free-threaded-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "free-threaded-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "2b1b4d83968050a331af90bbf546602cc886064f7d267859038f8089f4033284"
+      },
+      "data": "docs/testing/data/performance-calibration-2026-10-25.json"
+    },
+    {
+      "id": "performance-calibration-gil-20261025",
+      "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "fixed_total",
+        "fixed_per_thread",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode gil"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "Warm local dependency cache, offline native release builds. ABBA order and untimed thread initialization; no CPU pinning or exclusive machine. CV>10% is an investigation signal, not a release gate. Synthetic embedding workload, not external adoption; no calibrated 5% gate. Build peak RSS is largest child, not simultaneous memory.",
+      "log": "docs/testing/reports/performance-calibration-2026-10-25.md",
+      "verified_at": "2026-10-25T04:59:04.464941+00:00",
+      "lock_sha256": {
+        "gil-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "gil-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "2b1b4d83968050a331af90bbf546602cc886064f7d267859038f8089f4033284"
+      },
+      "data": "docs/testing/data/performance-calibration-2026-10-25.json"
+    },
+    {
+      "id": "performance-free-threaded-20261025",
+      "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "disabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "full-sdk build profile",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode free-threaded"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "102 walltime and 27 build samples per mode; three processes cannot establish P95 or a 5% gate; noisy free-threaded scaling is not an optimization claim",
+      "log": "docs/testing/reports/performance-baseline-2026-10-25.md",
+      "verified_at": "2026-10-25T01:47:34.346524+00:00",
+      "lock_sha256": {
+        "free-threaded-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "free-threaded-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "69e6e0024b4487861a42048a175d7ef4879e9dd60e37dfa41b59f80f5336826c"
+      },
+      "data": "docs/testing/data/performance-2026-10-25.json"
+    },
+    {
+      "id": "performance-gil-20261025",
+      "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "full-sdk build profile",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode gil"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "102 walltime and 27 build samples per mode; three processes cannot establish P95 or a 5% gate; noisy free-threaded scaling is not an optimization claim",
+      "log": "docs/testing/reports/performance-baseline-2026-10-25.md",
+      "verified_at": "2026-10-25T01:34:10.335936+00:00",
+      "lock_sha256": {
+        "gil-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "gil-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "69e6e0024b4487861a42048a175d7ef4879e9dd60e37dfa41b59f80f5336826c"
+      },
+      "data": "docs/testing/data/performance-2026-10-25.json"
+    },
+    {
+      "id": "upstream-runtime-gc-replay-20261025",
+      "source_sha": "31e4f820db74b8992a378d476fcf266d925ee9e7",
+      "source_state": "committed",
+      "target": "macosx-11.0-arm64",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "macros",
+        "controlled GC lookup reversal/replay"
+      ],
+      "commands": [
+        "python -m tools.upstream_runtime --sha <recorded SHA> --target-python <CPython 3.14> --output <new directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "limitations": "controlled reversal/replay of type-data lookup delta from inherited #6453; preserves GC guard/dependencies; no new upstream runtime update; #6404 finalization negative not reproduced; no complete remote matrix",
+      "log": "docs/testing/reports/upstream-runtime-2026-10-25.md",
+      "verified_at": "2026-10-25T05:37:13.639413+00:00",
+      "data": "docs/testing/data/upstream-runtime-2026-10-25.json",
+      "upstream_sha": "5619fedbca3ad1baca82869b57df54afd0432a0b",
+      "mapped_patch_sha256": "81cb50a1f9d70361d9c5c9d6f162e0b1d4ba42c61b9ec948ac054acdf2d4ffae"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-abi3",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "gil_after_imports": true
+      },
+      "abi": "abi3",
+      "features": [
+        "abi3-py39"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-cli",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "cli",
+      "features": [
+        "introspection"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-embedding",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "embedding",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-native",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "gil_after_imports": true
+      },
+      "abi": "native",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-restoration",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "restoration",
+      "features": [
+        "retained baseline",
+        "native",
+        "abi3",
+        "CLI"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-baseline.lock": "ecef6fa6df828f94a771832c77a17b44d6dedd1a42e2922a241b1da10815e0c5",
+        "embedding-baseline.lock": "8c5554c02b80061d3d8e866a3133f7cf59c28408d2fa178efcb9d9367a83e8eb",
+        "cli-baseline.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-cli-wheel",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macos-aarch64",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9 launcher; CLI is a native executable",
+      "gil": "not-applicable",
+      "abi": "py3-none-macosx_11_0_arm64",
+      "features": [
+        "introspection CLI"
+      ],
+      "commands": [
+        "python -m tools.cli_wheel_acceptance --sha <source> --dist <native wheel directory> --platform-id macos-aarch64"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "Only macos-aarch64 installed and executed; the seven-platform set check correctly rejects the remaining six absent acceptances.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:45:38.448706+00:00",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "artifact": {
+        "name": "r2p-introspection",
+        "version": "0.30.0",
+        "tags": [
+          "py3-none-macosx_11_0_arm64"
+        ],
+        "filename_tag": "py3-none-macosx_11_0_arm64",
+        "sha256": "ee6284a6622b561a15571b76bc5ff3c28f86829279487f4a86166a6eaa881e46",
+        "bytes": 643627,
+        "path": "r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl"
+      }
+    },
+    {
+      "id": "local-acceptance-b04b79e7-engineering",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "repository/evidence",
+        "72 tool regressions"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s repository-check"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:41:58.204870+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-ft-python",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "<workspace>/target/optimization/final-local-ft-nox-v2/a94a8fe5/bin/python",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [
+          {
+            "name": "r2p_pytests",
+            "result": "success",
+            "path": "<workspace>/target/optimization/final-local-ft-nox-v2/a94a8fe5/lib/python3.14t/site-packages/r2p_pytests/__init__.py",
+            "gil_before": false,
+            "gil_after": false
+          }
+        ],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "selected Python regressions",
+        "free-threaded"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -f tests/python/noxfile.py --envdir <workspace>/target/optimization/final-local-ft-nox-v2 -s test -- tests/test_finalization.py tests/test_pyclasses.py tests/test_exception.py"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "Native macOS arm64 CPython 3.14.9t; selected Python files only; observed GIL disabled before and after r2p_pytests import; no remote or abi3 inference.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:48:57.241024+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-ft-rust",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "core",
+        "macros",
+        "free-threaded"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s test-rust -- scope=core"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:51:48.009189+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-gil-rust",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "complete native/abi3 Rust scope"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s test-rust"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:46:42.669289+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-initial-cli-platform",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "local launcher; SDK not executed",
+      "rust": "unrecorded",
+      "python": "CPython 3.14.9 launcher",
+      "gil": "unrecorded",
+      "abi": "not-run",
+      "features": [
+        "launcher/argument admission"
+      ],
+      "commands": [
+        "python3.14 -m tools.cli_wheel_acceptance --sha b04b79e7130c9f7694962cb70a45585e276cf41a --dist <workspace>/target/optimization/final-local-cli-dist-20261025 --platform-id macos-arm64"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "Unsupported macos-arm64 ID rejected at argument parsing; corrected to policy ID macos-aarch64 before native acceptance.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:45:18.080044+00:00",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "raw_log": "target/optimization/final-local-cli-20261025.log",
+      "log_sha256": "7fe5cb1dd50bbb12fc51909cfb66362589faca512aa591c9c14f39e14aa94857"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-initial-launcher",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "local launcher; SDK not executed",
+      "rust": "unrecorded",
+      "python": "CPython 3.14.9 launcher",
+      "gil": "unrecorded",
+      "abi": "not-run",
+      "features": [
+        "launcher/argument admission"
+      ],
+      "commands": [
+        "PYTHON_GIL=0 python3.14 tools/dev.py --target-python <CPython 3.14.9t> --evidence target/optimization/final-local-ft-rust-20261025.json -- -s test-rust -- scope=core"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "Ordinary CPython received PYTHON_GIL=0 and failed before SDK execution; corrected by launching the tools with CPython 3.14.9t.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:42:51.323542+00:00",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "raw_log": "target/optimization/final-local-ft-rust-20261025.log",
+      "log_sha256": "9db3bcf3fde5d3f7ae0dbd049754003635540d396e06a8989d36f3a718e19463"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-introspection",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "experimental-async",
+        "experimental-inspect"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- --envdir <workspace>/target/optimization/final-local-introspection-nox -s test-introspection"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:47:28.361367+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    }
+  ]
+}

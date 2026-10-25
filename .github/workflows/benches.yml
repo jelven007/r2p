@@ -5,9 +5,10 @@ on:
     branches:
       - "main"
   pull_request:
+  workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}-benches
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -19,7 +20,22 @@ permissions:
   contents: read
 
 jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      plan: ${{ steps.selection.outputs.plan }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Select benchmarks by change impact
+        id: selection
+        run: python3 -m tools.ci_policy select
+
   benchmarks:
+    needs: [resolve]
+    if: fromJSON(needs.resolve.outputs.plan).benchmarks
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -49,14 +65,14 @@ jobs:
           cache-all-crates: "true"
           cache-workspace-crates: "true"
 
-      - uses: taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27
+      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2.87.28
         with:
           tool: cargo-codspeed
 
       - name: Run the benchmarks
-        uses: CodSpeedHQ/action@f842b9a3ffe213dbb81768fd7f7eeb4dfcf1c369 # v5.4.2
+        uses: CodSpeedHQ/action@821a40cd6c80e3cfe387caf55668287addd808da # v5.5.0
         env:
-          # Runner v5.4.2 supports this flag; keep collecting measurements when
+          # The pinned runner supports this flag; keep collecting measurements when
           # the fork has not been registered with CodSpeed.
           CODSPEED_SKIP_UPLOAD: ${{ vars.R2P_ENABLE_CODSPEED != 'true' }}
         with:

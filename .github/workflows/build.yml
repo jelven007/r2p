@@ -28,6 +28,18 @@ on:
       verbose:
         type: boolean
         default: false
+      ffi-check:
+        type: boolean
+        default: true
+      allow-failure:
+        type: boolean
+        default: false
+      cell-id:
+        type: string
+        default: ""
+      job-name:
+        type: string
+        default: ""
 
 env:
   UV_LOCKED: 1
@@ -38,8 +50,7 @@ jobs:
   build:
     permissions:
       contents: read
-      pull-requests: read # dorny/paths-filter lists changed files.
-    continue-on-error: ${{ endsWith(inputs.python-version, '-dev') || contains(fromJSON('["beta", "nightly"]'), inputs.rust) }}
+    continue-on-error: ${{ inputs.allow-failure }}
     runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -50,6 +61,7 @@ jobs:
       # installs using setup-python do not work for arm macOS 3.9 and below
       - if: ${{ !(inputs.os == 'macos-latest' && contains(fromJSON('["3.9"]'), inputs.python-version) && inputs.python-architecture == 'x64') }}
         name: Set up Python ${{ inputs.python-version }}
+        id: interpreter
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ inputs.python-version }}
@@ -62,6 +74,41 @@ jobs:
           # workaround for the above, only available for 3.9
           python-version: ${{ inputs.os == 'macos-latest' && contains(fromJSON('["3.9"]'), inputs.python-version) && inputs.python-architecture == 'x64' && format('cpython-{0}-macos-x86-64', inputs.python-version) || '' }}
           save-cache: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
+
+      - name: Bind Nox and Rust to the selected interpreter
+        shell: bash
+        env:
+          TARGET_PYTHON: ${{ steps.interpreter.outputs.python-path }}
+          FALLBACK_PYTHON: cpython-3.9-macos-x86-64
+          FALLBACK_ALLOWED: ${{ inputs.os == 'macos-latest' && inputs.python-version == '3.9' && inputs.python-architecture == 'x64' }}
+          GRAALPY_WINDOWS: ${{ inputs.os == 'windows-latest' && startsWith(inputs.python-version, 'graalpy') }}
+          GRAALPY_LOCATION: ${{ env.pythonLocation }}
+        run: |
+          # setup-python reports Scripts/python.exe for Windows GraalPy, whose
+          # official archive and ensurepip use bin/python.exe instead.
+          if [[ "$GRAALPY_WINDOWS" == "true" ]]; then
+            TARGET_PYTHON="$GRAALPY_LOCATION/bin/python.exe"
+          fi
+          if [[ -z "$TARGET_PYTHON" ]]; then
+            if [[ "$FALLBACK_ALLOWED" != "true" ]]; then
+              echo "setup-python did not return the requested interpreter" >&2
+              exit 1
+            fi
+            TARGET_PYTHON="$(uv python find "$FALLBACK_PYTHON")"
+          fi
+          "$TARGET_PYTHON" - <<'PY'
+          import json, os, sys, sysconfig
+          with open(os.environ["GITHUB_ENV"], "a") as output:
+              for key in ("UV_PYTHON", "R2P_PYTHON"):
+                  output.write(f"{key}={sys.executable}\n")
+          print(json.dumps({
+              "executable": sys.executable,
+              "implementation": sys.implementation.name,
+              "version": list(sys.version_info[:3]),
+              "free_threaded": bool(sysconfig.get_config_var("Py_GIL_DISABLED")),
+              "gil_enabled": bool(sys._is_gil_enabled()) if hasattr(sys, "_is_gil_enabled") else None,
+          }))
+          PY
 
       - name: Install Rust toolchain
         shell: bash
@@ -80,7 +127,7 @@ jobs:
         if: inputs.os == 'windows-latest' && inputs.python-architecture == 'x86'
         shell: bash
         run: |
-          echo "CARGO_BUILD_TARGET=i686-pc-windows-msvc" >> $GITHUB_ENV
+          echo "CARGO_BUILD_TARGET=i686-pc-windows-msvc" >> "$GITHUB_ENV"
 
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
@@ -88,50 +135,69 @@ jobs:
 
       - if: inputs.os == 'ubuntu-latest'
         name: Prepare LD_LIBRARY_PATH (Ubuntu only)
-        run: echo LD_LIBRARY_PATH=${pythonLocation}/lib >> $GITHUB_ENV
-
-      - if: inputs.rust == inputs.MSRV
-        name: Prepare MSRV package versions
-        run: uv run --isolated --only-group nox nox -s set-msrv-package-versions
+        run: echo "LD_LIBRARY_PATH=${pythonLocation}/lib" >> "$GITHUB_ENV"
 
       - if: inputs.rust != 'stable'
         name: Ignore changed error messages for ui tests (still run for coverage)
         run: echo "UI_TEST=ignore" >> "$GITHUB_ENV"
 
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        if: ${{ inputs.rust == 'stable' && !startsWith(inputs.python-version, 'graalpy') }}
-        id: ffi-changes
-        with:
-          base: ${{ github.event.merge_group.base_ref }}
-          ref: ${{ github.event.merge_group.head_ref }}
-          filters: |
-            changed:
-              - 'crates/r2p-ffi/**'
-              - 'tools/ffi-check/**'
-              - 'crates/r2p-build-config/**'
-              - 'noxfile.py'
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/build.yml'
+      - name: Record observed interpreter and Rust metadata
+        shell: bash
+        run: '"$R2P_PYTHON" -m tools.engineering.ci_evidence --output target/ci-environment.json'
+        env:
+          CI_JOB_NAME: ${{ inputs.job-name }} / build
+          CI_CELL_ID: ${{ inputs.cell-id }}
 
       - name: Run r2p-ffi-check
         # TODO: investigate graalpy failures
-        if: ${{ endsWith(inputs.python-version, '-dev') || (steps.ffi-changes.outputs.changed == 'true' && inputs.rust == 'stable' && !startsWith(inputs.python-version, 'graalpy')) }}
+        if: ${{ endsWith(inputs.python-version, '-dev') || (inputs.ffi-check && inputs.rust == 'stable' && !startsWith(inputs.python-version, 'graalpy')) }}
         run: uv run --isolated --only-group nox nox -s ffi-check
 
       - uses: $/.github/actions/prepare-coverage
         if: ${{ inputs.os != 'windows-11-arm' }} # https://github.com/rust-lang/rust/issues/150123
 
       - name: Build docs
+        if: inputs.rust != inputs.MSRV
         run: uv run --isolated --only-group nox nox -s docs
 
       - name: Run Rust tests
+        if: inputs.rust != inputs.MSRV
         run: uv run --isolated --only-group nox nox -s test-rust
 
       - name: Test python examples and tests
+        if: inputs.rust != inputs.MSRV
         shell: bash
         run: uv run --isolated --only-group nox nox -s test-py
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target
+
+      - name: Run MSRV docs and tests in the isolated dependency snapshot
+        if: inputs.rust == inputs.MSRV
+        run: uv run --isolated --only-group nox nox -s set-msrv-package-versions -- docs test-rust test-py
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target
+
+      - name: Diagnose Windows PyPy loader failures
+        if: failure() && inputs.os == 'windows-latest' && startsWith(inputs.python-version, 'pypy')
+        run: uv run --no-project --with pefile==2024.8.26 python tools/inspect_windows_imports.py target/debug/deps
+
+      - name: Preserve MSRV source and dependency evidence
+        if: always() && inputs.rust == inputs.MSRV
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: msrv-${{ inputs.os }}-${{ inputs.python-version }}
+          path: |
+            target/msrv/**/msrv-evidence.json
+            target/msrv/**/Cargo.lock
+          if-no-files-found: error
+
+      - name: Preserve observed environment evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: environment-${{ inputs.os }}-${{ inputs.python-version }}-${{ inputs.python-architecture }}-${{ inputs.rust }}
+          path: target/ci-environment.json
+          if-no-files-found: warn
 
       - uses: $/.github/actions/report-coverage
         if: ${{ inputs.sha && inputs.os != 'windows-11-arm' }} # https://github.com/rust-lang/rust/issues/150123

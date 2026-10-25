@@ -1,0 +1,19 @@
+schema_version = 1
+verified_on = "2026-10-25"
+verification = "GitHub current user and repository owner API: jelven007; admin/maintain/push metadata true"
+
+[maintainers.jelven007]
+github = "https://github.com/jelven007"
+scope = ["SDK", "macros", "FFI", "build", "testing", "release", "documentation", "support", "upstream"]
+support = "best-effort; no response-time commitment"
+backup = "not-assigned"
+
+[private_security_reporting]
+enabled = false
+channel = "not-established"
+blocker = "GitHub private-vulnerability-reporting GET disabled; enabling PUT returned HTTP 403"
+
+[external_publication]
+owner = "jelven007"
+enabled = false
+prerequisites = ["accepted candidate evidence", "namespace authority", "support window", "private reporting channel", "post-publication verification"]

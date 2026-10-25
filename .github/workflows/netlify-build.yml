@@ -9,8 +9,8 @@ on:
     types: [published]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: ${{ github.event_name != 'release' }}
 
 env:
   UV_LOCKED: 1
@@ -20,7 +20,22 @@ permissions:
   contents: read
 
 jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      plan: ${{ steps.selection.outputs.plan }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Select site build by change impact
+        id: selection
+        run: python3 -m tools.ci_policy select
+
   guide-build:
+    needs: [resolve]
+    if: fromJSON(needs.resolve.outputs.plan).site
     permissions:
       contents: write # Publish versioned guides to gh-pages on releases.
     runs-on: ubuntu-latest
@@ -42,7 +57,7 @@ jobs:
           rustup default nightly
 
       - name: Setup mdBook
-        uses: taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2.87.28
         with:
           tool: mdbook@0.5, mdbook-tabs@0.3, lychee
 
@@ -50,7 +65,7 @@ jobs:
         id: prepare_tag
         run: |
           TAG_NAME="${GITHUB_REF##*/}"
-          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
+          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Restore lychee cache
         id: restore-cache
@@ -90,7 +105,7 @@ jobs:
       - name: Get current r2p version
         run: |
           R2P_VERSION=$(python -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')
-          echo "R2P_VERSION=${R2P_VERSION}" >> $GITHUB_ENV
+          echo "R2P_VERSION=${R2P_VERSION}" >> "$GITHUB_ENV"
 
       - name: Build the site
         run: uv run --isolated --only-group nox nox -s build-netlify-site -- ${{ (github.ref != 'refs/heads/main' && '--preview') || '' }}

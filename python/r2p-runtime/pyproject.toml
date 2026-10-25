@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "r2p-runtime"
 dynamic = ["version"]
-description = ''
+description = "Reserved r2p runtime package; no standalone runtime functionality"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT OR Apache-2.0"
@@ -14,14 +14,9 @@ authors = [
   { name = "David Hewitt", email = "1939362+davidhewitt@users.noreply.github.com" },
 ]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Private :: Do Not Upload",
+  "Development Status :: 1 - Planning",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = []
 

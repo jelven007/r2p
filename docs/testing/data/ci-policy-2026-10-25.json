@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "source_scope": "eab5efb9 plus R04 working-tree changes",
+  "msrv": "1.85",
+  "matrix_counts": {
+    "pr": 10,
+    "full": 45,
+    "clippy": 10,
+    "nightly": 1,
+    "introspection": 4,
+    "cross": 4,
+    "powerset": 2,
+    "no_std": 3,
+    "typing": 2,
+    "cli": 7
+  },
+  "required_success_jobs": 85,
+  "required_completed_jobs": 89,
+  "prospective_jobs": {
+    "check-nightly/x86_64-unknown-linux-gnu/nightly": {
+      "id": "nightly/linux-x64",
+      "allowed_results": [
+        "success",
+        "failure"
+      ]
+    },
+    "clippy/x86_64-unknown-linux-gnu/beta": {
+      "id": "clippy/x86_64-unknown-linux-gnu/beta",
+      "allowed_results": [
+        "success",
+        "failure"
+      ]
+    },
+    "python3.14-x64 ubuntu-latest rust-beta / build": {
+      "id": "build/linux-x64/3.14/beta",
+      "allowed_results": [
+        "success",
+        "failure"
+      ]
+    },
+    "python3.14-x64 ubuntu-latest rust-nightly / build": {
+      "id": "build/linux-x64/3.14/nightly",
+      "allowed_results": [
+        "success",
+        "failure"
+      ]
+    }
+  },
+  "matrix_sha256": "f378ba64f928c6e0a238fd3d66938cf72b6408c2a725bc31e526ad7c7bb2a2e9",
+  "validation": {
+    "unittest_count": 46,
+    "unittest_result": "success",
+    "ruff": "success",
+    "actionlint_workflows": 11,
+    "actionlint_result": "success",
+    "zizmor_offline": "success"
+  },
+  "remote_execution": "pending"
+}

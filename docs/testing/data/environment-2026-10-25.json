@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+  "dirty": true,
+  "tool_python": {
+    "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+    "implementation": "cpython",
+    "version": [
+      3,
+      14,
+      9
+    ],
+    "free_threaded": false,
+    "gil_enabled": true,
+    "platform": "macosx-11.0-arm64",
+    "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none",
+    "modules": [],
+    "gil_after_imports": true
+  },
+  "target_python": {
+    "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+    "implementation": "cpython",
+    "version": [
+      3,
+      14,
+      9
+    ],
+    "free_threaded": true,
+    "gil_enabled": false,
+    "platform": "macosx-11.0-arm64",
+    "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+    "modules": [],
+    "gil_after_imports": false
+  },
+  "rust": [
+    "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "binary: rustc",
+    "commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67",
+    "commit-date: 2026-10-13",
+    "host: aarch64-apple-darwin",
+    "release: 1.99.1",
+    "LLVM version: 23.1.1"
+  ],
+  "target": "aarch64-apple-darwin",
+  "nox_arguments": [],
+  "configuration": {},
+  "config_file": {
+    "path": null,
+    "sha256": null
+  },
+  "locks": {
+    "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+    "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+  },
+  "cases": {
+    "gil": {
+      "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none/bin/python3.14",
+      "implementation": "cpython",
+      "version": [
+        3,
+        14,
+        9
+      ],
+      "free_threaded": false,
+      "gil_enabled": true,
+      "platform": "macosx-11.0-arm64",
+      "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none",
+      "modules": [],
+      "gil_after_imports": true
+    },
+    "ft-off": {
+      "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+      "implementation": "cpython",
+      "version": [
+        3,
+        14,
+        9
+      ],
+      "free_threaded": true,
+      "gil_enabled": false,
+      "platform": "macosx-11.0-arm64",
+      "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+      "modules": [],
+      "gil_after_imports": false
+    },
+    "ft-on": {
+      "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+      "implementation": "cpython",
+      "version": [
+        3,
+        14,
+        9
+      ],
+      "free_threaded": true,
+      "gil_enabled": true,
+      "platform": "macosx-11.0-arm64",
+      "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+      "modules": [],
+      "gil_after_imports": true
+    },
+    "ft-auto-import": {
+      "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+      "implementation": "cpython",
+      "version": [
+        3,
+        14,
+        9
+      ],
+      "free_threaded": true,
+      "gil_enabled": false,
+      "platform": "macosx-11.0-arm64",
+      "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+      "modules": [
+        {
+          "name": "legacy_gil",
+          "result": "success",
+          "path": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/environment-r02-final/legacy_gil.cpython-314t-darwin.so",
+          "gil_before": false,
+          "gil_after": true
+        }
+      ],
+      "gil_after_imports": true
+    },
+    "legacy": {
+      "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9",
+      "implementation": "cpython",
+      "version": [
+        3,
+        9,
+        6
+      ],
+      "free_threaded": false,
+      "gil_enabled": null,
+      "platform": "macosx-10.9-universal2",
+      "base_prefix": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9",
+      "modules": [],
+      "gil_after_imports": null
+    },
+    "import-failure": {
+      "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+      "implementation": "cpython",
+      "version": [
+        3,
+        14,
+        9
+      ],
+      "free_threaded": true,
+      "gil_enabled": false,
+      "platform": "macosx-11.0-arm64",
+      "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+      "modules": [
+        {
+          "name": "r2p_missing_module_for_probe",
+          "result": "failure",
+          "error": "ModuleNotFoundError: No module named 'r2p_missing_module_for_probe'",
+          "gil_before": false,
+          "gil_after": false
+        }
+      ],
+      "gil_after_imports": false
+    }
+  },
+  "install_failure": {
+    "exit_code": 1,
+    "sdk_steps": []
+  },
+  "result": "success",
+  "exit_code": 0,
+  "finished_at": "2026-10-25T04:11:04.607653+00:00",
+  "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior"
+}

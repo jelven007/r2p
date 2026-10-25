@@ -87,7 +87,7 @@ flowchart LR
     SUPPORT --> REQ
 ```
 
-当前交付链路为已验证代码通过 PR 合并、固定 SHA 和历史快照；后续复现/修复反馈使用 PR，Issues 尚未启用。
+当前交付链路为已验证代码通过 PR 合并、固定 SHA 和历史快照；后续反馈使用 Issue 和关联修复 PR，入口见[支持政策](../operations/support-policy.md)。
 `release.yml`、`python-wheel.yml`、Netlify 工作流的发布 job 默认关闭，需对应仓库变量显式启用。
 注册表/站点发布另验收环境、身份、矩阵、制品和恢复，见[ADR-0003](adr/0003-delivery-and-history.md)。
 

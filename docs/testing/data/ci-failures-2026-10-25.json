@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "run_id": 40150316493,
+  "provenance": "previously saved actual job logs; no new API request",
+  "failures": [
+    {
+      "id": "graalpy-binding",
+      "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "original_log": "target/optimization/graalpy-windows-40150316493.log",
+      "original_log_sha256": "9c329b6595236af45630e08a59199ab0e2d71af79498c4643f826cf9b89dcd6c",
+      "excerpts": [
+        "pythongraalpy25.4-x64 windows-latest rust-stable / build\tUNKNOWN STEP\t2026-10-25T01:47:48.2644412Z HEAD is now at ba53c8a build: replay a pinned upstream update with owned local patch inventory",
+        "pythongraalpy25.4-x64 windows-latest rust-stable / build\tUNKNOWN STEP\t2026-10-25T01:48:31.4627628Z D:\\a\\_temp\\60e4a441-a96e-4fb4-8bdd-80a875362a3c.sh: line 8: C:\\hostedtoolcache\\windows\\GraalPy\\25.4.4\\x64\\Scripts\\python.exe: No such file or directory",
+        "pythongraalpy25.4-x64 windows-latest rust-stable / build\tUNKNOWN STEP\t2026-10-25T01:48:31.4691884Z ##[error]Process completed with exit code 127."
+      ]
+    },
+    {
+      "id": "engineering-install",
+      "source_sha": "d874da8e66ff30a133bb6d659354f09b29b6608c",
+      "original_log": "target/optimization/engineering-ba53-failure.log",
+      "original_log_sha256": "d12b46eda879a027f4e57f2579044170c1c8733ab7d3d22d6770f64f9fbcbe87",
+      "excerpts": [
+        "2026-10-25T01:21:55.2729750Z HEAD is now at d874da8 Merge ba53c8a1c38498891bde3091209f9a63302f1c0d into 3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+        "2026-10-25T01:22:04.4344705Z   \u00d7 For crate actionlint: actionlint is not found",
+        "2026-10-25T01:22:04.4345185Z   \u2570\u2500\u25b6 actionlint is not found",
+        "2026-10-25T01:22:04.4366262Z ##[error]Process completed with exit code 76."
+      ]
+    }
+  ]
+}

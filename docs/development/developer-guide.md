@@ -1,6 +1,6 @@
 # 开发指南
 
-版本：2.0；日期：2026-10-24；状态：当前源码研发流程。
+版本：2.1；日期：2026-10-25；状态：当前源码研发流程。
 关联：FR-001–FR-008、NFR-001、NFR-003–NFR-006。
 
 ## 1. 环境要求
@@ -50,9 +50,15 @@ uv run --isolated --only-group nox nox -s fmt
 
 ```bash
 R2P_PYTHON=python3.14 cargo test -p r2p --lib
+uv run --only-group nox python tools/dev.py --target-python /path/to/python3.14 --evidence target/environment.json -- -s test-rust -- skip-full
 ```
 
 `R2P_PYTHON` 需指向实际安装的解释器。
+`.python-version` 固定默认工程 Python 为 3.14；`tools/dev.py` 由工具 Python 运行，再以指定的目标 Python 启动 Nox。
+因此会话中的 `sys.version_info`、实现和 GIL 状态与 Rust 的 `R2P_PYTHON` 一致；直接运行 Nox 时也须自行保证这一点。
+`--target-python` 优先于已有 `R2P_PYTHON`，未指定时取该环境变量或启动器的实际解释器。
+快照保存工具/目标 executable、版本、GIL、Rust、目标 triple、Nox 参数、配置文件与锁文件摘要，以及开始/结束时间和退出码。
+跨编译配置只表示目标构建条件，不将工具或宿主解释器的版本记为目标运行验证。
 多解释器开发记录完整命令和环境；不要长期保留无意的扩展构建变量导致嵌入测试链接失败。
 新旧构建变量的优先级、空值和扩展/嵌入条件见[配置注册表](configuration-reference.md)。
 
@@ -72,6 +78,12 @@ R2P_PYTHON=python3.14 cargo test -p r2p --lib
 | 用户指南 | `uv run --isolated --only-group nox nox -s build-guide` |
 | 文档链接完整检查 | `uv run --isolated --only-group nox nox -s check-guide` |
 | 覆盖 | `uv run --isolated --only-group nox nox -s coverage -- --lcov` |
+
+`test-rust` 默认保留完整矩阵，`skip-full` 跳过含 `full` 的组合及其 UI/前向 ABI 派生测试。
+CPython 3.14、GIL、stable 下为完整 11 条、快速 6 条 Cargo 命令；其他解释器按适用 ABI 选择。
+`release`、`careful` 可继续组合使用；未知参数在执行 Cargo 前失败。
+定位问题可选 `scope=components`（四个基础组件）、`scope=core`（无默认和 macros）、`scope=abi` 或 `scope=ui`（严格编译诊断）。
+局部 scope 不替代完整门禁；coverage 的参数仅传给报告生成，不传给 Rust 测试选择。
 
 覆盖、链接、基准、FFI 和指南构建可能需要额外工具；使用 `nox --list-sessions` 查看实际支持的会话。
 测试矩阵与准入以[测试策略](../testing/test-strategy.md)为准。
@@ -100,7 +112,11 @@ R2P_PYTHON=python3.14 cargo test -p r2p --lib
 
 上游风格与贡献要求保留在[上游贡献原文](../reference/upstream-contributing.md)，本仓库路径以[目录规范](repository-layout.md)为准。
 根 Cargo.lock/uv.lock 已纳入 Git，日常检查使用锁定依赖。
-MSRV 1.85 可能不能使用 stable 解析的全部最新开发依赖，在隔离副本执行 `nox -s set-msrv-package-versions check-all`；不得将兼容锁覆盖主工作区后未经说明提交。
+MSRV 1.85 可能不能使用 stable 解析的全部最新开发依赖。
+选择 MSRV 工具链后执行 `nox -s set-msrv-package-versions -- check-all`，会话自动复制当前已跟踪及未忽略的源码（包含未提交修改），在 `target/msrv/checkout-*` 内解析依赖并运行后续会话。
+只准备锁时省略 `-- check-all`；使用空格将两个会话直接放在 `-s` 后会让第二个会话回到原工作区，不能用于 MSRV 验收。
+隔离目录、所有实际 Cargo.lock 和 `msrv-evidence.json` 均保留；失败时也可检查。
+原工作区锁不变，忽略的工具和构建缓存不复制。
 Meson 示例打包后端另要求 Rust 1.87+，不改变 SDK 本体的 1.85 MSRV。
 
 ## 7. 编译诊断与 stub 更新

@@ -5,4 +5,4 @@ contact_links:
     about: Development, configuration, compatibility, support and recovery
   - name: r2p support policy
     url: https://github.com/jelven007/r2p/blob/main/docs/operations/support-policy.md
-    about: Reproduction and fix PRs are available while this fork's Issues are disabled
+    about: Report reproducible issues with environment details; link fixes through PRs

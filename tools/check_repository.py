@@ -13,6 +13,11 @@ from urllib.parse import unquote, urlsplit
 
 import tomllib
 
+if __package__:
+    from tools.engineering.status import status_errors
+else:
+    from engineering.status import status_errors
+
 ROOT = Path(__file__).resolve().parent.parent
 SCAN_DIRS = ("crates", "tests", "examples", "benchmarks", "tools", "python")
 GENERATED_DIRS = {
@@ -80,7 +85,15 @@ def check_manifest(path: Path) -> list[str]:
 def engineering_docs() -> list[Path]:
     paths = [
         ROOT / name
-        for name in ("README.md", "Architecture.md", "Contributing.md", "Releasing.md")
+        for name in (
+            "README.md",
+            "Architecture.md",
+            "Contributing.md",
+            "Releasing.md",
+            "SECURITY.md",
+            "R2P_CHANGELOG.md",
+            "r2p-newsfragments/README.md",
+        )
     ]
     paths.extend(
         path
@@ -131,6 +144,23 @@ def check_includes() -> list[str]:
 
 def check_traceability() -> list[str]:
     errors = []
+    evidence = {
+        row["id"]: row
+        for row in json.loads((ROOT / "docs/testing/evidence.json").read_text())[
+            "records"
+        ]
+    }
+    maintainers = tomllib.loads(
+        (ROOT / "docs/governance/maintainers.toml").read_text()
+    )["maintainers"]
+    acceptance_states = {
+        "validated-subset",
+        "validated-local",
+        "source-only",
+        "process-only",
+        "pending",
+        "samples-collected",
+    }
     specification = (
         ROOT / "docs" / "requirements" / "system-requirements.md"
     ).read_text()
@@ -145,6 +175,8 @@ def check_traceability() -> list[str]:
             "id",
             "priority",
             "capability_status",
+            "acceptance_status",
+            "acceptance_evidence",
             "source",
             "design",
             "test_evidence",
@@ -154,7 +186,8 @@ def check_traceability() -> list[str]:
         if reader.fieldnames != columns:
             return ["traceability.csv: unexpected columns"]
         seen = set()
-        for row in reader:
+        rows = list(reader)
+        for row in rows:
             identifier = row["id"]
             if None in row or any(not row.get(column) for column in columns):
                 errors.append(f"traceability.csv: incomplete row {identifier}")
@@ -166,6 +199,32 @@ def check_traceability() -> list[str]:
                 errors.append(
                     f"traceability.csv: unknown ID or wrong priority {identifier}"
                 )
+            if row["acceptance_status"] not in acceptance_states:
+                errors.append(
+                    f"traceability.csv: {identifier} unknown acceptance status"
+                )
+            if row["owner"] not in maintainers:
+                errors.append(
+                    f"traceability.csv: {identifier} unassigned real maintainer"
+                )
+            for reference in row["acceptance_evidence"].split("+"):
+                if reference == "not-collected":
+                    if row["acceptance_status"] not in {"pending", "process-only"}:
+                        errors.append(
+                            f"traceability.csv: {identifier} claims acceptance without evidence"
+                        )
+                elif reference in evidence:
+                    if (
+                        row["acceptance_status"].startswith("validated-")
+                        or row["acceptance_status"] == "samples-collected"
+                    ) and evidence[reference]["result"] != "success":
+                        errors.append(
+                            f"traceability.csv: {identifier} validation references non-success"
+                        )
+                elif not (ROOT / reference).is_file():
+                    errors.append(
+                        f"traceability.csv: {identifier} unknown evidence {reference}"
+                    )
             for column in ("source", "design", "test_evidence"):
                 target = (ROOT / row[column]).resolve()
                 if not target.is_relative_to(ROOT) or not target.is_file():
@@ -177,6 +236,20 @@ def check_traceability() -> list[str]:
                     errors.append(f"traceability.csv: {identifier} unknown gate {gate}")
         for identifier in sorted(requirements.keys() - seen):
             errors.append(f"traceability.csv: missing requirement {identifier}")
+    product = tomllib.loads((ROOT / "product.toml").read_text())
+    runtime = tomllib.loads((ROOT / "python/r2p-runtime/pyproject.toml").read_text())
+    if all(
+        None not in row and all(row.get(column) for column in columns) for row in rows
+    ):
+        errors.extend(
+            status_errors(
+                rows, list(evidence.values()), product["implementation"], runtime
+            )
+        )
+    index = (ROOT / "tools/README.md").read_text()
+    for path in (ROOT / "tools").glob("*.py"):
+        if path.name != "__init__.py" and f"`{path.name}`" not in index:
+            errors.append(f"tools/README.md: missing public tool {path.name}")
     return errors
 
 
@@ -350,6 +423,34 @@ def check_sdk_identity() -> list[str]:
     return errors
 
 
+def check_template_sources() -> list[str]:
+    product = tomllib.loads((ROOT / "product.toml").read_text())
+    version = tomllib.loads((ROOT / "Cargo.toml").read_text())["package"]["version"]
+    expected = {
+        "git": product["source"]["repository"],
+        "rev": product["delivery"]["verified_git_revision"],
+    }
+    errors = []
+    if not re.fullmatch(r"[0-9a-f]{40}", expected["rev"]):
+        errors.append("product.toml: template Git revision must be a full SHA")
+    directories = [
+        *ROOT.glob("examples/*/.template"),
+        *ROOT.glob("crates/r2p-ffi/examples/*/.template"),
+    ]
+    for directory in directories:
+        hook = directory / "pre-script.rhai"
+        if f'variable::set("R2P_VERSION", "{version}");' not in hook.read_text():
+            errors.append(f"{hook.relative_to(ROOT)}: template SDK version differs")
+        for manifest in directory.rglob("Cargo.toml"):
+            data = tomllib.loads(manifest.read_text())
+            for name, dependency in data.get("dependencies", {}).items():
+                if name in {"r2p", "r2p-ffi"} and dependency != expected:
+                    errors.append(
+                        f"{manifest.relative_to(ROOT)}: {name} must use the verified Git source"
+                    )
+    return errors
+
+
 def main() -> int:
     cargo_paths = manifests()
     doc_paths = engineering_docs()
@@ -361,6 +462,7 @@ def main() -> int:
     errors.extend(check_product_identity())
     errors.extend(check_history())
     errors.extend(check_sdk_identity())
+    errors.extend(check_template_sources())
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1

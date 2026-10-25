@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-25",
+  "repository": "https://github.com/jelven007/r2p",
+  "current_user": "jelven007",
+  "issues_enabled": true,
+  "discussions_enabled": false,
+  "main": {
+    "revision": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+    "protected": false,
+    "protection_read": "HTTP 403 Resource not accessible by integration",
+    "protection_update": "HTTP 403 Resource not accessible by integration",
+    "desired_configuration": "docs/governance/main-protection.json"
+  },
+  "private_vulnerability_reporting": {
+    "enabled": false,
+    "enable_request": "HTTP 403 Resource not accessible by integration",
+    "private_contact": "not-established"
+  },
+  "connector_authorization": {
+    "result": "success",
+    "continuation": "new conversation required before retrying GitHub operations",
+    "protection_and_private_reporting": "not-applied; last API attempts returned HTTP 403"
+  },
+  "external_publication": {
+    "crates_io": "disabled",
+    "pypi": "disabled",
+    "netlify": "disabled"
+  },
+  "adoption": {
+    "internal_consumer_flows": 2,
+    "external_first_integration": "not-collected",
+    "external_upgrade": "not-collected",
+    "external_feedback": "not-collected",
+    "response_metrics": "not-collected"
+  }
+}

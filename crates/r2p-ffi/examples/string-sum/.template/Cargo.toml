@@ -10,4 +10,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 r2p-maturin-bridge = { package = "pyo3-ffi", path = "maturin-bridge" }
-r2p-ffi = { version = "{{R2P_VERSION}}" }
+r2p-ffi = { git = "https://github.com/jelven007/r2p", rev = "3a24917eb2766aa8ded8c04fefde1c1d4b133c00" }
