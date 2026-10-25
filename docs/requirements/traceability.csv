@@ -4,7 +4,7 @@ FR-002,P0,implemented,validated-subset,ci-40112259362+local-full-20261025,src/in
 FR-003,P0,implemented,validated-subset,ci-40112259362+local-full-20261025,src/conversion.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_frompy_intopy_roundtrip.rs,G2+G3,jelven007
 FR-004,P0,implemented,validated-subset,ci-40112259362+local-full-20261025,crates/r2p-macros-backend/src/lib.rs,docs/architecture/system-design.md,tests/test_compile_error.rs,G2,jelven007
 FR-005,P0,implemented-matrix-configured,validated-subset,ci-40112259362,crates/r2p-ffi/Cargo.toml,docs/architecture/interfaces-and-compatibility.md,docs/testing/support-matrix.md,G4,jelven007
-FR-006,P1,experimental,validated-subset,ci-40112259362,crates/r2p-introspection/src/introspection.rs,docs/architecture/interfaces-and-compatibility.md,tests/python/tests/test_stubs.py,G3+G4,jelven007
+FR-006,P1,experimental,validated-subset,ci-40112259362+local-introspection-boundaries-20261025,crates/r2p-introspection/src/introspection.rs,docs/architecture/interfaces-and-compatibility.md,tests/python/tests/test_stubs.py,G3+G4,jelven007
 FR-007,P0,git-delivered-external-publication-disabled,source-only,docs/releases/records/2026-10-24-production-baseline.md,product.toml,docs/releases/release-and-rollback.md,docs/releases/records/2026-10-24-production-baseline.md,G5,jelven007
 FR-008,P0,engineering-baseline-implemented,validated-subset,ci-40112259362,tools/check_repository.py,docs/development/repository-layout.md,docs/testing/reports/production-baseline-validation.md,G1,jelven007
 NFR-001,P0,lifecycle-checks-implemented,validated-subset,ci-40112259362+local-full-20261025,src/pycell.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_gc.rs,G2+G4,jelven007
