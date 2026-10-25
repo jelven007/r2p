@@ -3,6 +3,8 @@
 版本：2.0；日期：2026-10-24；最终核验：2026-10-25；状态：当前源码交付的证据矩阵。
 关联：FR-005/006、NFR-001/003/005。
 支持响应见[支持政策](../operations/support-policy.md)，准入要求见[测试策略](test-strategy.md)。
+逐条 SHA、环境、结果和限制的机器来源为 [evidence.json](evidence.json)，[生成摘要](evidence-summary.md)由 `python -m tools.evidence render` 更新。
+下表保留原阶段的解释；新候选不能复用旧 SHA 的结论，新运行以结构化记录区分。
 
 ## 1. 证据等级
 
@@ -37,6 +39,9 @@
 ## 2. 矩阵维护
 
 每次 Python/Rust 下限、ABI、特性、平台、构建适配或源码版本变化时复核受影响行。
+使用 `python -m tools.evidence import-actions --run-id <completed-run>` 导入完成的 CI；未完成运行不能导入支持证据。
+本地工具快照使用 `import-local --snapshot <json> --id <unique-id> --features <features> --report <report>` 导入。
+记录同 ID 不允许改写；`python -m tools.evidence check` 阻断重复 ID、缺失来源/环境/理由和摘要漂移。
 新增行记录完整 SHA、OS/CPU、Rust/Python、GIL/ABI、特性、命令、构建/运行结果、日志、跳过及阻断问题。
 PyPy/GraalPy 嵌入条件与 CPython 不同，仅编译的测试保持“编译”状态。
 前瞻 beta/nightly、实验功能和平台资源故障单独呈现，不把条件跳过计为行为通过。

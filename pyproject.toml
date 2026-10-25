@@ -8,12 +8,13 @@ dynamic = ["version"]
 "noxfile.py" = ["BLE001", "TRY002"]
 
 [tool.towncrier]
+# Inherited PyO3 history; new r2p notes use r2p-towncrier.toml.
 filename = "CHANGELOG.md"
 version = "0.30.0"
 start_string = "<!-- towncrier release notes start -->\n"
 template = ".towncrier.template.md"
 title_format = "## [{version}] - {project_date}"
-issue_format = "[#{issue}](https://github.com/PyO3/pyo3/pull/{issue})"  # Note r2p shows pulls, not issues, in the CHANGELOG
+issue_format = "[#{issue}](https://github.com/PyO3/pyo3/pull/{issue})"
 underlines = ["", "", ""]
 directory = "newsfragments"
 

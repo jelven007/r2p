@@ -1,0 +1,639 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "actions-40112259362-120926350793",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-24.04-arm/arm64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350793",
+      "verified_at": "2026-10-24T16:51:06Z"
+    },
+    {
+      "id": "actions-40112259362-120926350798",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350798",
+      "verified_at": "2026-10-24T16:58:50Z"
+    },
+    {
+      "id": "actions-40112259362-120926350833",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "windows-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350833",
+      "verified_at": "2026-10-24T16:49:43Z"
+    },
+    {
+      "id": "actions-40112259362-120926350841",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.15 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350841",
+      "verified_at": "2026-10-24T16:54:21Z"
+    },
+    {
+      "id": "actions-40112259362-120926350872",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14t (patch version in logs)",
+      "gil": "disabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350872",
+      "verified_at": "2026-10-24T16:48:51Z"
+    },
+    {
+      "id": "actions-40112259362-120926350886",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "windows-latest/x86",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350886",
+      "verified_at": "2026-10-24T16:58:15Z"
+    },
+    {
+      "id": "actions-40112259362-120926350891",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "windows-11-arm/arm64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350891",
+      "verified_at": "2026-10-24T16:56:44Z"
+    },
+    {
+      "id": "actions-40112259362-120926350892",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.15t (patch version in logs)",
+      "gil": "disabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350892",
+      "verified_at": "2026-10-24T16:59:30Z"
+    },
+    {
+      "id": "actions-40112259362-120926350893",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "macos-latest/arm64",
+      "rust": "stable (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350893",
+      "verified_at": "2026-10-24T16:48:27Z"
+    },
+    {
+      "id": "actions-40112259362-120926350914",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "ubuntu-latest/x64",
+      "rust": "nightly (patch version in logs)",
+      "python": "3.14 (patch version in logs)",
+      "gil": "enabled",
+      "abi": "Nox interpreter-specific combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "ABI according to Nox"
+      ],
+      "commands": [
+        "nox -s docs",
+        "nox -s test-rust",
+        "nox -s test-py",
+        "ffi-check conditional; inspect step results"
+      ],
+      "result": "success",
+      "level": "run",
+      "skip_reason": "",
+      "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362/job/120926350914",
+      "verified_at": "2026-10-24T16:58:53Z"
+    },
+    {
+      "id": "ci-40112259362",
+      "source_sha": "839ddb30dc3c936049a26f946b6206af25a99ba9",
+      "source_state": "committed",
+      "target": "Actions workflow aggregate",
+      "rust": "job-specific",
+      "python": "job-specific",
+      "gil": "not-applicable",
+      "abi": "job-specific",
+      "features": [
+        "selected jobs"
+      ],
+      "commands": [
+        "Actions CI / 40112259362"
+      ],
+      "result": "success",
+      "level": "check",
+      "skip_reason": "",
+      "limitations": "aggregate check is not a new interpreter/ABI behavior result",
+      "log": "https://github.com/jelven007/r2p/actions/runs/40112259362",
+      "verified_at": "2026-10-24T16:59:37Z"
+    },
+    {
+      "id": "consumer-3a24917e-2026-10-24-abi3",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "3.14.9",
+      "gil": "enabled",
+      "abi": "abi3",
+      "features": [
+        "abi3-py39"
+      ],
+      "commands": [
+        "python -m tools.consumer_smoke --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "SDK pinned to committed SHA; consumer templates were worktree changes at generator_sha; only recorded interpreter/target ran, wheel tags do not prove others",
+      "generator_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "artifacts": [
+        {
+          "path": "meson-starter.lock",
+          "sha256": "f87c810ae706cd2e2a2a7a7d51e852da49ad46f703a83afbd9956f88e4e222a6",
+          "size": 3331
+        },
+        {
+          "path": "setuptools-rust-starter.lock",
+          "sha256": "583513a98ce251ba001d0b66a46f1185fd55343b7be4543efb9ed944bb814ff9",
+          "size": 3341
+        },
+        {
+          "path": "word-count.lock",
+          "sha256": "9a903ee7caddaab646d33d4d868a73e70174d8f7de2ae14518404ac7b38294c1",
+          "size": 4809
+        },
+        {
+          "path": "decorator.lock",
+          "sha256": "165f6bf485fe4651c2df1738d0a98b4fdb0076859f99c99eb27f3bbfeac2f037",
+          "size": 3421
+        },
+        {
+          "path": "sequential.lock",
+          "sha256": "5e106364066e6c87d1f4f4aad042cb8f1d3b4c0965f5d663d1208f563cdb7801",
+          "size": 1130
+        },
+        {
+          "path": "plugin.lock",
+          "sha256": "60eb8d5367416fdadb7b2d93d3574f305452eed0dde3cc846524cfdcf6ff6a54",
+          "size": 3511
+        },
+        {
+          "path": "getitem.lock",
+          "sha256": "98b73892f2f3f8e08ad2a602a6b85c9c72a5b370727ee969d9286a471d395b5a",
+          "size": 3419
+        },
+        {
+          "path": "maturin-starter.lock",
+          "sha256": "23c4252c874be65b66b3ef8155289d5cbffd5da3a67576741797fc710312ed1b",
+          "size": 3427
+        },
+        {
+          "path": "string-sum.lock",
+          "sha256": "26ed5e6662337d0a95ed0bae4e8726ef80623c8356755709499f9776d57e4b98",
+          "size": 1130
+        },
+        {
+          "path": "native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "sha256": "d19a33751d555784937c4d0eae4c83b6e2a02074ef40bf8ca36c3fbdfa08c3ce",
+          "size": 234305
+        },
+        {
+          "path": "sdist/maturin_starter-0.1.0.tar.gz",
+          "sha256": "8ccd18e8e6cc0276101e258df2875b3b677941f9f2bc29e8737837bdd46ad919",
+          "size": 8012
+        },
+        {
+          "path": "abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "sha256": "a7521ef3cada6fe2c2b0c054a1319bd242b633151eeb45a452e597db1644b45d",
+          "size": 241603
+        }
+      ],
+      "log": "docs/testing/reports/consumer-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:24:33.573352+00:00"
+    },
+    {
+      "id": "consumer-3a24917e-2026-10-24-embedding",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "3.14.9",
+      "gil": "enabled",
+      "abi": "embedding",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.consumer_smoke --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "SDK pinned to committed SHA; consumer templates were worktree changes at generator_sha; only recorded interpreter/target ran, wheel tags do not prove others",
+      "generator_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "artifacts": [
+        {
+          "path": "meson-starter.lock",
+          "sha256": "f87c810ae706cd2e2a2a7a7d51e852da49ad46f703a83afbd9956f88e4e222a6",
+          "size": 3331
+        },
+        {
+          "path": "setuptools-rust-starter.lock",
+          "sha256": "583513a98ce251ba001d0b66a46f1185fd55343b7be4543efb9ed944bb814ff9",
+          "size": 3341
+        },
+        {
+          "path": "word-count.lock",
+          "sha256": "9a903ee7caddaab646d33d4d868a73e70174d8f7de2ae14518404ac7b38294c1",
+          "size": 4809
+        },
+        {
+          "path": "decorator.lock",
+          "sha256": "165f6bf485fe4651c2df1738d0a98b4fdb0076859f99c99eb27f3bbfeac2f037",
+          "size": 3421
+        },
+        {
+          "path": "sequential.lock",
+          "sha256": "5e106364066e6c87d1f4f4aad042cb8f1d3b4c0965f5d663d1208f563cdb7801",
+          "size": 1130
+        },
+        {
+          "path": "plugin.lock",
+          "sha256": "60eb8d5367416fdadb7b2d93d3574f305452eed0dde3cc846524cfdcf6ff6a54",
+          "size": 3511
+        },
+        {
+          "path": "getitem.lock",
+          "sha256": "98b73892f2f3f8e08ad2a602a6b85c9c72a5b370727ee969d9286a471d395b5a",
+          "size": 3419
+        },
+        {
+          "path": "maturin-starter.lock",
+          "sha256": "23c4252c874be65b66b3ef8155289d5cbffd5da3a67576741797fc710312ed1b",
+          "size": 3427
+        },
+        {
+          "path": "string-sum.lock",
+          "sha256": "26ed5e6662337d0a95ed0bae4e8726ef80623c8356755709499f9776d57e4b98",
+          "size": 1130
+        },
+        {
+          "path": "native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "sha256": "d19a33751d555784937c4d0eae4c83b6e2a02074ef40bf8ca36c3fbdfa08c3ce",
+          "size": 234305
+        },
+        {
+          "path": "sdist/maturin_starter-0.1.0.tar.gz",
+          "sha256": "8ccd18e8e6cc0276101e258df2875b3b677941f9f2bc29e8737837bdd46ad919",
+          "size": 8012
+        },
+        {
+          "path": "abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "sha256": "a7521ef3cada6fe2c2b0c054a1319bd242b633151eeb45a452e597db1644b45d",
+          "size": 241603
+        }
+      ],
+      "log": "docs/testing/reports/consumer-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:24:33.573352+00:00"
+    },
+    {
+      "id": "consumer-3a24917e-2026-10-24-native",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.consumer_smoke --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "SDK pinned to committed SHA; consumer templates were worktree changes at generator_sha; only recorded interpreter/target ran, wheel tags do not prove others",
+      "generator_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "artifacts": [
+        {
+          "path": "meson-starter.lock",
+          "sha256": "f87c810ae706cd2e2a2a7a7d51e852da49ad46f703a83afbd9956f88e4e222a6",
+          "size": 3331
+        },
+        {
+          "path": "setuptools-rust-starter.lock",
+          "sha256": "583513a98ce251ba001d0b66a46f1185fd55343b7be4543efb9ed944bb814ff9",
+          "size": 3341
+        },
+        {
+          "path": "word-count.lock",
+          "sha256": "9a903ee7caddaab646d33d4d868a73e70174d8f7de2ae14518404ac7b38294c1",
+          "size": 4809
+        },
+        {
+          "path": "decorator.lock",
+          "sha256": "165f6bf485fe4651c2df1738d0a98b4fdb0076859f99c99eb27f3bbfeac2f037",
+          "size": 3421
+        },
+        {
+          "path": "sequential.lock",
+          "sha256": "5e106364066e6c87d1f4f4aad042cb8f1d3b4c0965f5d663d1208f563cdb7801",
+          "size": 1130
+        },
+        {
+          "path": "plugin.lock",
+          "sha256": "60eb8d5367416fdadb7b2d93d3574f305452eed0dde3cc846524cfdcf6ff6a54",
+          "size": 3511
+        },
+        {
+          "path": "getitem.lock",
+          "sha256": "98b73892f2f3f8e08ad2a602a6b85c9c72a5b370727ee969d9286a471d395b5a",
+          "size": 3419
+        },
+        {
+          "path": "maturin-starter.lock",
+          "sha256": "23c4252c874be65b66b3ef8155289d5cbffd5da3a67576741797fc710312ed1b",
+          "size": 3427
+        },
+        {
+          "path": "string-sum.lock",
+          "sha256": "26ed5e6662337d0a95ed0bae4e8726ef80623c8356755709499f9776d57e4b98",
+          "size": 1130
+        },
+        {
+          "path": "native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "sha256": "d19a33751d555784937c4d0eae4c83b6e2a02074ef40bf8ca36c3fbdfa08c3ce",
+          "size": 234305
+        },
+        {
+          "path": "sdist/maturin_starter-0.1.0.tar.gz",
+          "sha256": "8ccd18e8e6cc0276101e258df2875b3b677941f9f2bc29e8737837bdd46ad919",
+          "size": 8012
+        },
+        {
+          "path": "abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "sha256": "a7521ef3cada6fe2c2b0c054a1319bd242b633151eeb45a452e597db1644b45d",
+          "size": 241603
+        }
+      ],
+      "log": "docs/testing/reports/consumer-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:24:33.573352+00:00"
+    },
+    {
+      "id": "local-docs-20261025",
+      "source_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "full"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s docs build-guide"
+      ],
+      "result": "success",
+      "level": "check",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report",
+      "log": "docs/testing/reports/ci-policy-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:55:53.234728+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      }
+    },
+    {
+      "id": "local-full-20261025",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "default",
+        "no-default",
+        "full",
+        "abi3",
+        "abi3-py39",
+        "strict-ui"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s test-rust"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report",
+      "log": "docs/testing/reports/tooling-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:15:23.141757+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      }
+    },
+    {
+      "id": "local-msrv-20261025",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.85.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "simulated-interpreters"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s set-msrv-package-versions -- check-all"
+      ],
+      "result": "success",
+      "level": "compiled",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report",
+      "log": "docs/testing/reports/tooling-optimization-2026-10-25.md",
+      "verified_at": "2026-10-24T23:16:45.784977+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      }
+    }
+  ]
+}

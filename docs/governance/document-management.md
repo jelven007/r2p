@@ -14,6 +14,9 @@
 | 总体方案、接口约束与决策 | `docs/architecture/` | 技术负责人 |
 | 环境、命令、目录映射 | `docs/development/` | 开发/构建负责人 |
 | 策略/支持矩阵与实际结果 | `docs/testing/`，证据在 `reports/` | 测试负责人；策略和执行分开 |
+| 可校验的环境/运行记录与生成摘要 | `docs/testing/evidence.json`；`tools/evidence.py` 生成摘要 | 当前维护者；既有记录不覆盖 |
+| 真实维护人员与能力限制 | `docs/governance/maintainers.toml`、根 SECURITY.md | 已核实 GitHub 维护者 |
+| 新 r2p 发行片段 | `r2p-newsfragments/`、`r2p-towncrier.toml`、`R2P_CHANGELOG.md` | 变更开发者/发行维护者 |
 | 采用、反馈、支持与指标 | `docs/operations/` | 运营/支持负责人 |
 | 环境、故障、恢复操作 | `docs/runbooks/` | 运维负责人 |
 | 版本、两个历史快照、发行/交付记录 | `docs/releases/`；history.json 是快照唯一来源 | 发行负责人 |
@@ -32,6 +35,8 @@
 
 稳定编号为 FR/NFR、G、ADR、Q、WP、R；删除或废弃保留历史记录，不能将已有编号重新用于其他含义。
 CSV 中的 source/design/test_evidence 是文件引用，acceptance_gate 引用已定义门禁。
+CSV 分列 capability_status 与 acceptance_status，acceptance_evidence 引用结构化记录 ID 或具体报告，owner 必须在真实维护者清单中。
+pending/process-only 可记录 not-collected；不得把配置存在或文档存在写为运行成功。
 
 Git 保存文档变更；发布/测试报告额外记录源码 SHA、环境、命令、结果和制品。
 日期不能代替版本；工作区有未提交修改时说明“基于 SHA 的本地变更”，不把 HEAD 当成已包含全部修改。
@@ -61,6 +66,7 @@ Nox `fmt` 包含 `repository-check`，Markdown 格式使用 `rumdl`。
 
 范围、支持承诺、独立发行身份和运行预算需要相应负责人确认；常规目录/文档维护按已有任务授权执行。
 本次核验 GitHub main 未配置分支保护；PR 工作流与本地核验不能描述为已启用强制平台控制。
+2026-10-25 更新：main 保护与私密漏洞报告的启用请求均因当前凭证的 API 权限不足返回 403；其准入状态保持未完成。
 
 ## 5. 归档和周期维护
 

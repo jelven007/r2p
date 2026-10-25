@@ -64,6 +64,7 @@ ENGINEERING_PREFIXES = (
     "docs/reference/",
     ".github/ISSUE_TEMPLATE/",
     "newsfragments/",
+    "r2p-newsfragments/",
 )
 ENGINEERING_FILES = {
     "Architecture.md",
@@ -72,6 +73,7 @@ ENGINEERING_FILES = {
     ".github/CODEOWNERS",
     ".github/pull_request_template.md",
     "docs/README.md",
+    "R2P_CHANGELOG.md",
 }
 SDK_DOC_FILES = {"README.md", "Contributing.md"}
 

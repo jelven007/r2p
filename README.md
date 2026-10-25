@@ -91,6 +91,6 @@ uv run --isolated --only-group nox nox -s test-py
 SDK 技术标识已迁移为 `r2p`；上游历史、版权与许可证按来源保留。
 官方 PyO3 网站、徽章、包索引页面属于上游资料，不代表 `r2p` 已独立运营这些资源。
 源码交付和两个历史快照按[交付记录](docs/releases/records/2026-10-24-production-baseline.md)追溯。
-注册表和站点发行尚未启用；复现/修复反馈通过 [PR](https://github.com/jelven007/r2p/pulls) 进入尽力维护流程，Issues 当前关闭。
+注册表和站点发行尚未启用；问题通过 [Issues](https://github.com/jelven007/r2p/issues/new/choose) 反馈，修复通过 [PR](https://github.com/jelven007/r2p/pulls) 提交，按[支持政策](docs/operations/support-policy.md)尽力维护。
 
 本仓库协作方式见 [Contributing.md](Contributing.md)，行为规范见 [Code-of-Conduct.md](Code-of-Conduct.md)，历史发布说明见 [CHANGELOG.md](CHANGELOG.md)。

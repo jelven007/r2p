@@ -1,17 +1,17 @@
-id,priority,capability_status,source,design,test_evidence,acceptance_gate,owner
-FR-001,P0,implemented,src/lib.rs,docs/architecture/system-design.md,tests/test_pyfunction.rs,G2+G3,SDK developer
-FR-002,P0,implemented,src/interpreter_lifecycle.rs,docs/architecture/system-design.md,tests/test_append_to_inittab.rs,G2,SDK developer
-FR-003,P0,implemented,src/conversion.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_frompy_intopy_roundtrip.rs,G2+G3,SDK developer
-FR-004,P0,implemented,crates/r2p-macros-backend/src/lib.rs,docs/architecture/system-design.md,tests/test_compile_error.rs,G2,Macro developer
-FR-005,P0,local-validated-matrix-limited,crates/r2p-ffi/Cargo.toml,docs/architecture/interfaces-and-compatibility.md,docs/testing/support-matrix.md,G4,QA lead
-FR-006,P1,experimental,crates/r2p-introspection/src/introspection.rs,docs/architecture/interfaces-and-compatibility.md,tests/python/tests/test_stubs.py,G3+G4,SDK developer
-FR-007,P0,git-delivery-candidate-packages-validated,product.toml,docs/releases/release-and-rollback.md,docs/releases/records/2026-10-24-production-baseline.md,G5,Release lead
-FR-008,P0,production-engineering-baseline,tools/check_repository.py,docs/development/repository-layout.md,docs/testing/reports/production-baseline-validation.md,G1,Tech lead
-NFR-001,P0,production-acceptance-pending,src/pycell.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_gc.rs,G2+G4,Tech lead
-NFR-002,P1,baseline-pending,benchmarks/r2p-benches/Cargo.toml,docs/testing/test-strategy.md,benchmarks/r2p-benches/benches/bench_call.rs,G4,Performance owner
-NFR-003,P0,local-msrv-and-sdk-validated,Cargo.toml,docs/architecture/interfaces-and-compatibility.md,docs/testing/reports/kernel-migration-validation.md,G2+G4,Tech lead
-NFR-004,P0,tracked-locks-and-git-snapshots,Cargo.lock,docs/releases/version-policy.md,docs/releases/history.json,G5,Release lead
-NFR-005,P0,local-validated-remote-results-separate,noxfile.py,docs/testing/test-strategy.md,docs/testing/reports/production-baseline-validation.md,G1+G2+G3+G4,QA lead
-NFR-006,P0,local-baseline-delivered,docs/README.md,docs/governance/document-management.md,tools/check_repository.py,G1,Document owner
-NFR-007,P0,git-recovery-defined-external-drill-pending,docs/runbooks/incident-response.md,docs/releases/release-and-rollback.md,docs/testing/reports/production-baseline-validation.md,G6,SRE lead
-NFR-008,P1,pr-feedback-defined-issues-disabled,docs/operations/support-policy.md,docs/operations/operating-plan.md,docs/governance/change-record-template.md,G6,Support lead
+id,priority,capability_status,acceptance_status,acceptance_evidence,source,design,test_evidence,acceptance_gate,owner
+FR-001,P0,implemented,validated-subset,ci-40112259362+local-full-20261025,src/lib.rs,docs/architecture/system-design.md,tests/test_pyfunction.rs,G2+G3,jelven007
+FR-002,P0,implemented,validated-subset,ci-40112259362+local-full-20261025,src/interpreter_lifecycle.rs,docs/architecture/system-design.md,tests/test_append_to_inittab.rs,G2,jelven007
+FR-003,P0,implemented,validated-subset,ci-40112259362+local-full-20261025,src/conversion.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_frompy_intopy_roundtrip.rs,G2+G3,jelven007
+FR-004,P0,implemented,validated-subset,ci-40112259362+local-full-20261025,crates/r2p-macros-backend/src/lib.rs,docs/architecture/system-design.md,tests/test_compile_error.rs,G2,jelven007
+FR-005,P0,implemented-matrix-configured,validated-subset,ci-40112259362,crates/r2p-ffi/Cargo.toml,docs/architecture/interfaces-and-compatibility.md,docs/testing/support-matrix.md,G4,jelven007
+FR-006,P1,experimental,validated-subset,ci-40112259362,crates/r2p-introspection/src/introspection.rs,docs/architecture/interfaces-and-compatibility.md,tests/python/tests/test_stubs.py,G3+G4,jelven007
+FR-007,P0,git-delivered-external-publication-disabled,source-only,docs/releases/records/2026-10-24-production-baseline.md,product.toml,docs/releases/release-and-rollback.md,docs/releases/records/2026-10-24-production-baseline.md,G5,jelven007
+FR-008,P0,engineering-baseline-implemented,validated-subset,ci-40112259362,tools/check_repository.py,docs/development/repository-layout.md,docs/testing/reports/production-baseline-validation.md,G1,jelven007
+NFR-001,P0,lifecycle-checks-implemented,validated-subset,ci-40112259362+local-full-20261025,src/pycell.rs,docs/architecture/interfaces-and-compatibility.md,tests/test_gc.rs,G2+G4,jelven007
+NFR-002,P1,benchmarking-configured,pending,not-collected,benchmarks/r2p-benches/Cargo.toml,docs/testing/test-strategy.md,benchmarks/r2p-benches/benches/bench_call.rs,G4,jelven007
+NFR-003,P0,compatibility-matrix-configured,validated-subset,ci-40112259362+local-msrv-20261025,Cargo.toml,docs/architecture/interfaces-and-compatibility.md,docs/testing/reports/kernel-migration-validation.md,G2+G4,jelven007
+NFR-004,P0,tracked-locks-and-git-snapshots,source-only,local-msrv-20261025,Cargo.lock,docs/releases/version-policy.md,docs/releases/history.json,G5,jelven007
+NFR-005,P0,test-selection-and-gates-implemented,validated-subset,ci-40112259362+local-full-20261025,noxfile.py,docs/testing/test-strategy.md,docs/testing/reports/ci-policy-optimization-2026-10-25.md,G1+G2+G3+G4,jelven007
+NFR-006,P0,documentation-governance-implemented,validated-local,local-docs-20261025,docs/README.md,docs/governance/document-management.md,tools/check_repository.py,G1,jelven007
+NFR-007,P0,git-recovery-defined-external-drill-pending,pending,not-collected,docs/runbooks/incident-response.md,docs/releases/release-and-rollback.md,docs/testing/reports/production-baseline-validation.md,G6,jelven007
+NFR-008,P1,issue-and-pr-feedback-enabled,process-only,not-collected,docs/operations/support-policy.md,docs/operations/operating-plan.md,docs/governance/change-record-template.md,G6,jelven007

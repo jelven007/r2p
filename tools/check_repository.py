@@ -80,7 +80,15 @@ def check_manifest(path: Path) -> list[str]:
 def engineering_docs() -> list[Path]:
     paths = [
         ROOT / name
-        for name in ("README.md", "Architecture.md", "Contributing.md", "Releasing.md")
+        for name in (
+            "README.md",
+            "Architecture.md",
+            "Contributing.md",
+            "Releasing.md",
+            "SECURITY.md",
+            "R2P_CHANGELOG.md",
+            "r2p-newsfragments/README.md",
+        )
     ]
     paths.extend(
         path
@@ -131,6 +139,22 @@ def check_includes() -> list[str]:
 
 def check_traceability() -> list[str]:
     errors = []
+    evidence = {
+        row["id"]: row
+        for row in json.loads((ROOT / "docs/testing/evidence.json").read_text())[
+            "records"
+        ]
+    }
+    maintainers = tomllib.loads(
+        (ROOT / "docs/governance/maintainers.toml").read_text()
+    )["maintainers"]
+    acceptance_states = {
+        "validated-subset",
+        "validated-local",
+        "source-only",
+        "process-only",
+        "pending",
+    }
     specification = (
         ROOT / "docs" / "requirements" / "system-requirements.md"
     ).read_text()
@@ -145,6 +169,8 @@ def check_traceability() -> list[str]:
             "id",
             "priority",
             "capability_status",
+            "acceptance_status",
+            "acceptance_evidence",
             "source",
             "design",
             "test_evidence",
@@ -166,6 +192,32 @@ def check_traceability() -> list[str]:
                 errors.append(
                     f"traceability.csv: unknown ID or wrong priority {identifier}"
                 )
+            if row["acceptance_status"] not in acceptance_states:
+                errors.append(
+                    f"traceability.csv: {identifier} unknown acceptance status"
+                )
+            if row["owner"] not in maintainers:
+                errors.append(
+                    f"traceability.csv: {identifier} unassigned real maintainer"
+                )
+            for reference in row["acceptance_evidence"].split("+"):
+                if reference == "not-collected":
+                    if row["acceptance_status"] not in {"pending", "process-only"}:
+                        errors.append(
+                            f"traceability.csv: {identifier} claims acceptance without evidence"
+                        )
+                elif reference in evidence:
+                    if (
+                        row["acceptance_status"].startswith("validated-")
+                        and evidence[reference]["result"] != "success"
+                    ):
+                        errors.append(
+                            f"traceability.csv: {identifier} validation references non-success"
+                        )
+                elif not (ROOT / reference).is_file():
+                    errors.append(
+                        f"traceability.csv: {identifier} unknown evidence {reference}"
+                    )
             for column in ("source", "design", "test_evidence"):
                 target = (ROOT / row[column]).resolve()
                 if not target.is_relative_to(ROOT) or not target.is_file():

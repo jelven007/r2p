@@ -1,6 +1,10 @@
 [files]
 extend-exclude = []
 
+[default]
+# Intentional misspelling used to verify that unknown CLI arguments fail.
+extend-ignore-re = ['\bskip-ful\b']
+
 [default.extend-words]
 # error: `fo` should be `of`, `for`, `do`, `go`, `to`
 # --> .\src\exceptions.rs:1202:30
