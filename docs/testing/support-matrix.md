@@ -33,6 +33,9 @@
 详细数量、命令和已有 ignored/skip 项见[SDK 内核迁移报告](reports/kernel-migration-validation.md)及其引用的[初始报告](reports/validation-report.md)。
 生产工程基线的目录、工作流和交付验证见[历史报告](reports/production-baseline-validation.md)。
 后续本地候选、性能采样、环境修正与失败记录见[当前结构化摘要](evidence-summary.md)及[持续实施记录](../governance/optimization-continuation-2026-10-25.md)。
+固定实施提交 `b04b79e7` 的 macOS arm64 本机验收见[报告](reports/local-acceptance-2026-10-25.md)。
+普通 GIL 完整 Rust 入口、FT core 与 26 项 Python 回归、内省和候选/恢复通过；FT 模块导入前后的实际 GIL 均关闭。
+CLI 只有 macos-aarch64 的新原生验收，七平台集合仍阻断；该结果不扩展表中的历史远端支持范围。
 上述远端证据对应源码 `839ddb30dc3c936049a26f946b6206af25a99ba9` 的 [CI 运行](https://github.com/jelven007/r2p/actions/runs/40112259362)。
 主分支合并 `2cc5fbcddea3b35d6a0a95caf6177478b79e79be` 与该提交的文件树一致；后续交付回执仅更新文档。
 九个 stable Clippy 跨目标检查也通过，但仅有 Clippy 结果的目标不据此声明运行支持。

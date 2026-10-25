@@ -1920,6 +1920,503 @@
       "data": "docs/testing/data/upstream-runtime-2026-10-25.json",
       "upstream_sha": "5619fedbca3ad1baca82869b57df54afd0432a0b",
       "mapped_patch_sha256": "81cb50a1f9d70361d9c5c9d6f162e0b1d4ba42c61b9ec948ac054acdf2d4ffae"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-abi3",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "gil_after_imports": true
+      },
+      "abi": "abi3",
+      "features": [
+        "abi3-py39"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-cli",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "cli",
+      "features": [
+        "introspection"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-embedding",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "embedding",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-native",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "gil_after_imports": true
+      },
+      "abi": "native",
+      "features": [
+        "default"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-candidate.lock": "c4226da2e06bfc20255afbc4afa3c9c4fe6d9a2050bbd10ed5dde963a6cd2591",
+        "embedding-candidate.lock": "48c8c2275019361c1209f11b43d5a07d8c44787555371be7595a76f2042e7d84",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "candidate-observed-b04b79e7-restoration",
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "candidate_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "consumer_template_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "tool_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "cpython 3.14.9",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "restoration",
+      "features": [
+        "retained baseline",
+        "native",
+        "abi3",
+        "CLI"
+      ],
+      "commands": [
+        "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+        "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:50:42.073255+00:00",
+      "lock_sha256": {
+        "extension-baseline.lock": "ecef6fa6df828f94a771832c77a17b44d6dedd1a42e2922a241b1da10815e0c5",
+        "embedding-baseline.lock": "8c5554c02b80061d3d8e866a3133f7cf59c28408d2fa178efcb9d9367a83e8eb",
+        "cli-baseline.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "manifest_sha256": "25ba836ef2d642ab3e5b1d478803c3b02068544213505b6b1d8ee781a8807531",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "manifest_path": "target/optimization/candidate-final-local-20261025/manifest.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-cli-wheel",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "macos-aarch64",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9 launcher; CLI is a native executable",
+      "gil": "not-applicable",
+      "abi": "py3-none-macosx_11_0_arm64",
+      "features": [
+        "introspection CLI"
+      ],
+      "commands": [
+        "python -m tools.cli_wheel_acceptance --sha <source> --dist <native wheel directory> --platform-id macos-aarch64"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "Only macos-aarch64 installed and executed; the seven-platform set check correctly rejects the remaining six absent acceptances.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:45:38.448706+00:00",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "artifact": {
+        "name": "r2p-introspection",
+        "version": "0.30.0",
+        "tags": [
+          "py3-none-macosx_11_0_arm64"
+        ],
+        "filename_tag": "py3-none-macosx_11_0_arm64",
+        "sha256": "ee6284a6622b561a15571b76bc5ff3c28f86829279487f4a86166a6eaa881e46",
+        "bytes": 643627,
+        "path": "r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl"
+      }
+    },
+    {
+      "id": "local-acceptance-b04b79e7-engineering",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "repository/evidence",
+        "72 tool regressions"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s repository-check"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:41:58.204870+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-ft-python",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "<workspace>/target/optimization/final-local-ft-nox-v2/a94a8fe5/bin/python",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [
+          {
+            "name": "r2p_pytests",
+            "result": "success",
+            "path": "<workspace>/target/optimization/final-local-ft-nox-v2/a94a8fe5/lib/python3.14t/site-packages/r2p_pytests/__init__.py",
+            "gil_before": false,
+            "gil_after": false
+          }
+        ],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "selected Python regressions",
+        "free-threaded"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -f tests/python/noxfile.py --envdir <workspace>/target/optimization/final-local-ft-nox-v2 -s test -- tests/test_finalization.py tests/test_pyclasses.py tests/test_exception.py"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "Native macOS arm64 CPython 3.14.9t; selected Python files only; observed GIL disabled before and after r2p_pytests import; no remote or abi3 inference.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:48:57.241024+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-ft-rust",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "core",
+        "macros",
+        "free-threaded"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s test-rust -- scope=core"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:51:48.009189+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-gil-rust",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "complete native/abi3 Rust scope"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- -s test-rust"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:46:42.669289+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-initial-cli-platform",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "local launcher; SDK not executed",
+      "rust": "unrecorded",
+      "python": "CPython 3.14.9 launcher",
+      "gil": "unrecorded",
+      "abi": "not-run",
+      "features": [
+        "launcher/argument admission"
+      ],
+      "commands": [
+        "python3.14 -m tools.cli_wheel_acceptance --sha b04b79e7130c9f7694962cb70a45585e276cf41a --dist <workspace>/target/optimization/final-local-cli-dist-20261025 --platform-id macos-arm64"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "Unsupported macos-arm64 ID rejected at argument parsing; corrected to policy ID macos-aarch64 before native acceptance.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:45:18.080044+00:00",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "raw_log": "target/optimization/final-local-cli-20261025.log",
+      "log_sha256": "7fe5cb1dd50bbb12fc51909cfb66362589faca512aa591c9c14f39e14aa94857"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-initial-launcher",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "local launcher; SDK not executed",
+      "rust": "unrecorded",
+      "python": "CPython 3.14.9 launcher",
+      "gil": "unrecorded",
+      "abi": "not-run",
+      "features": [
+        "launcher/argument admission"
+      ],
+      "commands": [
+        "PYTHON_GIL=0 python3.14 tools/dev.py --target-python <CPython 3.14.9t> --evidence target/optimization/final-local-ft-rust-20261025.json -- -s test-rust -- scope=core"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "Ordinary CPython received PYTHON_GIL=0 and failed before SDK execution; corrected by launching the tools with CPython 3.14.9t.",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:42:51.323542+00:00",
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json",
+      "raw_log": "target/optimization/final-local-ft-rust-20261025.log",
+      "log_sha256": "9db3bcf3fde5d3f7ae0dbd049754003635540d396e06a8989d36f3a718e19463"
+    },
+    {
+      "id": "local-acceptance-b04b79e7-introspection",
+      "source_sha": "b04b79e7130c9f7694962cb70a45585e276cf41a",
+      "source_state": "committed",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "<workspace>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "<sandbox-prefix><workspace>/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "experimental-async",
+        "experimental-inspect"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <recorded-target> -- --envdir <workspace>/target/optimization/final-local-introspection-nox -s test-introspection"
+      ],
+      "result": "success",
+      "level": "run",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
+      "log": "docs/testing/reports/local-acceptance-2026-10-25.md",
+      "verified_at": "2026-10-25T05:47:28.361367+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/local-acceptance-2026-10-25.json"
     }
   ]
 }

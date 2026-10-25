@@ -4,6 +4,7 @@
 SDK 内核、包名和宏属性统一为 `r2p`，产品元数据见 [product.toml](product.toml)。
 当前交付仓库为 `jelven007/r2p`，按已验证的固定 Git SHA 消费。
 已有本地回归、候选消费和性能样本；结果限定各自源码与环境，见[当前结构化证据](docs/testing/evidence-summary.md)。
+固定实施提交 `b04b79e7` 的候选/恢复、GIL/FT、内省和本机 CLI 验收通过，见[本机报告](docs/testing/reports/local-acceptance-2026-10-25.md)。
 当前优化分支的最终 SHA 完整远端验收仍待完成，进度见[持续优化记录](docs/governance/optimization-continuation-2026-10-25.md)。
 
 | 项目 | 基线 |

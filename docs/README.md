@@ -32,6 +32,7 @@
 | 测试 | [测试策略](testing/test-strategy.md) | 分层、用例、矩阵、缺陷及准入 |
 | 支持矩阵 | [兼容性证据与状态](testing/support-matrix.md) | 已配置、已编译、已运行和支持等级 |
 | 当前验证 | [结构化摘要](testing/evidence-summary.md)、[实际环境与失败等级](testing/reports/evidence-environment-2026-10-25.md) | 各 SHA 实际执行了什么、结果和限制是什么 |
+| 固定提交验收 | [b04b79e7 本机验收](testing/reports/local-acceptance-2026-10-25.md) | 候选/恢复、GIL/FT、内省、CLI 和原始制品取回的结果及远端缺口是什么 |
 | 持续发行验证 | [跨版本恢复与上传续发](testing/reports/continuous-release-2026-10-25.md) | 各 SHA 版本、原始制品和本地 HTTP 失败恢复如何核验 |
 | 工程与资源验证 | [Nox 拆分、保留和取回](testing/reports/nox-resources-2026-10-25.md) | 会话/命令契约和原始制品生命周期如何核验 |
 | 性能与成本 | [两种工作量与扩大采样](testing/reports/performance-calibration-2026-10-25.md) | 本地测量说明什么、真实用户负载和连续 CI 成本还缺什么 |
