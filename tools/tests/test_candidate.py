@@ -15,7 +15,7 @@ from pathlib import Path
 from tools.candidate_artifacts import ROOT, crate_metadata, wheel_metadata
 from tools.cli_wheel_acceptance import matches_platform, verify_set
 from tools.publish_candidate import upload_body
-from tools.release_gate import REPOSITORY, required_jobs, validate_run
+from tools.release_gate import REPOSITORY, job_policy, required_jobs, validate_run
 
 SHA = "1" * 40
 VERSION = "0.30.0"
@@ -234,7 +234,7 @@ class ReleaseGateTests(unittest.TestCase):
         }
         self.jobs = [
             {"name": name, "status": "completed", "conclusion": "success"}
-            for name in sorted(required_jobs("1.85"))
+            for name in sorted(job_policy("1.85"))
         ]
 
     def test_completed_exact_full_matrix_is_required(self):
@@ -269,15 +269,17 @@ class ReleaseGateTests(unittest.TestCase):
             "status": "completed",
             "conclusion": "failure",
         }
-        self.assertEqual(validate_run(self.run, self.jobs + [future], SHA, "1.85"), [])
+        jobs = [job for job in self.jobs if job["name"] != future["name"]]
+        self.assertEqual(validate_run(self.run, jobs + [future], SHA, "1.85"), [])
         for change in (
             {"conclusion": "cancelled"},
             {"name": "unknown-optional-job"},
             {"status": "in_progress"},
         ):
             self.assertTrue(
-                validate_run(self.run, self.jobs + [future | change], SHA, "1.85")
+                validate_run(self.run, jobs + [future | change], SHA, "1.85")
             )
+        self.assertTrue(validate_run(self.run, jobs, SHA, "1.85"))
 
 
 if __name__ == "__main__":

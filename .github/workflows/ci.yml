@@ -207,30 +207,13 @@ jobs:
   clippy:
     needs: [fmt, resolve]
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['clippy'].status != 'not-applicable' }}
-    runs-on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
       fail-fast: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast') }}
-      matrix:
-        rust: [stable]
-        target:
-          [
-            "aarch64-apple-darwin",
-            "x86_64-unknown-linux-gnu",
-            "aarch64-unknown-linux-gnu",
-            "powerpc64le-unknown-linux-gnu",
-            "s390x-unknown-linux-gnu",
-            "wasm32-wasip1",
-            "x86_64-pc-windows-msvc",
-            "i686-pc-windows-msvc",
-            "aarch64-pc-windows-msvc",
-          ]
-        include:
-          # Run beta clippy as a way to detect any incoming lints which may affect downstream users
-          - rust: beta
-            target: "x86_64-unknown-linux-gnu"
-    name: clippy/${{ matrix.target }}/${{ matrix.rust }}
-    continue-on-error: ${{ matrix.rust != 'stable' }}
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.clippy }}
+    name: ${{ matrix.name }}
+    continue-on-error: ${{ matrix.allow-failure }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -248,18 +231,18 @@ jobs:
       - run: uv run --isolated --only-group nox nox -s clippy-all
     env:
       CARGO_BUILD_TARGET: ${{ matrix.target }}
+      UV_PYTHON: ${{ matrix.python-version }}
 
   check-nightly:
     needs: [fmt, resolve]
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['check-nightly'].status != 'not-applicable' }}
-    runs-on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
       fail-fast: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast') }}
-      matrix:
-        target: ["x86_64-unknown-linux-gnu"]
-    name: check-nightly/${{ matrix.target }}/nightly
-    continue-on-error: true
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.nightly }}
+    name: ${{ matrix.name }}
+    continue-on-error: ${{ matrix.allow-failure }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -267,21 +250,23 @@ jobs:
       - name: Install Rust toolchain
         env:
           RUST_TARGET: ${{ matrix.target }}
+          RUST_TOOLCHAIN: ${{ matrix.rust }}
         run: |
-          rustup toolchain install nightly --profile minimal --no-self-update --component clippy,rust-src --target "$RUST_TARGET" --allow-downgrade
-          rustup default nightly
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --no-self-update --component clippy,rust-src --target "$RUST_TARGET" --allow-downgrade
+          rustup default "$RUST_TOOLCHAIN"
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           save-cache: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
       - run: uv run --isolated --only-group nox nox -s check-all
     env:
       CARGO_BUILD_TARGET: ${{ matrix.target }}
+      UV_PYTHON: ${{ matrix.python-version }}
 
   build-pr:
     permissions:
       contents: read
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['build-pr'].status != 'not-applicable' }}
-    name: python${{ matrix.python-version }}-${{ matrix.platform.python-architecture }} ${{ matrix.platform.os }} rust-${{ matrix.rust }}
+    name: ${{ matrix.name }}
     needs: [fmt, resolve]
     uses: $/.github/workflows/build.yml
     with:
@@ -294,6 +279,9 @@ jobs:
       MSRV: ${{ needs.resolve.outputs.MSRV }}
       verbose: ${{ needs.resolve.outputs.verbose == 'true' }}
       ffi-check: ${{ fromJSON(needs.resolve.outputs.plan).ffi }}
+      allow-failure: ${{ matrix.allow-failure }}
+      cell-id: ${{ matrix.id }}
+      job-name: ${{ matrix.name }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     strategy:
@@ -305,7 +293,7 @@ jobs:
     permissions:
       contents: read
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['build-full'].status != 'not-applicable' }}
-    name: python${{ matrix.python-version }}-${{ matrix.platform.python-architecture }} ${{ matrix.platform.os }} rust-${{ matrix.rust }}
+    name: ${{ matrix.name }}
     needs: [fmt, resolve]
     uses: $/.github/workflows/build.yml
     with:
@@ -318,6 +306,9 @@ jobs:
       MSRV: ${{ needs.resolve.outputs.MSRV }}
       verbose: ${{ needs.resolve.outputs.verbose == 'true' }}
       ffi-check: ${{ fromJSON(needs.resolve.outputs.plan).ffi }}
+      allow-failure: ${{ matrix.allow-failure }}
+      cell-id: ${{ matrix.id }}
+      job-name: ${{ matrix.name }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     strategy:
@@ -439,13 +430,14 @@ jobs:
   no_std:
     needs: [fmt, resolve]
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['no_std'].status != 'not-applicable' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    name: ${{ matrix.name }}
     strategy:
       fail-fast: false
-      matrix:
-        session: ["test-py", "test-rust", "clippy"]
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.no_std }}
     env:
       R2P_WIP_NO_STD: "1"
+      UV_PYTHON: ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -454,14 +446,18 @@ jobs:
         with:
           save-cache: ${{ needs.resolve.outputs.save-cache }}
       - name: Install Rust toolchain
+        env:
+          RUST_TOOLCHAIN: ${{ matrix.rust }}
         run: |
-          rustup toolchain install stable --profile minimal --no-self-update --component rust-src
-          rustup default stable
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --no-self-update --component rust-src
+          rustup default "$RUST_TOOLCHAIN"
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           save-if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
       - name: Test
-        run: uv run --isolated --only-group nox nox -s ${{ matrix.session }}
+        run: uv run --isolated --only-group nox nox -s "$NOX_SESSION"
+        env:
+          NOX_SESSION: ${{ matrix.session }}
 
   test-debug:
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-debug'].status != 'not-applicable' }}
@@ -536,24 +532,22 @@ jobs:
   check-feature-powerset:
     needs: [fmt, resolve]
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['check-feature-powerset'].status != 'not-applicable' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     env:
       RUSTUP_TOOLCHAIN: ${{ matrix.rust }}
-    name: check-feature-powerset ${{ matrix.rust }}
+      UV_PYTHON: ${{ matrix.python-version }}
+    name: ${{ matrix.name }}
     strategy:
       # run on stable and MSRV to check that all combinations of features are expected to build fine on our supported
       # range of compilers
-      matrix:
-        rust: ["stable"]
-        include:
-          - rust: ${{ needs.resolve.outputs.MSRV }}
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.powerset }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.15"
+          python-version: ${{ matrix.python-version }}
       - name: Install Rust toolchain
         run: |
           rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --no-self-update
@@ -573,32 +567,12 @@ jobs:
   test-cross-compilation:
     needs: [fmt, resolve]
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-cross-compilation'].status != 'not-applicable' }}
-    runs-on: ${{ matrix.os }}
-    name: test-cross-compilation ${{ matrix.os }} -> ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    name: ${{ matrix.name }}
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
       fail-fast: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast') }}
-      matrix:
-        include:
-          # ubuntu "cross compile" to itself
-          - os: "ubuntu-latest"
-            target: "x86_64-unknown-linux-gnu"
-            flags: "-i python3.13"
-            manylinux: auto
-          # ubuntu x86_64 -> aarch64
-          - os: "ubuntu-latest"
-            target: "aarch64-unknown-linux-gnu"
-            flags: "-i python3.13"
-            manylinux: auto
-          # ubuntu x86_64 -> windows x86_64
-          - os: "ubuntu-latest"
-            target: "x86_64-pc-windows-gnu"
-            flags: "-i python3.13"
-            apt-packages: mingw-w64 llvm
-          # windows x86_64 -> aarch64
-          - os: "windows-latest"
-            target: "aarch64-pc-windows-msvc"
-            flags: "-i python3.13"
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.cross }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -616,12 +590,20 @@ jobs:
           save-if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
           key: ${{ matrix.target }}
       - name: Install Rust toolchain
+        shell: bash
+        env:
+          RUST_TOOLCHAIN: ${{ matrix.rust }}
         run: |
-          rustup toolchain install stable --profile minimal --no-self-update
-          rustup default stable
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --no-self-update
+          rustup default "$RUST_TOOLCHAIN"
       - name: Setup cross-compiler packages
         if: ${{ matrix.apt-packages }}
-        run: sudo apt-get install -y ${{ matrix.apt-packages }}
+        shell: bash
+        run: |
+          read -r -a packages <<< "$APT_PACKAGES"
+          sudo apt-get install -y -- "${packages[@]}"
+        env:
+          APT_PACKAGES: ${{ matrix.apt-packages }}
       - uses: $/.github/actions/prepare-coverage
         with:
           host_only: true
@@ -691,31 +673,9 @@ jobs:
     needs: [fmt, resolve]
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['test-introspection'].status != 'not-applicable' }}
     strategy:
-      matrix:
-        platform:
-          [
-            {
-              os: "macos-latest",
-              python-architecture: "arm64",
-              rust-target: "aarch64-apple-darwin",
-            },
-            {
-              os: "ubuntu-latest",
-              python-architecture: "x64",
-              rust-target: "x86_64-unknown-linux-gnu",
-            },
-            {
-              os: "windows-latest",
-              python-architecture: "x64",
-              rust-target: "x86_64-pc-windows-msvc",
-            },
-            {
-              os: "windows-latest",
-              python-architecture: "x86",
-              rust-target: "i686-pc-windows-msvc",
-            },
-          ]
-    runs-on: ${{ matrix.platform.os }}
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.introspection }}
+    runs-on: ${{ matrix.runner }}
+    name: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -724,12 +684,13 @@ jobs:
         shell: bash
         env:
           RUST_TARGET: ${{ matrix.platform.rust-target }}
+          RUST_TOOLCHAIN: ${{ matrix.rust }}
         run: |
-          rustup toolchain install stable --profile minimal --no-self-update --target "$RUST_TARGET"
-          rustup default stable
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --no-self-update --target "$RUST_TARGET"
+          rustup default "$RUST_TOOLCHAIN"
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.14"
+          python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.python-architecture }}
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
@@ -740,6 +701,7 @@ jobs:
       - run: uv run --isolated --only-group nox nox -s test-introspection
     env:
       CARGO_BUILD_TARGET: ${{ matrix.platform.rust-target }}
+      UV_PYTHON: ${{ matrix.python-version }}
 
   test-introspection-pr:
     needs: [fmt, resolve]
@@ -764,28 +726,34 @@ jobs:
   pytests-type-checking:
     needs: [fmt, resolve]
     if: ${{ fromJSON(needs.resolve.outputs.plan).jobs['pytests-type-checking'].status != 'not-applicable' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    name: ${{ matrix.name }}
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
       fail-fast: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast') }}
-      matrix:
-        checker: [mypy, pyrefly]
+      matrix: ${{ fromJSON(needs.resolve.outputs.plan).matrices.typing }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Install Rust toolchain
+        env:
+          RUST_TOOLCHAIN: ${{ matrix.rust }}
         run: |
-          rustup toolchain install stable --profile minimal --no-self-update --component rust-src
-          rustup default stable
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --no-self-update --component rust-src
+          rustup default "$RUST_TOOLCHAIN"
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.14"
+          python-version: ${{ matrix.python-version }}
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           save-cache: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
-      - run: uv run --project ../.. --isolated --only-group nox nox -s ${{matrix.checker}}
+      - run: uv run --project ../.. --isolated --only-group nox nox -s "$NOX_CHECKER"
         working-directory: tests/python
+        env:
+          NOX_CHECKER: ${{ matrix.checker }}
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
 
   sdk-docs:
     needs: [fmt, resolve]

@@ -11,7 +11,7 @@ from pathlib import Path
 
 import tomllib
 
-from tools.engineering.ci_matrix import build_matrices
+from tools.engineering.ci_matrix import MATRIX_JOBS, build_matrices
 
 ROOT = Path(__file__).resolve().parent.parent
 CORE_JOBS = {
@@ -284,12 +284,34 @@ def check_workflow_contract() -> list[str]:
         )
         if not dependency or "resolve" not in dependency[1].split(", "):
             errors.append(f"{name}: must depend on resolve")
-    for name, matrix in (("build-pr", "pr"), ("build-full", "full")):
+    for name, matrix in MATRIX_JOBS.items():
         if (
             f"matrix: ${{{{ fromJSON(needs.resolve.outputs.plan).matrices.{matrix} }}}}"
             not in jobs[name]
         ):
-            errors.append(f"{name}: build matrix must come from the verified selection")
+            errors.append(f"{name}: matrix must come from the verified selection")
+        if "name: ${{ matrix.name }}" not in jobs[name]:
+            errors.append(f"{name}: job name must come from the shared cell")
+        if name in {"build-pr", "build-full"}:
+            for field in ("allow-failure", "cell-id", "job-name"):
+                value = {"cell-id": "id", "job-name": "name"}.get(field, field)
+                if f"{field}: ${{{{ matrix.{value} }}}}" not in jobs[name]:
+                    errors.append(f"{name}: missing shared cell input {field}")
+        elif "runs-on: ${{ matrix.runner }}" not in jobs[name]:
+            errors.append(f"{name}: runner must come from the shared cell")
+    build = (ROOT / ".github/workflows/build.yml").read_text()
+    if "continue-on-error: ${{ inputs.allow-failure }}" not in build:
+        errors.append("build.yml: tolerated failure must use the shared policy")
+    for name in ("clippy", "check-nightly"):
+        if "continue-on-error: ${{ matrix.allow-failure }}" not in jobs[name]:
+            errors.append(f"{name}: tolerated failure must use the shared policy")
+    wheel = (ROOT / ".github/workflows/python-wheel.yml").read_text()
+    if (
+        "python -m tools.engineering.ci_matrix --github-output" not in wheel
+        or "matrix: ${{ fromJSON(needs.admission.outputs.cli-matrix) }}" not in wheel
+        or "cli-matrix: ${{ steps.matrix.outputs.cli-matrix }}" not in wheel
+    ):
+        errors.append("python-wheel.yml: CLI execution must use the shared matrix")
     return errors
 
 

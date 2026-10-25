@@ -7,30 +7,18 @@ import json
 import os
 import re
 import subprocess
-from collections import Counter
 from pathlib import Path
 
 import tomllib
 
 from tools.candidate_artifacts import ROOT, verify_manifest
 from tools.ci_policy import CORE_JOBS, FULL_JOBS
-from tools.engineering.ci_matrix import build_matrices
+from tools.engineering.ci_matrix import MATRIX_JOBS, release_cells
 
 REPOSITORY = "jelven007/r2p"
-CLIPPY_TARGETS = (
-    "aarch64-apple-darwin",
-    "x86_64-unknown-linux-gnu",
-    "aarch64-unknown-linux-gnu",
-    "powerpc64le-unknown-linux-gnu",
-    "s390x-unknown-linux-gnu",
-    "wasm32-wasip1",
-    "x86_64-pc-windows-msvc",
-    "i686-pc-windows-msvc",
-    "aarch64-pc-windows-msvc",
-)
 
 
-def required_jobs(msrv: str) -> set[str]:
+def job_policy(msrv: str) -> dict[str, dict]:
     names = (
         CORE_JOBS
         | FULL_JOBS
@@ -44,44 +32,24 @@ def required_jobs(msrv: str) -> set[str]:
             "candidate-acceptance",
             "conclusion",
         }
-    ) - {
-        "clippy",
-        "no_std",
-        "pytests-type-checking",
-        "build-full",
-        "test-cross-compilation",
-        "check-feature-powerset",
+    ) - MATRIX_JOBS.keys()
+    return {
+        name: {
+            "id": name,
+            "support": "supported",
+            "allowed-results": ["success"],
+        }
+        for name in names
+    } | release_cells(msrv)
+
+
+def required_jobs(msrv: str) -> set[str]:
+    """Supported jobs require success; prospective cells still must complete."""
+    return {
+        name
+        for name, rule in job_policy(msrv).items()
+        if rule["support"] == "supported"
     }
-    names |= {f"clippy/{target}/stable" for target in CLIPPY_TARGETS}
-    names |= {f"no_std ({session})" for session in ("test-py", "test-rust", "clippy")}
-    names |= {f"pytests-type-checking ({checker})" for checker in ("mypy", "pyrefly")}
-    names |= {f"check-feature-powerset {rust}" for rust in ("stable", msrv)}
-    names |= {
-        "test-introspection (macos-latest, arm64, aarch64-apple-darwin)",
-        "test-introspection (ubuntu-latest, x64, x86_64-unknown-linux-gnu)",
-        "test-introspection (windows-latest, x64, x86_64-pc-windows-msvc)",
-        "test-introspection (windows-latest, x86, i686-pc-windows-msvc)",
-    }
-    names |= {
-        f"test-cross-compilation {runner} -> {target}"
-        for runner, target in (
-            ("ubuntu-latest", "x86_64-unknown-linux-gnu"),
-            ("ubuntu-latest", "aarch64-unknown-linux-gnu"),
-            ("ubuntu-latest", "x86_64-pc-windows-gnu"),
-            ("windows-latest", "aarch64-pc-windows-msvc"),
-        )
-    }
-    for cell in build_matrices(msrv)["full"]["include"]:
-        platform = cell["platform"]
-        # Nightly/beta are forward-looking; their job must complete but their
-        # tolerated failures do not define the supported stable/MSRV set.
-        if cell["rust"] in {"nightly", "beta"}:
-            continue
-        names.add(
-            f"python{cell['python-version']}-{platform['python-architecture']} "
-            f"{platform['os']} rust-{cell['rust']} / build"
-        )
-    return names
 
 
 def validate_run(run: dict, jobs: list[dict], sha: str, msrv: str) -> list[str]:
@@ -96,28 +64,21 @@ def validate_run(run: dict, jobs: list[dict], sha: str, msrv: str) -> list[str]:
         or run.get("conclusion") != "success"
     ):
         errors.append("CI identity/source/completion/conclusion does not match")
-    counts = Counter(job["name"] for job in jobs)
-    for name in sorted(required_jobs(msrv)):
+    policies = job_policy(msrv)
+    for name, rule in sorted(policies.items()):
         matches = [job for job in jobs if job["name"] == name]
         if (
-            counts[name] != 1
+            len(matches) != 1
             or matches[0].get("status") != "completed"
-            or matches[0].get("conclusion") != "success"
+            or matches[0].get("conclusion") not in rule["allowed-results"]
         ):
             errors.append(
                 f"required full-matrix job missing, duplicated or unsuccessful: {name}"
             )
     for job in jobs:
-        prospective = (
-            job["name"] == "check-nightly/x86_64-unknown-linux-gnu/nightly"
-            or job["name"] == "clippy/x86_64-unknown-linux-gnu/beta"
-            or job["name"]
-            in {
-                "python3.14-x64 ubuntu-latest rust-nightly / build",
-                "python3.14-x64 ubuntu-latest rust-beta / build",
-            }
+        allowed = policies.get(job["name"], {}).get(
+            "allowed-results", ["success", "skipped"]
         )
-        allowed = {"success", "failure"} if prospective else {"success", "skipped"}
         if job.get("status") != "completed" or job.get("conclusion") not in allowed:
             errors.append(f"CI job incomplete or unsuccessful: {job['name']}")
     return errors
@@ -167,7 +128,7 @@ def main() -> int:
     if args.manifest:
         verify_manifest(args.manifest, args.sha)
     evidence = {
-        "schema_version": 1,
+        "schema_version": 2,
         "source_sha": args.sha,
         "version": version,
         "run_id": args.run_id,
@@ -175,6 +136,7 @@ def main() -> int:
         "required_jobs": sorted(
             required_jobs(package["workspace"]["package"]["rust-version"])
         ),
+        "job_policy": job_policy(package["workspace"]["package"]["rust-version"]),
         "jobs": [
             {key: job[key] for key in ("name", "status", "conclusion", "html_url")}
             for job in jobs

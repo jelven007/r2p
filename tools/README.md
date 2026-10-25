@@ -17,7 +17,7 @@
 | `verify_environment.py` | 实测 FT GIL 开/关、旧 C 扩展导入后的状态、旧解释器及安装失败 | macOS、clang、uv，显式提供普通/FT/旧 Python；不代表 SDK 全矩阵 |
 | `inspect_windows_imports.py` | 读取 PE 导入表，调查 Windows Python/PyPy 动态库缺失 | Python、pefile；目标 DLL/EXE 原始文件 |
 | `ci_policy.py` | 根据真实变更/事件选择检查，汇总阻断异常跳过和遗漏 | `python -m tools.ci_policy check`；CI select/conclude 使用事件与 needs JSON |
-| `engineering/ci_matrix.py` | PR 10 / 完整 45 个构建组合的统一定义 | Python 3.11+；矩阵修改进入完整验证 |
+| `engineering/ci_matrix.py` | 构建、Clippy、内省、跨编译、CLI 等执行组合与发行允许结果的统一定义 | Python 3.11+；稳定 ID、动态工作流和 gate 单源；矩阵修改进入完整验证 |
 | `evidence.py` | 校验 SHA/实际 GIL/步骤等级/理由；导入 Actions、离线导出、本地/候选/性能/环境数据，生成摘要 | Python 3.11+；`python -m tools.evidence check`，同 ID 不覆盖；缺少实际观测时 unrecorded |
 | `engineering/`、`tests/` | 无副作用的特性矩阵、参数契约、环境快照和 MSRV 隔离；标准库回归 | `python -m unittest discover -s tools/tests` |
 | `ffi-check/` | 对照 Python 头文件生成的 bindgen 定义与手写 FFI | 独立 workspace；Python 头文件、libclang 和可链接库 |

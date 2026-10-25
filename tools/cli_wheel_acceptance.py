@@ -15,37 +15,18 @@ import tomllib
 
 from tools.candidate_artifacts import ROOT, check_cli, digest, wheel_metadata
 from tools.consumer_smoke import python_in
+from tools.engineering.ci_matrix import CLI_PLATFORMS
 
-PLATFORMS = {
-    "linux-x86_64",
-    "linux-aarch64",
-    "windows-x64",
-    "windows-x86",
-    "windows-aarch64",
-    "macos-x86_64",
-    "macos-aarch64",
-}
+PLATFORMS = CLI_PLATFORMS.keys()
 
 
 def matches_platform(tag: str, platform_id: str) -> bool:
-    if not tag.startswith("py3-none-"):
+    if not tag.startswith("py3-none-") or platform_id not in CLI_PLATFORMS:
         return False
     platforms = tag.split("-", 2)[2].split(".")
-    windows = {
-        "windows-x64": "win_amd64",
-        "windows-x86": "win32",
-        "windows-aarch64": "win_arm64",
-    }
-    if platform_id in windows:
-        return platforms == [windows[platform_id]]
-    operating_system, architecture = platform_id.split("-", 1)
-    prefixes = (
-        ("macosx_",)
-        if operating_system == "macos"
-        else ("manylinux", "musllinux_", "linux_")
-    )
-    if architecture == "aarch64" and operating_system == "macos":
-        architecture = "arm64"
+    _, _, prefixes, architecture = CLI_PLATFORMS[platform_id]
+    if not architecture:
+        return platforms == list(prefixes)
     return all(
         value.startswith(prefixes) and value.endswith("_" + architecture)
         for value in platforms
@@ -101,7 +82,7 @@ def main() -> int:
     if args.verify_set:
         verify_set(args.dist, args.sha, version)
         print(
-            "All seven native CLI wheels have matching source, digest and successful execution"
+            f"All {len(PLATFORMS)} native CLI wheels have matching source, digest and successful execution"
         )
         return 0
     if not args.platform_id:

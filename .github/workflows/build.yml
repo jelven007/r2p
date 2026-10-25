@@ -31,6 +31,15 @@ on:
       ffi-check:
         type: boolean
         default: true
+      allow-failure:
+        type: boolean
+        default: false
+      cell-id:
+        type: string
+        default: ""
+      job-name:
+        type: string
+        default: ""
 
 env:
   UV_LOCKED: 1
@@ -41,7 +50,7 @@ jobs:
   build:
     permissions:
       contents: read
-    continue-on-error: ${{ endsWith(inputs.python-version, '-dev') || contains(fromJSON('["beta", "nightly"]'), inputs.rust) }}
+    continue-on-error: ${{ inputs.allow-failure }}
     runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -136,7 +145,8 @@ jobs:
         shell: bash
         run: '"$R2P_PYTHON" -m tools.engineering.ci_evidence --output target/ci-environment.json'
         env:
-          CI_JOB_NAME: python${{ inputs.python-version }}-${{ inputs.python-architecture }} ${{ inputs.os }} rust-${{ inputs.rust }} / build
+          CI_JOB_NAME: ${{ inputs.job-name }} / build
+          CI_CELL_ID: ${{ inputs.cell-id }}
 
       - name: Run r2p-ffi-check
         # TODO: investigate graalpy failures

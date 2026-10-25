@@ -19,6 +19,7 @@ def main() -> int:
     root = Path(__file__).resolve().parents[2]
     snapshot = environment_snapshot(root, sys.executable, sys.executable, [])
     snapshot["job_name"] = os.environ.get("CI_JOB_NAME", "")
+    snapshot["cell_id"] = os.environ.get("CI_CELL_ID", "")
     snapshot["run_id"] = os.environ.get("GITHUB_RUN_ID", "")
     snapshot["recorded_at"] = datetime.now(timezone.utc).isoformat()
     snapshot["scope"] = (

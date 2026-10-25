@@ -21,6 +21,8 @@ permissions:
 jobs:
   admission:
     runs-on: ubuntu-latest
+    outputs:
+      cli-matrix: ${{ steps.matrix.outputs.cli-matrix }}
     env:
       SDK_SOURCE_SHA: ${{ github.sha }}
       CANDIDATE_CI_RUN_ID: ${{ inputs.ci_run_id || vars.R2P_CANDIDATE_CI_RUN_ID }}
@@ -31,6 +33,9 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14"
+      - name: Resolve the native CLI execution policy
+        id: matrix
+        run: python -m tools.engineering.ci_matrix --github-output
       - name: Require complete successful CI for this source
         run: |
           SDK_VERSION="$(python -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')"
@@ -49,45 +54,17 @@ jobs:
   native_wheels:
     needs: [admission]
     runs-on: ${{ matrix.runner }}
+    name: ${{ matrix.name }}
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - runner: ubuntu-latest
-            target: x86_64
-            python-architecture: x64
-            platform-id: linux-x86_64
-          - runner: ubuntu-24.04-arm
-            target: aarch64
-            python-architecture: arm64
-            platform-id: linux-aarch64
-          - runner: windows-latest
-            target: x64
-            python-architecture: x64
-            platform-id: windows-x64
-          - runner: windows-latest
-            target: x86
-            python-architecture: x86
-            platform-id: windows-x86
-          - runner: windows-11-arm
-            target: aarch64
-            python-architecture: arm64
-            platform-id: windows-aarch64
-          - runner: macos-15-intel
-            target: x86_64
-            python-architecture: x64
-            platform-id: macos-x86_64
-          - runner: macos-latest
-            target: aarch64
-            python-architecture: arm64
-            platform-id: macos-aarch64
+      matrix: ${{ fromJSON(needs.admission.outputs.cli-matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.14"
+          python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.python-architecture }}
       - uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
         with:
