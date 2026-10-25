@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "scope": "R03 local fixture cross-version restore and loopback accepted-byte uploads; no external publication",
+  "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+  "fixture_only": true,
+  "tool_sha": "827291d6b59fa1d2196acd410c63ee98bbdf98f1",
+  "verification_tool_sha": "0a6e635485dc42aca345a7358e2f076fac57c890",
+  "artifact_root": "target/optimization/candidate-cross-version-20261025-v3",
+  "manifest_sha256": "cb00912789f5c17e25f63ac91c15a21121bc7653c4a1d14c94db0999db851785",
+  "version_policy": "stable-sdk; cli=sdk; consumer=template",
+  "target_python": {
+    "implementation": "cpython",
+    "version": [
+      3,
+      14,
+      9
+    ],
+    "free_threaded": false,
+    "gil_enabled": true,
+    "gil_after_imports": true,
+    "platform": "macosx-11.0-arm64"
+  },
+  "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1\n",
+  "commands": {
+    "total": 55,
+    "expected_rejections": 5,
+    "unexpected_failures": 0
+  },
+  "variants": {
+    "candidate": {
+      "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+      "version": "0.30.1",
+      "fixture_only": true,
+      "consumer": {
+        "name": "maturin-starter",
+        "version": "0.2.0",
+        "template_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736"
+      },
+      "crates": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.1",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "bytes": 43454,
+          "path": "candidate/r2p-build-config-0.30.1.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.1",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "51921c3ac913f14afa0534b1e58ab881bb92fc8bae417a75829153db17a03637",
+          "bytes": 97139,
+          "path": "candidate/r2p-macros-backend-0.30.1.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.1",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "ccdde4c2c66809cbc81e1930941366b8e7263aee61a31920dc976b4fa5707cb8",
+          "bytes": 93337,
+          "path": "candidate/r2p-ffi-0.30.1.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.1",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "baf7b8536ad489434b052c31df5238aed939dc8eb35d7ab8aca820051d473796",
+          "bytes": 8503,
+          "path": "candidate/r2p-macros-0.30.1.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.1",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "ca525a6b9e25c39f1de7b744a8e7ba7a7dbe671d25527181fb59540f9b20ed3c",
+          "bytes": 1339620,
+          "path": "candidate/r2p-0.30.1.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.1",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "66bb575f307797d3379dded69fa89ce0d5e4f37a8d984318f1877ca1d56ea0da",
+          "bytes": 26960,
+          "path": "candidate/r2p-introspection-0.30.1.crate"
+        }
+      ],
+      "wheels": [
+        {
+          "name": "maturin-starter",
+          "version": "0.2.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "2007f2fa38e6a9266f158d02c110b426040ec2f169132dae6604e0f00760a115",
+          "bytes": 234573,
+          "path": "candidate/native/maturin_starter-0.2.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.2.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "691b5f09aa8a9ba3bd1911169f5a225fb93387f892880c9c92ff4ec637dab253",
+          "bytes": 241847,
+          "path": "candidate/abi3/maturin_starter-0.2.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.1",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "97f99c4002a090024e45d092b68b8ae43c30160b151f3fa5c15790a22d8f9963",
+          "bytes": 643643,
+          "path": "candidate/cli/r2p_introspection-0.30.1-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736"
+        }
+      ],
+      "locks": {
+        "extension-candidate.lock": "d32af60eab7641d9acb7bf8e22e7a48d68c895beee3490fdaf74e9a3be3e0572",
+        "embedding-candidate.lock": "433ba4f07141d688d2cbac8b8a123b59e4c693be8afee2cca46088469c4e3fe6",
+        "cli-candidate.lock": "068f85ddcd347ba260e799f4c5c4c752508ba39faf3dd0346569276d326d7641"
+      },
+      "embedding": "success",
+      "registry_result": "success",
+      "cli_workspace_isolation": {
+        "scope": "empty workspace boundary only",
+        "before_sha256": "42815a368f7a89921382582338445705efdb9e2aa4e66e2b0003938e69ae13a4",
+        "after_sha256": "62cd7b5366a64b6d604770aac0ea6fcdcf6cb87b78c19fc67c3091a5dfa03d1c"
+      },
+      "extension_behavior": {
+        "native": {
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        },
+        "abi3": {
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        }
+      },
+      "cli_behavior": {
+        "argument_error": 1,
+        "malformed_input": 1,
+        "fixture_sha256": "1536ecf4c3ccf73a45a1e814d92ea1093e0ad51a1252cfe59d9f1f77a7932ce2",
+        "stub": "__all__ = [\"answer\"]\n\ndef answer(): ...\n",
+        "result": "success"
+      }
+    },
+    "baseline": {
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "version": "0.30.0",
+      "fixture_only": false,
+      "consumer": {
+        "name": "maturin-starter",
+        "version": "0.2.0",
+        "template_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736"
+      },
+      "crates": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "da0f97281a08b8ad7036f40cfc09dc852659d26a1f8d9aaf35ee23e3e1a1cbe8",
+          "bytes": 42962,
+          "path": "baseline/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "08c7fd7a6d8bcb01ddcb69fce8a4937b396d1d22fd9922a39a057f0ff0ac2454",
+          "bytes": 97133,
+          "path": "baseline/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "0ca658238c635573914b913d582c7f157d7196d30f7105c8a7bd395699e0df4f",
+          "bytes": 93342,
+          "path": "baseline/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "058412945a77763f8162dd986001c0b1b8e492c79d6fbeadd86750138f1b95ec",
+          "bytes": 8500,
+          "path": "baseline/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "3e94ac7696bcab85b5feb54b21da08b59259d26793917852772df6d27834ce1d",
+          "bytes": 1336652,
+          "path": "baseline/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "199260c363a01c1142a46613f813cd8918f237964cb357dc6cc5fcaa47e9edda",
+          "bytes": 23089,
+          "path": "baseline/r2p-introspection-0.30.0.crate"
+        }
+      ],
+      "wheels": [
+        {
+          "name": "maturin-starter",
+          "version": "0.2.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "e86097e8fb3a0c2e19301369479e15a8e15c6451bfa65220398f4700e6e250c9",
+          "bytes": 234506,
+          "path": "baseline/native/maturin_starter-0.2.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.2.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "7e292c6428ff33f4722152d37f5250a898d92bee02f91dc6f49455e282ec9f90",
+          "bytes": 241781,
+          "path": "baseline/abi3/maturin_starter-0.2.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "abf62e8b69571e9478f2157c3eaab253ba3b3b6a83324d82b194538a7fcb24a1",
+          "bytes": 624744,
+          "path": "baseline/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        }
+      ],
+      "locks": {
+        "extension-baseline.lock": "06a822353f4a3677d256ed370797cf67eea415fcf9918b99806e12ae9fe27563",
+        "embedding-baseline.lock": "8c5554c02b80061d3d8e866a3133f7cf59c28408d2fa178efcb9d9367a83e8eb",
+        "cli-baseline.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "embedding": "success",
+      "registry_result": "success",
+      "cli_workspace_isolation": {
+        "scope": "empty workspace boundary only",
+        "before_sha256": "d40150fb1171d8812bf8e92d164c57f0eef1127fbc25ec1d0d68f626ee54f678",
+        "after_sha256": "4ac0ace26fa0aba19806ee13f0f8390a83d82f0ceb276e4c05fa6d352580a010"
+      },
+      "extension_behavior": {
+        "native": {
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        },
+        "abi3": {
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        }
+      },
+      "cli_behavior": {
+        "argument_error": 1,
+        "malformed_input": 1,
+        "fixture_sha256": "1536ecf4c3ccf73a45a1e814d92ea1093e0ad51a1252cfe59d9f1f77a7932ce2",
+        "stub": "__all__ = [\"answer\"]\n\ndef answer(): ...\n",
+        "result": "success"
+      }
+    }
+  },
+  "restoration": {
+    "result": "success",
+    "from_version": "0.30.1",
+    "to_version": "0.30.0",
+    "scope": "Local candidate \u2192 retained baseline packages and wheels; registry homes are independent and the same three wheel install environments were explicitly reinstalled.",
+    "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+    "commands": "baseline registry cargo run and uv pip install --reinstall followed by the identical behavior probes"
+  },
+  "initial_failures": [
+    {
+      "artifact_root": "target/optimization/candidate-cross-version-20261025",
+      "source_sha": "e7349204daa41f66b3a2e902005716583acc68dd",
+      "manifest_sha256": "953d246a3c93e7b34f2adf0dfa4a575c3327c18769fdb9c1895330eeb2020ace",
+      "result": "failure",
+      "error": "ValueError: consumer Rust/Python distribution versions differ"
+    },
+    {
+      "artifact_root": "target/optimization/candidate-cross-version-20261025-v2",
+      "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+      "manifest_sha256": "9701d74688cc92602412df73c5e243269206b812b563f61d9213a61d0bcfb83e",
+      "result": "failure",
+      "error": "RuntimeError: command failed: <repository>/target/optimization/candidate-cross-version-20261025-v2/014.log"
+    }
+  ],
+  "loopback_upload": {
+    "schema_version": 1,
+    "source_sha": "e813ff6e02bd8a39da67d78e7084e7475ca0b736",
+    "manifest_sha256": "cb00912789f5c17e25f63ac91c15a21121bc7653c4a1d14c94db0999db851785",
+    "tool_sha": "0a6e635485dc42aca345a7358e2f076fac57c890",
+    "scope": "loopback HTTP fixture with actual accepted crate bytes; no external CI gate or release",
+    "cases": [
+      {
+        "scenario": "delayed",
+        "phase": "dry-run",
+        "exit_code": 0,
+        "expected_rejection": false,
+        "uploads": [],
+        "journal_result": null,
+        "download_hashes": {},
+        "log": "delayed-dry-run.log",
+        "result": "success"
+      },
+      {
+        "scenario": "delayed",
+        "phase": "upload",
+        "exit_code": 0,
+        "expected_rejection": false,
+        "uploads": [
+          "r2p-build-config",
+          "r2p-macros-backend",
+          "r2p-ffi",
+          "r2p-macros",
+          "r2p",
+          "r2p-introspection"
+        ],
+        "journal_result": "success",
+        "download_hashes": {
+          "r2p-build-config": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "r2p-macros-backend": "51921c3ac913f14afa0534b1e58ab881bb92fc8bae417a75829153db17a03637",
+          "r2p-ffi": "ccdde4c2c66809cbc81e1930941366b8e7263aee61a31920dc976b4fa5707cb8",
+          "r2p-macros": "baf7b8536ad489434b052c31df5238aed939dc8eb35d7ab8aca820051d473796",
+          "r2p": "ca525a6b9e25c39f1de7b744a8e7ba7a7dbe671d25527181fb59540f9b20ed3c",
+          "r2p-introspection": "66bb575f307797d3379dded69fa89ce0d5e4f37a8d984318f1877ca1d56ea0da"
+        },
+        "log": "delayed-upload.log",
+        "result": "success"
+      },
+      {
+        "scenario": "delayed",
+        "phase": "resume",
+        "exit_code": 0,
+        "expected_rejection": false,
+        "uploads": [
+          "r2p-build-config",
+          "r2p-macros-backend",
+          "r2p-ffi",
+          "r2p-macros",
+          "r2p",
+          "r2p-introspection"
+        ],
+        "journal_result": "success",
+        "download_hashes": {
+          "r2p-build-config": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "r2p-macros-backend": "51921c3ac913f14afa0534b1e58ab881bb92fc8bae417a75829153db17a03637",
+          "r2p-ffi": "ccdde4c2c66809cbc81e1930941366b8e7263aee61a31920dc976b4fa5707cb8",
+          "r2p-macros": "baf7b8536ad489434b052c31df5238aed939dc8eb35d7ab8aca820051d473796",
+          "r2p": "ca525a6b9e25c39f1de7b744a8e7ba7a7dbe671d25527181fb59540f9b20ed3c",
+          "r2p-introspection": "66bb575f307797d3379dded69fa89ce0d5e4f37a8d984318f1877ca1d56ea0da"
+        },
+        "log": "delayed-resume.log",
+        "result": "success"
+      },
+      {
+        "scenario": "partial",
+        "phase": "error",
+        "exit_code": 1,
+        "expected_rejection": true,
+        "uploads": [
+          "r2p-build-config",
+          "r2p-macros-backend"
+        ],
+        "journal_result": "incomplete",
+        "download_hashes": {
+          "r2p-build-config": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "r2p-macros-backend": null,
+          "r2p-ffi": null,
+          "r2p-macros": null,
+          "r2p": null,
+          "r2p-introspection": null
+        },
+        "log": "partial-error.log",
+        "result": "success"
+      },
+      {
+        "scenario": "partial",
+        "phase": "wait-only",
+        "exit_code": 1,
+        "expected_rejection": true,
+        "uploads": [
+          "r2p-build-config",
+          "r2p-macros-backend"
+        ],
+        "journal_result": "incomplete",
+        "download_hashes": {
+          "r2p-build-config": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "r2p-macros-backend": null,
+          "r2p-ffi": null,
+          "r2p-macros": null,
+          "r2p": null,
+          "r2p-introspection": null
+        },
+        "log": "partial-wait-only.log",
+        "result": "success"
+      },
+      {
+        "scenario": "partial",
+        "phase": "retry",
+        "exit_code": 0,
+        "expected_rejection": false,
+        "uploads": [
+          "r2p-build-config",
+          "r2p-macros-backend",
+          "r2p-macros-backend",
+          "r2p-ffi",
+          "r2p-macros",
+          "r2p",
+          "r2p-introspection"
+        ],
+        "journal_result": "success",
+        "download_hashes": {
+          "r2p-build-config": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "r2p-macros-backend": "51921c3ac913f14afa0534b1e58ab881bb92fc8bae417a75829153db17a03637",
+          "r2p-ffi": "ccdde4c2c66809cbc81e1930941366b8e7263aee61a31920dc976b4fa5707cb8",
+          "r2p-macros": "baf7b8536ad489434b052c31df5238aed939dc8eb35d7ab8aca820051d473796",
+          "r2p": "ca525a6b9e25c39f1de7b744a8e7ba7a7dbe671d25527181fb59540f9b20ed3c",
+          "r2p-introspection": "66bb575f307797d3379dded69fa89ce0d5e4f37a8d984318f1877ca1d56ea0da"
+        },
+        "log": "partial-retry.log",
+        "result": "success"
+      },
+      {
+        "scenario": "accepted-error",
+        "phase": "error",
+        "exit_code": 1,
+        "expected_rejection": true,
+        "uploads": [
+          "r2p-build-config",
+          "r2p-macros-backend"
+        ],
+        "journal_result": "incomplete",
+        "download_hashes": {
+          "r2p-build-config": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "r2p-macros-backend": null,
+          "r2p-ffi": null,
+          "r2p-macros": null,
+          "r2p": null,
+          "r2p-introspection": null
+        },
+        "log": "accepted-error-error.log",
+        "result": "success"
+      },
+      {
+        "scenario": "accepted-error",
+        "phase": "resume",
+        "exit_code": 0,
+        "expected_rejection": false,
+        "uploads": [
+          "r2p-build-config",
+          "r2p-macros-backend",
+          "r2p-ffi",
+          "r2p-macros",
+          "r2p",
+          "r2p-introspection"
+        ],
+        "journal_result": "success",
+        "download_hashes": {
+          "r2p-build-config": "2435a486858ae1c3a63130cbb4b2b6d348b64278e53cc5233046f6537204d548",
+          "r2p-macros-backend": "51921c3ac913f14afa0534b1e58ab881bb92fc8bae417a75829153db17a03637",
+          "r2p-ffi": "ccdde4c2c66809cbc81e1930941366b8e7263aee61a31920dc976b4fa5707cb8",
+          "r2p-macros": "baf7b8536ad489434b052c31df5238aed939dc8eb35d7ab8aca820051d473796",
+          "r2p": "ca525a6b9e25c39f1de7b744a8e7ba7a7dbe671d25527181fb59540f9b20ed3c",
+          "r2p-introspection": "66bb575f307797d3379dded69fa89ce0d5e4f37a8d984318f1877ca1d56ea0da"
+        },
+        "log": "accepted-error-resume.log",
+        "result": "success"
+      },
+      {
+        "scenario": "bad-index",
+        "phase": "stop",
+        "exit_code": 1,
+        "expected_rejection": true,
+        "uploads": [
+          "r2p-build-config"
+        ],
+        "journal_result": "incomplete",
+        "download_hashes": {
+          "r2p-build-config": null,
+          "r2p-macros-backend": null,
+          "r2p-ffi": null,
+          "r2p-macros": null,
+          "r2p": null,
+          "r2p-introspection": null
+        },
+        "log": "bad-index-stop.log",
+        "result": "success"
+      },
+      {
+        "scenario": "bad-download",
+        "phase": "stop",
+        "exit_code": 1,
+        "expected_rejection": true,
+        "uploads": [
+          "r2p-build-config"
+        ],
+        "journal_result": "incomplete",
+        "download_hashes": {
+          "r2p-build-config": null,
+          "r2p-macros-backend": null,
+          "r2p-ffi": null,
+          "r2p-macros": null,
+          "r2p": null,
+          "r2p-introspection": null
+        },
+        "log": "bad-download-stop.log",
+        "result": "success"
+      }
+    ],
+    "result": "success",
+    "artifact_root": "target/optimization/registry-upload-20261025",
+    "evidence_sha256": "1130b4bedf416c9e76e46ed29bd9c08a1f7126d93ace260d996ac15e3919bd99"
+  },
+  "validation": {
+    "unittest_count": 56,
+    "unittest_result": "success",
+    "schema_1_original_manifest": "success",
+    "ruff": "success",
+    "actionlint_workflows": 11,
+    "actionlint_result": "success",
+    "zizmor_offline": "success",
+    "rumdl_changed_documents": "success",
+    "repository_check": "success"
+  },
+  "remote_full_ci": "pending",
+  "external_namespace_and_public_download": "pending",
+  "result": "success"
+}

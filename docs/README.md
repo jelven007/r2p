@@ -32,6 +32,7 @@
 | 测试 | [测试策略](testing/test-strategy.md) | 分层、用例、矩阵、缺陷及准入 |
 | 支持矩阵 | [兼容性证据与状态](testing/support-matrix.md) | 已配置、已编译、已运行和支持等级 |
 | 当前验证 | [结构化摘要](testing/evidence-summary.md)、[实际环境与失败等级](testing/reports/evidence-environment-2026-10-25.md) | 各 SHA 实际执行了什么、结果和限制是什么 |
+| 持续发行验证 | [跨版本恢复与上传续发](testing/reports/continuous-release-2026-10-25.md) | 各 SHA 版本、原始制品和本地 HTTP 失败恢复如何核验 |
 | 历史验证 | [生产工程基线](testing/reports/production-baseline-validation.md)、[原目录基线](testing/reports/validation-report.md)、[MSRV/汇总修正](testing/reports/ci-fixes-validation.md) | 保留各阶段的原始命令与结果 |
 | SDK 内核迁移 | [迁移规则](development/kernel-namespace-migration.md)、[验证报告](testing/reports/kernel-migration-validation.md) | crate、宏、构建变量、Python 模块与打包如何迁移到 r2p |
 | 运营 | [运营计划](operations/operating-plan.md) | 采用、反馈、支持、指标如何形成闭环 |
