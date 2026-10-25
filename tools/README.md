@@ -14,6 +14,7 @@
 | `publish_candidate.py` | 按顺序上传验收原始字节，等待索引/下载摘要，保存 journal 并恢复部分进度；默认仅验证请求 | 外部执行需同 SHA gate、--execute、开关及 token；--local-registry 仅接受回环 HTTP fixture |
 | `cli_wheel_acceptance.py` | 本机安装/执行 CLI wheel，核验七个原生平台制品集合 | 原始 wheel、完整 SHA、平台 ID；集合完整不代表本机执行了七个平台 |
 | `performance.py`、`performance_report.py` | 同环境独立进程采样、编译/RSS/大小成本、描述统计与原始数据报告 | 明确基线/候选 SHA 和解释器；样本报告不自动判定 5% 门限 |
+| `ci_cost.py` | 汇总真实 Actions 导出的排队时间、执行时间与任务占用，核验单工作流连续 20 次样本完整性 | `--input <run/jobs JSON> --output <新 JSON>`；不推导账单金额、缓存命中或节省比例 |
 | `upstream_sync.py` | 固定上游修订、映射变更、隔离重放和本地差异清单 | 本地 Git 历史、清晰来源；不改主工作区或历史标签 |
 | `verify_environment.py` | 实测 FT GIL 开/关、旧 C 扩展导入后的状态、旧解释器及安装失败 | macOS、clang、uv，显式提供普通/FT/旧 Python；不代表 SDK 全矩阵 |
 | `inspect_windows_imports.py` | 读取 PE 导入表，调查 Windows Python/PyPy 动态库缺失 | Python、pefile；目标 DLL/EXE 原始文件 |
