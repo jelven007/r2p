@@ -149,6 +149,7 @@ def wheel_metadata(path: Path, name: str, version: str, expected_tag: str) -> di
         if (
             metadata["Name"] != name
             or metadata["Version"] != version
+            or not path.name.startswith(f"{name.replace('-', '_')}-{version}-")
             or set(tags) not in (expanded_tags, {expected_tag})
             or not path.name.endswith(expected_tag + ".whl")
         ):
@@ -303,6 +304,23 @@ def verify_manifest(path: Path, sha: str) -> dict:
         or not re.fullmatch(r"[0-9a-f]{40}", manifest.get("tool_sha", ""))
     ):
         raise ValueError("candidate template/tool/version policy differs")
+    native_prefix = None
+    if schema == 2:
+        target = manifest.get("target_python", {})
+        python_version = target.get("version", [])
+        if (
+            target.get("implementation") != "cpython"
+            or target.get("free_threaded") is not False
+            or target.get("gil_enabled") is not True
+            or len(python_version) != 3
+            or python_version[0] != 3
+            or python_version[1] < 9
+        ):
+            raise ValueError(
+                "native/abi3 acceptance requires a recorded GIL CPython target"
+            )
+        abi = f"cp{python_version[0]}{python_version[1]}"
+        native_prefix = f"{abi}-{abi}-"
     for variant_name, variant in manifest["variants"].items():
         version = release_version(variant["version"])
         if schema == 1 and version != "0.30.0":
@@ -355,6 +373,11 @@ def verify_manifest(path: Path, sha: str) -> dict:
                     or (kind == "cli" and not tag.startswith("py3-none-"))
                     or (kind == "abi3" and not tag.startswith("cp39-abi3-"))
                     or (kind == "native" and not re.match(r"cp[0-9]+-cp[0-9]+-", tag))
+                    or (
+                        kind == "native"
+                        and native_prefix
+                        and not tag.startswith(native_prefix)
+                    )
                 ):
                     raise ValueError("candidate wheel distribution/version/ABI differs")
                 wheel_metadata(artifact, expected_name, expected_version, tag)

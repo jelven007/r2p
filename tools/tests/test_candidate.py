@@ -172,6 +172,7 @@ class PackageTests(unittest.TestCase):
         )
         for fields in (
             {"version": "0.29.0"},
+            {"filename_version": "0.29.0"},
             {"tag": "cp39-abi3-macosx_11_0_arm64"},
             {"license": False},
             {"binary": False},
@@ -258,6 +259,12 @@ class PackageTests(unittest.TestCase):
             "source_sha": SHA,
             "consumer_template_sha": SHA,
             "tool_sha": "3" * 40,
+            "target_python": {
+                "implementation": "cpython",
+                "version": [3, 14, 9],
+                "free_threaded": False,
+                "gil_enabled": True,
+            },
             "version_policy": "stable-sdk; cli=sdk; consumer=template",
             "result": "success",
             "public_release": False,
@@ -367,6 +374,7 @@ class PackageTests(unittest.TestCase):
             "restoration",
             "set",
             "sha",
+            "target",
             "policy",
         ):
             manifest = copy.deepcopy(original)
@@ -385,6 +393,8 @@ class PackageTests(unittest.TestCase):
                 candidate["crates"].pop()
             elif mutation == "sha":
                 manifest["variants"]["baseline"]["source_sha"] = "bad"
+            elif mutation == "target":
+                manifest["target_python"]["version"] = [3, 15, 0]
             else:
                 manifest["version_policy"] = "uncontrolled"
             path.write_text(json.dumps(manifest))
