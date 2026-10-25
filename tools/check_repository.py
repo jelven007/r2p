@@ -13,6 +13,11 @@ from urllib.parse import unquote, urlsplit
 
 import tomllib
 
+if __package__:
+    from tools.engineering.status import status_errors
+else:
+    from engineering.status import status_errors
+
 ROOT = Path(__file__).resolve().parent.parent
 SCAN_DIRS = ("crates", "tests", "examples", "benchmarks", "tools", "python")
 GENERATED_DIRS = {
@@ -154,6 +159,7 @@ def check_traceability() -> list[str]:
         "source-only",
         "process-only",
         "pending",
+        "samples-collected",
     }
     specification = (
         ROOT / "docs" / "requirements" / "system-requirements.md"
@@ -180,7 +186,8 @@ def check_traceability() -> list[str]:
         if reader.fieldnames != columns:
             return ["traceability.csv: unexpected columns"]
         seen = set()
-        for row in reader:
+        rows = list(reader)
+        for row in rows:
             identifier = row["id"]
             if None in row or any(not row.get(column) for column in columns):
                 errors.append(f"traceability.csv: incomplete row {identifier}")
@@ -209,8 +216,8 @@ def check_traceability() -> list[str]:
                 elif reference in evidence:
                     if (
                         row["acceptance_status"].startswith("validated-")
-                        and evidence[reference]["result"] != "success"
-                    ):
+                        or row["acceptance_status"] == "samples-collected"
+                    ) and evidence[reference]["result"] != "success":
                         errors.append(
                             f"traceability.csv: {identifier} validation references non-success"
                         )
@@ -229,6 +236,20 @@ def check_traceability() -> list[str]:
                     errors.append(f"traceability.csv: {identifier} unknown gate {gate}")
         for identifier in sorted(requirements.keys() - seen):
             errors.append(f"traceability.csv: missing requirement {identifier}")
+    product = tomllib.loads((ROOT / "product.toml").read_text())
+    runtime = tomllib.loads((ROOT / "python/r2p-runtime/pyproject.toml").read_text())
+    if all(
+        None not in row and all(row.get(column) for column in columns) for row in rows
+    ):
+        errors.extend(
+            status_errors(
+                rows, list(evidence.values()), product["implementation"], runtime
+            )
+        )
+    index = (ROOT / "tools/README.md").read_text()
+    for path in (ROOT / "tools").glob("*.py"):
+        if path.name != "__init__.py" and f"`{path.name}`" not in index:
+            errors.append(f"tools/README.md: missing public tool {path.name}")
     return errors
 
 

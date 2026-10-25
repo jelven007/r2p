@@ -16,10 +16,13 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+from tools.engineering.environment import probe_python
 from tools.new_project import ROOT, examples, generate, source_configuration
 
 BEHAVIOR = """\
-import json, pathlib, sys
+import json, pathlib, sys, sysconfig
+probe = getattr(sys, "_is_gil_enabled", None)
+gil_before = bool(probe()) if probe else None
 import maturin_starter as sdk
 assert pathlib.Path(sdk.__file__).is_relative_to(sys.prefix), sdk.__file__
 assert sdk.divide(84, 2) == 42
@@ -38,6 +41,12 @@ assert sdk.divide(6, 2) == 3
 from maturin_starter.submodule import SubmoduleClass
 assert SubmoduleClass().greeting() == "Hello, world!"
 print(json.dumps({"python": sys.version, "module": sdk.__file__,
+                  "environment": {
+                      "implementation": sys.implementation.name,
+                      "version": list(sys.version_info[:3]),
+                      "free_threaded": bool(sysconfig.get_config_var("Py_GIL_DISABLED")),
+                      "gil_enabled": gil_before,
+                      "gil_after_imports": bool(probe()) if probe else None},
                   "function": "passed", "class": "passed", "exception": "passed"}))
 """
 
@@ -114,6 +123,7 @@ def main() -> int:
         ).strip(),
         "verified_at": datetime.now(timezone.utc).isoformat(),
         "python": sys.version,
+        "target_python": probe_python(sys.executable),
         "platform": platform.platform(),
         "work_directory": str(work),
         "commands": [],

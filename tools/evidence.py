@@ -68,6 +68,19 @@ def validate(data: dict) -> list[str]:
             )
         if row["gil"] not in {"enabled", "disabled", "unrecorded", "not-applicable"}:
             errors.append(f"{identifier}: invalid GIL state")
+        if "python_environment" in row:
+            environment = row["python_environment"]
+            if not isinstance(environment, dict) or any(
+                key in environment
+                and environment[key] is not None
+                and type(environment[key]) is not bool
+                for key in ("gil_enabled", "gil_after_imports", "free_threaded")
+            ):
+                errors.append(f"{identifier}: invalid observed Python environment")
+            elif row["gil"] != gil_state(environment):
+                errors.append(
+                    f"{identifier}: GIL label differs from observed environment"
+                )
         for key in ("target", "rust", "python", "abi", "limitations"):
             if not isinstance(row[key], str) or not row[key]:
                 errors.append(f"{identifier}: missing {key}")
@@ -122,62 +135,116 @@ def check(data: dict | None = None) -> list[str]:
     return errors
 
 
-def import_actions(run_id: int, gh: str) -> list[dict]:
-    def api(path: str) -> dict:
-        return json.loads(subprocess.check_output([gh, "api", path], text=True))
+def gil_state(environment: dict, *, after_imports: bool = True) -> str:
+    """A build flag or wheel tag cannot attest to the process's GIL state."""
+    key = (
+        "gil_after_imports"
+        if after_imports and "gil_after_imports" in environment
+        else "gil_enabled"
+    )
+    value = environment.get(key)
+    if value is True:
+        return "enabled"
+    if value is False:
+        return "disabled"
+    return "unrecorded"
 
-    run = api(f"repos/jelven007/r2p/actions/runs/{run_id}")
+
+def python_version(environment: dict) -> str:
+    if not environment.get("implementation") or not environment.get("version"):
+        return "unrecorded"
+    return (
+        environment["implementation"] + " " + ".".join(map(str, environment["version"]))
+    )
+
+
+def actions_level(job: dict, environment: dict) -> str:
+    """A failed test bundle may have failed during installation or compilation."""
+    runtime = {
+        "Test python examples and tests",
+        "Run MSRV docs and tests in the isolated dependency snapshot",
+    }
+    succeeded = {
+        step["name"]
+        for step in job.get("steps", [])
+        if step.get("conclusion") == "success"
+    }
+    if runtime & succeeded or (
+        "Run Rust tests" in succeeded and environment.get("implementation") == "cpython"
+    ):
+        return "run"
+    # Nox uses --no-run for Rust tests on PyPy/GraalPy. Unknown implementation
+    # cannot upgrade that successful command from compilation to runtime.
+    if {"Build docs", "Run Rust tests"} & succeeded:
+        return "compiled"
+    if any(
+        step["name"] in runtime | {"Run Rust tests"}
+        and step.get("conclusion") == "failure"
+        for step in job.get("steps", [])
+    ):
+        return "check"
+    return "configured"
+
+
+def import_actions_data(
+    run: dict, jobs: list[dict], environments: dict | None = None
+) -> list[dict]:
+    """Import a saved API export; observed metadata is optional, never inferred."""
     if run["status"] != "completed":
         raise ValueError("only completed Actions runs can become support evidence")
+    run_id = run["id"]
+    environments = environments or {}
     records = []
-    page = 1
-    while True:
-        jobs = api(
-            f"repos/jelven007/r2p/actions/runs/{run_id}/jobs?per_page=100&page={page}"
-        )["jobs"]
-        for job in jobs:
-            match = re.fullmatch(
-                r"python(\S+)-(\S+) (.+) rust-(\S+) / build", job["name"]
-            )
-            if not match:
-                continue
-            python, architecture, runner, rust = match.groups()
-            result = job["conclusion"]
-            records.append(
-                {
-                    "id": f"actions-{run_id}-{job['id']}",
-                    "source_sha": run["head_sha"],
-                    "source_state": "committed",
-                    "target": f"{runner}/{architecture}",
-                    "rust": f"{rust} (patch version in logs)",
-                    "python": f"{python} (patch version in logs)",
-                    "gil": "disabled" if python.endswith("t") else "enabled",
-                    "abi": "Nox interpreter-specific combinations",
-                    "features": [
-                        "default",
-                        "no-default",
-                        "full",
-                        "ABI according to Nox",
-                    ],
-                    "commands": [
-                        "nox -s docs",
-                        "nox -s test-rust",
-                        "nox -s test-py",
-                        "ffi-check conditional; inspect step results",
-                    ],
-                    "result": result,
-                    "level": "run",
-                    "skip_reason": "job did not run; inspect Actions event/dependency conditions"
-                    if result == "skipped"
-                    else "",
-                    "limitations": "per-test skips remain in logs; nightly UI uses ignore; no registry support inference",
-                    "log": job["html_url"],
-                    "verified_at": job["completed_at"],
-                }
-            )
-        if len(jobs) < 100:
-            break
-        page += 1
+    for job in jobs:
+        if not re.fullmatch(r"python\S+-\S+ .+ rust-\S+ / build", job["name"]):
+            continue
+        snapshot = environments.get(job["name"], {})
+        if snapshot and (
+            snapshot.get("source_sha") != run["head_sha"] or snapshot.get("dirty")
+        ):
+            raise ValueError("Actions environment source differs from the tested SHA")
+        environment = snapshot.get("target_python", {})
+        level = actions_level(job, environment)
+        result = job["conclusion"] or "not-run"
+        if level == "configured" and result == "success":
+            result = "not-run"
+        records.append(
+            {
+                "id": f"actions-observed-{run_id}-{job['id']}",
+                "source_sha": run["head_sha"],
+                "source_state": "committed",
+                "target": snapshot.get("target", "unrecorded"),
+                "rust": next(
+                    (
+                        line
+                        for line in snapshot.get("rust", [])
+                        if line.startswith("rustc ")
+                    ),
+                    "unrecorded",
+                ),
+                "python": python_version(environment),
+                "gil": gil_state(environment),
+                "python_environment": environment,
+                "requested_configuration": job["name"],
+                "abi": "inspect individual Nox combinations in logs",
+                "features": ["step-specific; inspect logs"],
+                "commands": [
+                    step["name"]
+                    for step in job.get("steps", [])
+                    if step.get("conclusion") in {"success", "failure"}
+                ]
+                or [job["name"]],
+                "steps": job.get("steps", []),
+                "result": result,
+                "level": level,
+                "skip_reason": "no SDK execution step recorded"
+                if result in {"skipped", "not-run"}
+                else "",
+                "limitations": "level reflects successful SDK steps; failed test bundles alone do not prove execution; environment absent from old runs is unrecorded; startup GIL does not attest to module imports; no registry support inference",
+                "log": job["html_url"],
+                "verified_at": job.get("completed_at") or run["updated_at"],
+            }
+        )
     records.append(
         {
             "id": f"ci-{run_id}",
@@ -201,6 +268,24 @@ def import_actions(run_id: int, gh: str) -> list[dict]:
     return records
 
 
+def import_actions(run_id: int, gh: str) -> list[dict]:
+    def api(path: str) -> dict:
+        return json.loads(subprocess.check_output([gh, "api", path], text=True))
+
+    run = api(f"repos/jelven007/r2p/actions/runs/{run_id}")
+    jobs = []
+    page = 1
+    while True:
+        batch = api(
+            f"repos/jelven007/r2p/actions/runs/{run_id}/jobs?per_page=100&page={page}"
+        )["jobs"]
+        jobs.extend(batch)
+        if len(batch) < 100:
+            break
+        page += 1
+    return import_actions_data(run, jobs)
+
+
 def import_local(
     path: Path, identifier: str, level: str, features: list[str], report: str
 ) -> dict:
@@ -221,7 +306,8 @@ def import_local(
         "python": python["implementation"]
         + " "
         + ".".join(map(str, python["version"])),
-        "gil": "disabled" if python["free_threaded"] else "enabled",
+        "gil": gil_state(python),
+        "python_environment": python,
         "abi": "native/selected ABI combinations",
         "features": features,
         "commands": [
@@ -229,8 +315,11 @@ def import_local(
             + " ".join(snapshot["nox_arguments"])
         ],
         "result": "success" if snapshot["exit_code"] == 0 else "failure",
-        "level": level,
-        "limitations": "local worktree changes are not contained in source_sha; scope and skips in report",
+        "level": level if snapshot["exit_code"] == 0 else "configured",
+        "level_basis": "successful command and explicitly selected scope"
+        if snapshot["exit_code"] == 0
+        else "failed bundle; SDK execution not attested",
+        "limitations": "local worktree changes are not contained in source_sha; scope and skips in report; interpreter startup GIL does not attest to SDK module imports",
         "log": report,
         "verified_at": snapshot["finished_at"],
         "lock_sha256": snapshot["locks"],
@@ -251,15 +340,18 @@ def import_consumer(path: Path) -> list[dict]:
     ):
         records.append(
             {
-                "id": f"consumer-{snapshot['source']['revision'][:8]}-{snapshot['verified_at'][:10]}-{mode}",
+                "id": f"consumer-observed-{snapshot['source']['revision'][:8]}-{snapshot['verified_at'][:10]}-{mode}",
                 "source_sha": snapshot["source"]["revision"],
                 "source_state": "committed",
                 "target": snapshot["platform"],
                 "rust": snapshot["rust"].splitlines()[0],
                 "python": snapshot["python"].split(" (", 1)[0],
-                "gil": "disabled"
-                if re.search(r"Tag: cp\d+t-", snapshot["wheel_metadata"]["native"])
-                else "enabled",
+                "gil": gil_state(
+                    snapshot.get("behavior", {}).get(mode, {}).get("environment", {})
+                ),
+                "python_environment": snapshot.get("behavior", {})
+                .get(mode, {})
+                .get("environment", {}),
                 "abi": mode,
                 "features": features,
                 "commands": ["python -m tools.consumer_smoke --output <new-directory>"],
@@ -332,7 +424,7 @@ def import_candidate(path: Path) -> list[dict]:
         selected = snapshot["variants"]["baseline"] if retained else variant
         records.append(
             {
-                "id": f"candidate-{source_sha[:8]}-{mode}",
+                "id": f"candidate-observed-{source_sha[:8]}-{mode}",
                 "source_sha": selected["source_sha"],
                 "candidate_sha": source_sha,
                 "consumer_template_sha": snapshot["consumer_template_sha"],
@@ -340,8 +432,13 @@ def import_candidate(path: Path) -> list[dict]:
                 "source_state": "committed",
                 "target": snapshot["platform"],
                 "rust": snapshot["rust"].splitlines()[0],
-                "python": "CPython " + snapshot["python"].split(" (", 1)[0],
-                "gil": "enabled",
+                "python": python_version(snapshot.get("target_python", {})),
+                "gil": gil_state(
+                    selected.get("behavior", {}).get(mode, {}).get("environment", {})
+                ),
+                "python_environment": selected.get("behavior", {})
+                .get(mode, {})
+                .get("environment", {}),
                 "abi": mode,
                 "features": features,
                 "commands": [
@@ -362,6 +459,52 @@ def import_candidate(path: Path) -> list[dict]:
     return records
 
 
+def import_environment(path: Path) -> list[dict]:
+    snapshot = json.loads(path.read_text())
+    if snapshot.get("result") != "success":
+        raise ValueError("environment verification is incomplete")
+    base = import_local(
+        path,
+        "environment-r02",
+        "check",
+        ["environment probe", "legacy C fixture"],
+        "docs/testing/reports/evidence-environment-2026-10-25.md",
+    )
+    records = []
+    for name, environment in snapshot["cases"].items():
+        records.append(
+            base
+            | {
+                "id": f"environment-r02-{name}",
+                "python": python_version(environment),
+                "python_environment": environment,
+                "gil": gil_state(environment),
+                "commands": [
+                    "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+                ],
+                "result": "success",
+                "level": "check",
+                "limitations": snapshot["limitations"],
+                "data": str(path.relative_to(ROOT)),
+            }
+        )
+    records.append(
+        base
+        | {
+            "id": "environment-r02-install-failure",
+            "result": "failure",
+            "level": "configured",
+            "gil": "unrecorded",
+            "python_environment": {},
+            "python": "unrecorded",
+            "commands": ["uv pip install --no-index r2p-missing-package-for-evidence"],
+            "limitations": "expected real offline installation failure; no SDK execution",
+            "data": str(path.relative_to(ROOT)),
+        }
+    )
+    return records
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -370,17 +513,21 @@ def main() -> int:
             "check",
             "render",
             "import-actions",
+            "import-actions-export",
             "import-local",
             "import-consumer",
             "import-performance",
             "import-candidate",
+            "import-environment",
         ),
     )
     parser.add_argument("--run-id", type=int)
     parser.add_argument("--gh", default="gh")
     parser.add_argument("--snapshot", type=Path)
     parser.add_argument("--id")
-    parser.add_argument("--level", choices=("compiled", "run", "check"), default="run")
+    parser.add_argument(
+        "--level", choices=("compiled", "run", "check"), default="check"
+    )
     parser.add_argument("--features", nargs="+", default=["Nox-selected"])
     parser.add_argument("--report")
     args = parser.parse_args()
@@ -393,6 +540,13 @@ def main() -> int:
         if not args.run_id:
             parser.error("--run-id is required")
         additions = import_actions(args.run_id, args.gh)
+    elif args.command == "import-actions-export":
+        if not args.snapshot:
+            parser.error("--snapshot is required")
+        snapshot = json.loads(args.snapshot.read_text())
+        additions = import_actions_data(
+            snapshot["run"], snapshot["jobs"], snapshot.get("environments")
+        )
     elif args.command == "import-local":
         if not all((args.snapshot, args.id, args.report)):
             parser.error("--snapshot, --id, and --report are required")
@@ -411,6 +565,10 @@ def main() -> int:
         if not args.snapshot:
             parser.error("--snapshot is required")
         additions = import_candidate(args.snapshot.resolve())
+    elif args.command == "import-environment":
+        if not args.snapshot:
+            parser.error("--snapshot is required")
+        additions = import_environment(args.snapshot.resolve())
     else:
         additions = []
     if additions:
@@ -426,10 +584,12 @@ def main() -> int:
         in {
             "render",
             "import-actions",
+            "import-actions-export",
             "import-local",
             "import-consumer",
             "import-performance",
             "import-candidate",
+            "import-environment",
         }
         and not errors
     ):

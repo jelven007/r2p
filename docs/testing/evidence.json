@@ -1264,6 +1264,355 @@
       "verified_at": "2026-10-24T23:24:33.573352+00:00"
     },
     {
+      "id": "environment-r02-ft-auto-import",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [
+          {
+            "name": "legacy_gil",
+            "result": "success",
+            "path": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/environment-r02-final/legacy_gil.cpython-314t-darwin.so",
+            "gil_before": false,
+            "gil_after": true
+          }
+        ],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-ft-off",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-ft-on",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-gil",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "enabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "gil_enabled": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none",
+        "modules": [],
+        "gil_after_imports": true
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-import-failure",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.14.9",
+      "gil": "disabled",
+      "python_environment": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "gil_enabled": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none",
+        "modules": [
+          {
+            "name": "r2p_missing_module_for_probe",
+            "result": "failure",
+            "error": "ModuleNotFoundError: No module named 'r2p_missing_module_for_probe'",
+            "gil_before": false,
+            "gil_after": false
+          }
+        ],
+        "gil_after_imports": false
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-install-failure",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "unrecorded",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "uv pip install --no-index r2p-missing-package-for-evidence"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "expected real offline installation failure; no SDK execution",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "environment-r02-legacy",
+      "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "cpython 3.9.6",
+      "gil": "unrecorded",
+      "python_environment": {
+        "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9",
+        "implementation": "cpython",
+        "version": [
+          3,
+          9,
+          6
+        ],
+        "free_threaded": false,
+        "gil_enabled": null,
+        "platform": "macosx-10.9-universal2",
+        "base_prefix": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9",
+        "modules": [],
+        "gil_after_imports": null
+      },
+      "abi": "native/selected ABI combinations",
+      "features": [
+        "environment probe",
+        "legacy C fixture"
+      ],
+      "commands": [
+        "python -m tools.verify_environment --gil-python <recorded> --ft-python <recorded> --legacy-python <recorded> --output <new-directory>"
+      ],
+      "result": "success",
+      "level": "check",
+      "level_basis": "successful command and explicitly selected scope",
+      "limitations": "macOS local environment probes and legacy C fixture; not SDK cross-platform behavior",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "verified_at": "2026-10-25T04:11:04.607653+00:00",
+      "lock_sha256": {
+        "Cargo.lock": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+        "uv.lock": "8308bf443277f49926a1c152cd3e515dd4008a116f3c07e9873dd00143165b2e"
+      },
+      "data": "docs/testing/data/environment-2026-10-25.json"
+    },
+    {
+      "id": "failure-ci-40150316493-engineering-install",
+      "source_sha": "d874da8e66ff30a133bb6d659354f09b29b6608c",
+      "source_state": "committed",
+      "target": "Ubuntu x64",
+      "rust": "unrecorded",
+      "python": "unrecorded",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "not exercised",
+      "features": [
+        "not exercised"
+      ],
+      "commands": [
+        "Install actionlint"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "actual saved CI setup failure; no SDK execution or new remote verification; source is the actual logged checkout",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "data": "docs/testing/data/ci-failures-2026-10-25.json",
+      "verified_at": "2026-10-25T01:22:04.4366262+00:00"
+    },
+    {
+      "id": "failure-ci-40150316493-graalpy-binding",
+      "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "source_state": "committed",
+      "target": "Windows x64",
+      "rust": "unrecorded",
+      "python": "unrecorded",
+      "gil": "unrecorded",
+      "python_environment": {},
+      "abi": "not exercised",
+      "features": [
+        "not exercised"
+      ],
+      "commands": [
+        "Bind selected interpreter"
+      ],
+      "result": "failure",
+      "level": "configured",
+      "limitations": "actual saved CI setup failure; no SDK execution or new remote verification; source is the actual logged checkout",
+      "log": "docs/testing/reports/evidence-environment-2026-10-25.md",
+      "data": "docs/testing/data/ci-failures-2026-10-25.json",
+      "verified_at": "2026-10-25T01:48:31.4691884+00:00"
+    },
+    {
       "id": "local-docs-20261025",
       "source_sha": "41f76e752956f889caeb1c50827f2284544d95c5",
       "source_state": "worktree-changes",

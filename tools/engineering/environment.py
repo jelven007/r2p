@@ -11,21 +11,46 @@ import tempfile
 from pathlib import Path
 
 PYTHON_PROBE = """\
-import json, sys, sysconfig
-print(json.dumps({
+import importlib, json, sys, sysconfig
+def gil():
+    probe = getattr(sys, "_is_gil_enabled", None)
+    return bool(probe()) if probe is not None else None
+snapshot = {
     "executable": sys.executable,
     "implementation": sys.implementation.name,
     "version": list(sys.version_info[:3]),
     "free_threaded": bool(sysconfig.get_config_var("Py_GIL_DISABLED")),
+    "gil_enabled": gil(),
     "platform": sysconfig.get_platform(),
     "base_prefix": sys.base_prefix,
-}))
+    "modules": [],
+}
+for name in json.loads(sys.argv[1]):
+    before = gil()
+    try:
+        module = importlib.import_module(name)
+    except Exception as error:
+        snapshot["modules"].append({
+            "name": name, "result": "failure",
+            "error": type(error).__name__ + ": " + str(error),
+            "gil_before": before, "gil_after": gil(),
+        })
+    else:
+        snapshot["modules"].append({
+            "name": name, "result": "success",
+            "path": getattr(module, "__file__", None),
+            "gil_before": before, "gil_after": gil(),
+        })
+snapshot["gil_after_imports"] = gil()
+print(json.dumps(snapshot))
 """
 
 
-def probe_python(executable: str) -> dict:
+def probe_python(executable: str, modules: tuple[str, ...] = ()) -> dict:
     return json.loads(
-        subprocess.check_output([executable, "-c", PYTHON_PROBE], text=True)
+        subprocess.check_output(
+            [executable, "-c", PYTHON_PROBE, json.dumps(modules)], text=True
+        )
     )
 
 

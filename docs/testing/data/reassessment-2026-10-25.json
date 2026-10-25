@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "assessment_date": "2026-10-25",
+  "source_sha": "643b3204aedd825d2c48107a45b8d580f6d09a0f",
+  "branch": "feat/sdk-production-optimization",
+  "source_state_at_start": "clean committed checkout",
+  "local_tracking_reference": {
+    "ahead": 7,
+    "remote_refreshed_in_this_assessment": false
+  },
+  "statistics": {
+    "tracked_files": 981,
+    "rust_files": 487,
+    "rust_physical_lines": 125751,
+    "python_files": 84,
+    "python_physical_lines": 10327,
+    "nox_physical_lines": 2204,
+    "nox_sessions": 40,
+    "nox_top_level_functions": 71,
+    "sdk_features": 26,
+    "full_aggregate_entries": 27,
+    "pr_build_cells": 10,
+    "full_build_cells": 45,
+    "required_release_jobs": 85,
+    "diff_from_3a24917e": {
+      "changed_files": 123,
+      "inserted_lines": 13703,
+      "deleted_lines": 554
+    }
+  },
+  "checks": [
+    {
+      "command": "python -m unittest discover -s tools/tests",
+      "result": "success",
+      "tests": 37,
+      "seconds": 4.198,
+      "scope": "engineering tool regressions; no new Rust or full Python matrix result"
+    },
+    {
+      "command": "python tools/check_repository.py",
+      "result": "success",
+      "cargo_manifests": 25,
+      "engineering_documents_before_new_assessment": 60
+    },
+    {
+      "command": "python -m tools.evidence check",
+      "result": "success",
+      "records": 27,
+      "by_level": {
+        "run": 22,
+        "check": 3,
+        "compiled": 2
+      },
+      "by_result": {
+        "success": 27
+      },
+      "scope": "schema and summary consistency; this does not prove all importer semantics"
+    },
+    {
+      "command": "verify_manifest(target/optimization/candidate-20261025-4/manifest.json, 9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3) and compare raw manifest digest with compact data",
+      "result": "success",
+      "candidate_source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "scope": "retained original artifacts; not a new build at assessment HEAD"
+    }
+  ],
+  "gil_evidence_reproduction": {
+    "result": "mismatch reproduced",
+    "interpreter": "CPython 3.14.9 free-threaded, macOS arm64",
+    "interpreter_path": ".tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+    "environment": {
+      "PYTHON_GIL": "1"
+    },
+    "probe": "tools.engineering.environment.probe_python",
+    "observed_free_threaded_build": true,
+    "runtime_probe": "sys._is_gil_enabled()",
+    "observed_runtime_gil_enabled": true,
+    "current_import_local_derived_label": "disabled",
+    "source_locations": [
+      "tools/engineering/environment.py:13-22",
+      "tools/evidence.py:212-227"
+    ],
+    "scope": "verified current probe output and importer derivation; no existing evidence record was overwritten",
+    "existing_performance_samples": "performance.py separately checks actual runtime GIL, so this reproduction does not invalidate those samples"
+  },
+  "limitations": [
+    "No live GitHub query or remote write in this assessment; remote facts use the last recorded results.",
+    "No full SDK matrix rerun, new performance sampling, code security audit or external publication.",
+    "Physical line counts include comments, documentation and tests.",
+    "This assessment adds documentation and an index entry; implementation remains a later task."
+  ]
+}

@@ -30,6 +30,7 @@ from tools.candidate_artifacts import (
     wheel_metadata,
 )
 from tools.consumer_smoke import BEHAVIOR, python_in
+from tools.engineering.environment import probe_python
 from tools.new_project import ROOT, generate
 
 
@@ -205,6 +206,7 @@ def main() -> int:
         "public_release": False,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "python": sys.version,
+        "target_python": probe_python(sys.executable),
         "platform": platform.platform(),
         "work_directory": str(work),
         "commands": [],

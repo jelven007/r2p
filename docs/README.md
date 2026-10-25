@@ -13,7 +13,9 @@
 | 阶段 | 文档 | 回答的问题 |
 | --- | --- | --- |
 | 分析 | [项目分析与现状](governance/project-assessment.md) | 现有代码是什么、证据在哪里、缺口是什么 |
-| 当前优化 | [2026-10-25 项目分析与优化方案](governance/optimization-plan-2026-10-25.md) | 当前 main 的具体缺口、优先级、工作量与验收标准是什么 |
+| 当前复评 | [当前项目复评与下一阶段方案](governance/optimization-reassessment-2026-10-25.md) | 643b3204 上已完成什么、当前缺口和下一阶段投入是什么 |
+| 持续优化 | [R-01–R-09 实施记录](governance/optimization-continuation-2026-10-25.md) | 复评后的真实实施、验证与剩余外部条件是什么 |
+| 优化原方案 | [2026-10-25 初始优化方案](governance/optimization-plan-2026-10-25.md) | 初始 main 基线的工作包、优先级和验收要求是什么 |
 | 优化实施 | [实施记录](governance/optimization-execution-2026-10-25.md)、[测试入口与环境验证](testing/reports/tooling-optimization-2026-10-25.md) | 哪些已实现和验证、哪些仍在执行 |
 | 历史优化 | [初次优化评估与建议](governance/optimization-assessment.md) | 上一阶段发现了什么、哪些已经交付 |
 | 需求 | [系统需求规格](requirements/system-requirements.md) | 服务谁、实现什么、如何验收 |
@@ -29,8 +31,8 @@
 | 配置 | [构建配置注册表](development/configuration-reference.md) | 配置优先级、扩展/嵌入与跨编译条件 |
 | 测试 | [测试策略](testing/test-strategy.md) | 分层、用例、矩阵、缺陷及准入 |
 | 支持矩阵 | [兼容性证据与状态](testing/support-matrix.md) | 已配置、已编译、已运行和支持等级 |
-| 当前验证 | [生产工程验证](testing/reports/production-baseline-validation.md) | 当前提交执行了什么、结果和限制是什么 |
-| 历史验证 | [原目录基线](testing/reports/validation-report.md)、[MSRV/汇总修正](testing/reports/ci-fixes-validation.md) | 保留各阶段的原始命令与结果 |
+| 当前验证 | [结构化摘要](testing/evidence-summary.md)、[实际环境与失败等级](testing/reports/evidence-environment-2026-10-25.md) | 各 SHA 实际执行了什么、结果和限制是什么 |
+| 历史验证 | [生产工程基线](testing/reports/production-baseline-validation.md)、[原目录基线](testing/reports/validation-report.md)、[MSRV/汇总修正](testing/reports/ci-fixes-validation.md) | 保留各阶段的原始命令与结果 |
 | SDK 内核迁移 | [迁移规则](development/kernel-namespace-migration.md)、[验证报告](testing/reports/kernel-migration-validation.md) | crate、宏、构建变量、Python 模块与打包如何迁移到 r2p |
 | 运营 | [运营计划](operations/operating-plan.md) | 采用、反馈、支持、指标如何形成闭环 |
 | 支持 | [支持政策](operations/support-policy.md) | 问题入口、维护边界和版本支持 |
@@ -51,7 +53,7 @@
 - **工程规范**：本仓库采用的研发和交付要求；具体执行仍需测试/发行证据。
 - **发行准入要求**：外部制品发行前应满足的目标，尚未证明全部满足。
 - **待确认**：需要产品或负责人确认的范围、权限、预算或指标。
-- **已验证**：有[当前报告](testing/reports/production-baseline-validation.md)或其引用的历史报告支持，限定 SHA、环境和范围。
+- **已验证**：有[结构化证据](testing/evidence-summary.md)及引用报告支持，限定 SHA、环境和范围。
 
 当前实际责任人见[维护者清单](governance/maintainers.toml)，由 jelven007 承担已列角色；备份维护者尚未分配。
 SLO、支持期限和性能门槛是拟定目标，确定后才构成外部承诺。
