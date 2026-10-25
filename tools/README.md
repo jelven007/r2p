@@ -7,10 +7,10 @@
 | `dev.py` | 指定受测 Python 启动 Nox；记录环境和命令结果 | 工具 Python 3.14+、uv、Rust；目标 Python 须已安装 |
 | `new_project.py` | 生成独立项目；SDK 与适配器统一 Git SHA/path/已验证注册表来源 | Python 3.11+、Git；不覆盖已有目录 |
 | `consumer_smoke.py` | 九个模板依赖图、sdist 重建、普通/abi3 wheel 隔离安装和嵌入异常验证 | `python -m tools.consumer_smoke --output target/consumer-check`；Python 3.14、uv、Rust |
-| `candidate.py` | 六个 SDK crate 的独立 sparse 注册表消费、三种 wheel 安装和 baseline 恢复 | Python 3.14、uv、Rust；不同完整 SHA；输出目录须不存在 |
+| `candidate.py` | 六个 SDK crate 的独立 sparse 注册表消费、三种 wheel 安装和跨版本 baseline 恢复 | Python 3.14、uv、Rust；各 SHA 独立稳定版本、精确依赖；输出目录须不存在 |
 | `candidate_artifacts.py` | 原始 crate/wheel 内容、精确依赖、源码、哈希和恢复 manifest 复验；CLI 行为探针 | `python -m tools.candidate_artifacts verify --manifest <path> --sha <SHA> --output <path>` |
 | `release_gate.py` | 要求发行源码对应完整 CI 的全部必需任务与候选制品通过 | 已完成 Actions run、GitHub 权限；本地制品不替代完整远端 CI |
-| `publish_candidate.py` | 保留验收过的原始 crate 字节进行上传；默认仅验证请求 | 同 SHA gate；执行需显式 --execute、发行开关及 registry token |
+| `publish_candidate.py` | 按顺序上传验收原始字节，等待索引/下载摘要，保存 journal 并恢复部分进度；默认仅验证请求 | 外部执行需同 SHA gate、--execute、开关及 token；--local-registry 仅接受回环 HTTP fixture |
 | `cli_wheel_acceptance.py` | 本机安装/执行 CLI wheel，核验七个原生平台制品集合 | 原始 wheel、完整 SHA、平台 ID；集合完整不代表本机执行了七个平台 |
 | `performance.py`、`performance_report.py` | 同环境独立进程采样、编译/RSS/大小成本、描述统计与原始数据报告 | 明确基线/候选 SHA 和解释器；样本报告不自动判定 5% 门限 |
 | `upstream_sync.py` | 固定上游修订、映射变更、隔离重放和本地差异清单 | 本地 Git 历史、清晰来源；不改主工作区或历史标签 |

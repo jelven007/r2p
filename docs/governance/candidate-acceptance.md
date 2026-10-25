@@ -6,11 +6,17 @@
 
 ## 同一来源与包集合
 
-候选固定完整 Git SHA、六个 SDK crate 的 0.30.0 版本、精确内部依赖、许可证、Cargo 锁及每个制品的 SHA-256。
+candidate 与 baseline 各固定完整 Git SHA，从各自源码读取 SDK 版本，允许两个版本不同。
+同一组的六个 SDK crate 必须版本一致，内部依赖精确绑定为 `=该组版本`，同时核验许可证、Cargo 锁与每个制品的 SHA-256。
 集合为 r2p-build-config、r2p-macros-backend、r2p-ffi、r2p-macros、r2p、r2p-introspection。
 私有 pyo3-ffi 适配器、性能工具、示例与 Python runtime 占位包不进入 SDK 发布集合。
 在独立 checkout 打包，保留真实 Git 来源信息，主工作区锁和两个历史 tag 不变。
 候选 manifest 分列源码/包元数据、制品摘要、验收命令、目标环境、结果和限制。
+新 manifest 使用 schema 2；首次 schema 1 的两组 0.30.0 契约仍可复验，既有证据不改写。
+当前版本政策接受规范的稳定 `MAJOR.MINOR.PATCH`，前缀 v、预发行和构建元数据尚无 Rust/Python 联合发行契约，因此拒绝。
+CLI Python 分发版本由对应 r2p-introspection crate 动态提供，必须等于该组 SDK 版本。
+扩展消费者的版本由模板的 Cargo/pyproject 共同提供，两者须一致，但独立于 SDK 版本。
+两组消费者均使用 candidate SHA 的模板，分别替换为本组的 registry 精确依赖；模板来源与执行工具 SHA 分开记录。
 
 ## Rust 源码包
 
@@ -44,6 +50,21 @@ r2p-introspection 当前是 bindings=bin 的 CLI wheel。
 目前 85 个必需任务均须成功，声明为前瞻的 nightly/beta 可失败，但取消或未完成仍阻断。
 发布只消费已验收的 manifest 和制品；重建后须重新核对摘要与行为。
 Rust 和 Python 发布工作流均需绑定来源、版本、验收集合和 gate。
+Rust 上传按六包依赖顺序执行，每包上传后等待索引可见，并下载原始 .crate 校验 SHA-256 后才继续。
+默认只校验上传体；外部执行仍要求同 SHA 成功 gate、`--execute`、发行开关和凭证。
+`--local-registry http://127.0.0.1:<port>` 仅用于回环 HTTP fixture，不需要也不产生外部 CI gate。
+本地 fixture journal 的 scope 为 local-fixture，不能转为 crates.io 续发记录。
+
+执行前后均保存 upload-journal.json，绑定源码、manifest/gate 摘要、注册表地址与六包摘要，不包含凭证。
+上传请求发送前标记 uploading，响应成功后标记 accepted，索引和下载核验后标记 verified。
+恢复时仍逐包复核远端字节；已存在且摘要一致的版本不重传。
+请求发生网络或 HTTP 错误时可能已被接受，默认只等待索引与下载，超时停止。
+`--retry-unindexed` 是明确的续发选择：等待超时后仅对仍处于 uploading 的未验证请求重新发送；accepted/verified 不自动重传。
+索引或下载摘要不同、已撤回、journal 绑定漂移及并发 journal 锁均阻断后续包。
+进程异常退出后若遗留 journal.lock，须先确认没有活动上传，再移除该锁。
+发布工作流保留成功或部分失败 journal 90 天；手动调度可通过 resume_run_id 取回同一来源记录。
+CI 成功与实际外部 namespace、运营准入仍属于独立条件；回环测试不替代外部首次发行验证。
+
 恢复验收重新校验 retained artifact，安装候选后再显式安装旧制品，运行同一消费行为。
 恢复记录必须说明这是本地候选恢复；实际发布后的下载复验仍属于首次外部发行准入。
 命名空间权限、私密报告渠道、维护责任和支持期限也必须真实落实，未满足项继续保留。

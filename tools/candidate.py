@@ -26,6 +26,8 @@ from tools.candidate_artifacts import (
     check_cli,
     crate_metadata,
     digest,
+    release_version,
+    source_version,
     verify_manifest,
     wheel_metadata,
 )
@@ -175,7 +177,7 @@ def main() -> int:
         parser.error("candidate and baseline require different full immutable SHAs")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
-    work = Path(tempfile.mkdtemp(prefix="r2p-candidate-")).resolve()
+    work = Path(tempfile.mkdtemp(prefix="work-", dir=output)).resolve()
     cache_home = Path(os.environ.get("CARGO_HOME", str(Path.home() / ".cargo")))
     lock_digest = digest(ROOT / "Cargo.lock")
     environment = os.environ.copy()
@@ -197,7 +199,8 @@ def main() -> int:
         RUSTUP_TOOLCHAIN="stable",
     )
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "version_policy": "stable-sdk; cli=sdk; consumer=template",
         "source_sha": args.sha,
         "consumer_template_sha": args.sha,
         "tool_sha": subprocess.check_output(
@@ -275,16 +278,13 @@ def main() -> int:
         for variant, sha in (("candidate", args.sha), ("baseline", args.baseline_sha)):
             source = output / f"source-{variant}"
             run("git", "worktree", "add", "--detach", source, sha, cwd=ROOT)
-            version = tomllib.loads((source / "Cargo.toml").read_text())["package"][
-                "version"
-            ]
-            if version != "0.30.0":
-                raise ValueError(
-                    "this candidate contract targets the six 0.30.0 SDK crates"
-                )
+            version = source_version(source)
             records = {
                 "source_sha": sha,
                 "version": version,
+                "fixture_only": (
+                    source / "docs/governance/release-fixture.json"
+                ).exists(),
                 "crates": [],
                 "wheels": [],
             }
@@ -363,6 +363,23 @@ def main() -> int:
                 source=candidate_source,
                 root=output / "source-candidate",
             )
+            consumer_package = tomllib.loads((project / "Cargo.toml").read_text())[
+                "package"
+            ]
+            consumer_python = tomllib.loads((project / "pyproject.toml").read_text())[
+                "project"
+            ]
+            consumer_version = release_version(consumer_package["version"])
+            if (
+                consumer_python.get("version") != consumer_version
+                or consumer_python["name"] != consumer_package["name"]
+            ):
+                raise ValueError("consumer Rust/Python distribution versions differ")
+            records["consumer"] = {
+                "name": consumer_python["name"],
+                "version": consumer_version,
+                "template_sha": args.sha,
+            }
             records["graphs"] = {}
             for consumer in (project, embedding):
                 metadata = json.loads(
@@ -455,7 +472,7 @@ def main() -> int:
                 row = wheel_metadata(
                     wheel,
                     "r2p-introspection" if abi == "cli" else "maturin-starter",
-                    version if abi == "cli" else "0.1.0",
+                    version if abi == "cli" else consumer_version,
                     tag,
                 )
                 row.update(
@@ -597,6 +614,8 @@ def main() -> int:
             save()
         report["restoration"] = {
             "result": "success",
+            "from_version": report["variants"]["candidate"]["version"],
+            "to_version": report["variants"]["baseline"]["version"],
             "scope": "Local candidate → retained baseline packages and wheels; registry homes are independent and the same three wheel install environments were explicitly reinstalled.",
             "source_sha": args.baseline_sha,
             "commands": "baseline registry cargo run and uv pip install --reinstall followed by the identical behavior probes",

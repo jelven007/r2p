@@ -7,13 +7,13 @@ import json
 import os
 import struct
 import tarfile
-import urllib.request
 from pathlib import Path
 
 import tomllib
 
 from tools.candidate import index_entry
-from tools.candidate_artifacts import verify_manifest
+from tools.candidate_artifacts import SDK, digest, verify_manifest
+from tools.engineering.registry_upload import Registry, publish
 
 
 def upload_body(path: Path) -> bytes:
@@ -82,45 +82,82 @@ def upload_body(path: Path) -> bytes:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", required=True, type=Path)
-    parser.add_argument("--gate", required=True, type=Path)
+    parser.add_argument("--gate", type=Path)
     parser.add_argument("--sha", required=True)
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument(
+        "--local-registry", help="loopback HTTP fixture only; never an external release"
+    )
+    parser.add_argument("--journal", type=Path)
+    parser.add_argument("--wait-timeout", type=float, default=300)
+    parser.add_argument("--poll-interval", type=float, default=2)
+    parser.add_argument("--retry-unindexed", action="store_true")
     args = parser.parse_args()
     manifest = verify_manifest(args.manifest, args.sha)
-    gate = json.loads(args.gate.read_text())
+    gate_hash = None
+    if not args.local_registry:
+        if any(
+            variant.get("fixture_only") for variant in manifest["variants"].values()
+        ):
+            parser.error(
+                "release fixture artifacts are forbidden for external publishing"
+            )
+        if not args.gate:
+            parser.error("successful same-source full CI gate is required")
+        gate = json.loads(args.gate.read_text())
+        if (
+            gate.get("source_sha") != args.sha
+            or gate.get("result") != "success"
+            or gate.get("version") != manifest["variants"]["candidate"]["version"]
+            or not isinstance(gate.get("run_id"), int)
+            or gate["run_id"] <= 0
+        ):
+            parser.error("successful same-source full CI gate is required")
+        gate_hash = digest(args.gate)
     if (
-        gate.get("source_sha") != args.sha
-        or gate.get("result") != "success"
-        or gate.get("version") != manifest["variants"]["candidate"]["version"]
-        or not gate.get("run_id")
-    ):
-        parser.error("successful same-source full CI gate is required")
-    if args.execute and (
-        os.environ.get("R2P_ENABLE_CRATES_IO") != "true"
-        or not os.environ.get("CARGO_REGISTRY_TOKEN")
+        args.execute
+        and not args.local_registry
+        and (
+            os.environ.get("R2P_ENABLE_CRATES_IO") != "true"
+            or not os.environ.get("CARGO_REGISTRY_TOKEN")
+        )
     ):
         parser.error(
             "public release remains disabled or registry credentials are absent"
         )
-    for row in manifest["variants"]["candidate"]["crates"]:
+    try:
+        registry = Registry(
+            args.local_registry,
+            token=os.environ.get("CARGO_REGISTRY_TOKEN")
+            if not args.local_registry
+            else None,
+        )
+    except ValueError as error:
+        parser.error(str(error))
+    rows = sorted(
+        manifest["variants"]["candidate"]["crates"],
+        key=lambda row: SDK.index(row["name"]),
+    )
+    for row in rows:
         body = upload_body(args.manifest.parent / row["path"])
-        if args.execute:
-            request = urllib.request.Request(
-                "https://crates.io/api/v1/crates/new",
-                data=body,
-                method="PUT",
-                headers={
-                    "Authorization": os.environ["CARGO_REGISTRY_TOKEN"],
-                    "Content-Type": "application/octet-stream",
-                    "User-Agent": "r2p-candidate-release/1",
-                },
-            )
-            with urllib.request.urlopen(request, timeout=60) as response:
-                result = json.load(response)
-            if result.get("errors"):
-                raise RuntimeError(f"registry rejected {row['name']}")
         print(
-            f"{'Uploaded' if args.execute else 'Validated upload body for'} {row['name']} {row['version']} sha256={row['sha256']}"
+            f"Validated upload body for {row['name']} {row['version']} sha256={row['sha256']} bytes={len(body)}"
+        )
+    if args.execute:
+        publish(
+            rows,
+            registry=registry,
+            journal_path=args.journal or args.manifest.parent / "upload-journal.json",
+            binding={
+                "source_sha": args.sha,
+                "manifest_sha256": digest(args.manifest),
+                "gate_sha256": gate_hash,
+                "scope": "local-fixture" if args.local_registry else "crates.io",
+            },
+            body_for=lambda row: upload_body(args.manifest.parent / row["path"]),
+            timeout=args.wait_timeout,
+            poll=args.poll_interval,
+            retry_unindexed=args.retry_unindexed,
         )
     return 0
 

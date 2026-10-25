@@ -11,9 +11,20 @@ import tempfile
 import unittest
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
-from tools.candidate_artifacts import ROOT, crate_metadata, wheel_metadata
+from tools.candidate_artifacts import (
+    ROOT,
+    SDK,
+    crate_metadata,
+    digest,
+    release_version,
+    source_version,
+    verify_manifest,
+    wheel_metadata,
+)
 from tools.cli_wheel_acceptance import matches_platform, verify_set
+from tools.publish_candidate import main as publish_main
 from tools.publish_candidate import upload_body
 from tools.release_gate import REPOSITORY, job_policy, required_jobs, validate_run
 
@@ -27,24 +38,24 @@ class PackageTests(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
 
-    def crate(self, **changes) -> Path:
+    def crate(self, *, name="r2p-ffi", version=VERSION, **changes) -> Path:
         files = {
             "Cargo.toml": (
-                b'[package]\nname="r2p-ffi"\nversion="0.30.0"\n'
-                b'license="MIT OR Apache-2.0"\n'
-                b'[dependencies.r2p-build-config]\nversion="=0.30.0"\n'
-            ),
+                f'[package]\nname="{name}"\nversion="{version}"\n'
+                'license="MIT OR Apache-2.0"\n'
+                f'[dependencies.r2p-build-config]\nversion="={version}"\n'
+            ).encode(),
             ".cargo_vcs_info.json": json.dumps({"git": {"sha1": SHA}}).encode(),
             "LICENSE-MIT": (ROOT / "LICENSE-MIT").read_bytes(),
             "LICENSE-APACHE": (ROOT / "LICENSE-APACHE").read_bytes(),
         }
         files.update(changes)
-        path = self.root / "r2p-ffi-0.30.0.crate"
+        path = self.root / f"{name}-{version}.crate"
         with tarfile.open(path, "w:gz") as archive:
-            for name, content in files.items():
+            for filename, content in files.items():
                 if content is None:
                     continue
-                member = tarfile.TarInfo("r2p-ffi-0.30.0/" + name)
+                member = tarfile.TarInfo(path.stem + "/" + filename)
                 member.size = len(content)
                 archive.addfile(member, io.BytesIO(content))
         return path
@@ -113,14 +124,17 @@ class PackageTests(unittest.TestCase):
         *,
         tag="py3-none-macosx_11_0_arm64",
         version=VERSION,
+        filename_version=VERSION,
+        distribution="r2p-introspection",
         license=True,
         binary=True,
     ) -> Path:
-        path = self.root / f"r2p_introspection-{VERSION}-{tag}.whl"
+        wheel_name = distribution.replace("-", "_")
+        path = self.root / f"{wheel_name}-{filename_version}-{tag}.whl"
         with zipfile.ZipFile(path, "w") as archive:
-            prefix = f"r2p_introspection-{VERSION}.dist-info/"
+            prefix = f"{wheel_name}-{filename_version}.dist-info/"
             archive.writestr(
-                prefix + "METADATA", f"Name: r2p-introspection\nVersion: {version}\n"
+                prefix + "METADATA", f"Name: {distribution}\nVersion: {version}\n"
             )
             archive.writestr(prefix + "WHEEL", f"Wheel-Version: 1.0\nTag: {tag}\n")
             if license:
@@ -130,7 +144,7 @@ class PackageTests(unittest.TestCase):
                     )
             if binary:
                 archive.writestr(
-                    f"r2p_introspection-{VERSION}.data/scripts/r2p-introspection",
+                    f"{wheel_name}-{filename_version}.data/scripts/r2p-introspection",
                     b"fixture",
                 )
         return path
@@ -220,6 +234,204 @@ class PackageTests(unittest.TestCase):
         self.wheel(tag="py3-none-macosx_12_0_arm64")
         with self.assertRaises(ValueError):
             verify_set(self.root, SHA, VERSION)
+
+    def candidate_manifest(
+        self, *, schema=2, version="0.30.1", consumer_version="0.2.0"
+    ):
+        manifest = {
+            "schema_version": schema,
+            "source_sha": SHA,
+            "consumer_template_sha": SHA,
+            "tool_sha": "3" * 40,
+            "version_policy": "stable-sdk; cli=sdk; consumer=template",
+            "result": "success",
+            "public_release": False,
+            "variants": {},
+            "restoration": {
+                "result": "success",
+                "source_sha": "2" * 40,
+                "from_version": version,
+                "to_version": VERSION,
+            },
+        }
+        destination = self.root
+        for kind, sdk_version, sha in (
+            ("candidate", version, SHA),
+            ("baseline", VERSION, "2" * 40),
+        ):
+            self.root = destination / kind
+            self.root.mkdir(exist_ok=True)
+            crates = []
+            for name in SDK:
+                path = self.crate(
+                    name=name,
+                    version=sdk_version,
+                    **{
+                        ".cargo_vcs_info.json": json.dumps(
+                            {"git": {"sha1": sha}}
+                        ).encode()
+                    },
+                )
+                crates.append(
+                    crate_metadata(path, name, sdk_version, sha)
+                    | {"path": str(path.relative_to(destination))}
+                )
+            wheels = []
+            for abi, tag in (
+                ("cli", "py3-none-macosx_11_0_arm64"),
+                ("native", "cp314-cp314-macosx_11_0_arm64"),
+                ("abi3", "cp39-abi3-macosx_11_0_arm64"),
+            ):
+                wheel_version = sdk_version if abi == "cli" else consumer_version
+                name = "r2p-introspection" if abi == "cli" else "maturin-starter"
+                path = self.wheel(
+                    tag=tag,
+                    version=wheel_version,
+                    filename_version=wheel_version,
+                    distribution=name,
+                )
+                wheels.append(
+                    wheel_metadata(path, name, wheel_version, tag)
+                    | {
+                        "path": str(path.relative_to(destination)),
+                        "source_sha": sha,
+                        "kind": abi,
+                    }
+                )
+            locks = {}
+            for name in ("extension.lock", "embedding.lock", "cli.lock"):
+                path = self.root / name
+                path.write_text("fixture")
+                locks[name] = digest(path)
+            manifest["variants"][kind] = {
+                "source_sha": sha,
+                "version": sdk_version,
+                "crates": crates,
+                "wheels": wheels,
+                "locks": locks,
+                "consumer": {
+                    "name": "maturin-starter",
+                    "version": consumer_version,
+                    "template_sha": SHA,
+                },
+                "registry_result": "success",
+                "embedding": "success",
+                "behavior": {
+                    "native": dict.fromkeys(
+                        ("function", "class", "exception"), "passed"
+                    ),
+                    "abi3": dict.fromkeys(("function", "class", "exception"), "passed"),
+                    "cli": {"result": "success"},
+                },
+            }
+        manifest["variants"]["candidate"]["negative_admission"] = dict.fromkeys(
+            (
+                "wrong_version",
+                "missing_dependency",
+                "tampered_crate",
+                "missing_import",
+                "wrong_abi",
+            ),
+            "blocked",
+        )
+        self.root = destination
+        path = destination / "manifest.json"
+        path.write_text(json.dumps(manifest))
+        return path, manifest
+
+    def test_cross_version_manifest_and_independent_consumer_version(self):
+        path, original = self.candidate_manifest()
+        self.assertEqual(
+            verify_manifest(path, SHA)["variants"]["candidate"]["version"], "0.30.1"
+        )
+        for mutation in (
+            "version",
+            "consumer",
+            "cli",
+            "template",
+            "restoration",
+            "set",
+            "sha",
+            "policy",
+        ):
+            manifest = copy.deepcopy(original)
+            candidate = manifest["variants"]["candidate"]
+            if mutation == "version":
+                candidate["version"] = VERSION
+            elif mutation == "consumer":
+                candidate["consumer"]["version"] = "0.3.0"
+            elif mutation == "cli":
+                candidate["wheels"][0]["version"] = VERSION
+            elif mutation == "template":
+                candidate["consumer"]["template_sha"] = "4" * 40
+            elif mutation == "restoration":
+                manifest["restoration"]["to_version"] = "0.29.0"
+            elif mutation == "set":
+                candidate["crates"].pop()
+            elif mutation == "sha":
+                manifest["variants"]["baseline"]["source_sha"] = "bad"
+            else:
+                manifest["version_policy"] = "uncontrolled"
+            path.write_text(json.dumps(manifest))
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                verify_manifest(path, SHA)
+
+    def test_original_manifest_remains_verifiable(self):
+        path, _ = self.candidate_manifest(
+            schema=1, version=VERSION, consumer_version="0.1.0"
+        )
+        self.assertEqual(verify_manifest(path, SHA)["schema_version"], 1)
+
+    def test_fixture_is_forbidden_for_external_publishing_before_any_network(self):
+        path, manifest = self.candidate_manifest()
+        manifest["variants"]["candidate"]["fixture_only"] = True
+        path.write_text(json.dumps(manifest))
+        with (
+            patch(
+                "sys.argv",
+                ["publish", "--manifest", str(path), "--sha", SHA, "--execute"],
+            ),
+            patch("sys.stderr", new_callable=io.StringIO) as error,
+            patch(
+                "urllib.request.urlopen",
+                side_effect=AssertionError("unexpected network"),
+            ),
+            self.assertRaises(SystemExit) as rejected,
+        ):
+            publish_main()
+        self.assertEqual(rejected.exception.code, 2)
+        self.assertIn("fixture artifacts are forbidden", error.getvalue())
+
+    def test_stable_versions_and_mixed_source_rejected(self):
+        self.assertEqual(release_version("12.3.45"), "12.3.45")
+        for value in ("0.30", "v0.30.1", "00.30.1", "0.30.1-rc.1", "0.30.1+meta", None):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                release_version(value)
+        for name in SDK:
+            relative = (
+                Path("Cargo.toml")
+                if name == "r2p"
+                else Path("crates") / name / "Cargo.toml"
+            )
+            target = self.root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((ROOT / relative).read_bytes())
+        cli = self.root / "crates/r2p-introspection/pyproject.toml"
+        cli.write_bytes((ROOT / "crates/r2p-introspection/pyproject.toml").read_bytes())
+        self.assertEqual(source_version(self.root), VERSION)
+        ffi = self.root / "crates/r2p-ffi/Cargo.toml"
+        original = ffi.read_text()
+        for text in (
+            original.replace('version = "0.30.0"', 'version = "0.30.1"', 1),
+            original.replace('version = "=0.30.0"', 'version = "0.30.0"', 1),
+        ):
+            ffi.write_text(text)
+            with self.assertRaises(ValueError):
+                source_version(self.root)
+        ffi.write_text(original)
+        cli.write_text('[project]\nname="r2p-introspection"\nversion="0.30.0"\n')
+        with self.assertRaises(ValueError):
+            source_version(self.root)
 
 
 class ReleaseGateTests(unittest.TestCase):
