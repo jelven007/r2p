@@ -25,6 +25,8 @@ CLI Python 分发版本由对应 r2p-introspection crate 动态提供，必须�
 源码包组装允许使用 --no-verify；只有在新 Cargo home 内，从该注册表独立解析、构建和运行后才计入验收。
 使用明确的 source replacement 配置保留正常注册表依赖关系，禁止以 workspace path 或隐含 patch 代替安装验收。
 确认每个 SDK 的来源位于新 Cargo home，依赖图只有一份同源 r2p-ffi。
+临时目录位于本仓库 target 内；生成的 CLI 消费者使用独立空 workspace。
+对下载后的 CLI 包直接运行 Maturin 前，只追加空 `[workspace]` 边界以隔离祖先工作区，记录修改前后摘要，并比较全部包/依赖元数据不变；原始 .crate 字节始终保留不改。
 被删除的 SDK 依赖、篡改的制品、错误版本或许可证均应阻断。
 本地镜像验证不等于已在 crates.io 发布，不增加 product.toml 的公共注册表准入版本。
 

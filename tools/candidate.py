@@ -158,6 +158,26 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+def isolate_cli_workspace(source: Path) -> dict:
+    """Add only an empty workspace boundary to a downloaded CLI manifest."""
+    path = source / "Cargo.toml"
+    original = tomllib.loads(path.read_text())
+    before = digest(path)
+    if "workspace" not in original:
+        with path.open("a") as stream:
+            stream.write("\n[workspace]\n")
+    elif original.pop("workspace") != {}:
+        raise ValueError("CLI registry package has an unexpected workspace")
+    actual = tomllib.loads(path.read_text())
+    if actual.pop("workspace") != {} or actual != original:
+        raise ValueError("CLI workspace isolation changed package/dependency metadata")
+    return {
+        "scope": "empty workspace boundary only",
+        "before_sha256": before,
+        "after_sha256": digest(path),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sha", required=True)
@@ -401,6 +421,7 @@ def main() -> int:
             (cli_project / "Cargo.toml").write_text(
                 f'[package]\nname = "candidate-cli"\nversion = "0.1.0"\nedition = "2024"\n'
                 f'[dependencies]\nr2p-introspection = "={version}"\n'
+                "\n[workspace]\n"
             )
             (cli_project / "src/main.rs").write_text(
                 "fn main() { let _ = r2p_introspection::module_stub_files; }\n"
@@ -424,6 +445,7 @@ def main() -> int:
             ):
                 raise ValueError("CLI registry source differs from the candidate SHA")
             run("cargo", "run", "--locked", cwd=cli_project)
+            records["cli_workspace_isolation"] = isolate_cli_workspace(cli_source)
             run("cargo", "generate-lockfile", cwd=cli_source)
             cli_lock = output / variant / f"cli-{variant}.lock"
             shutil.copyfile(cli_source / "Cargo.lock", cli_lock)

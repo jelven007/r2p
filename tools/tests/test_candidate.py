@@ -13,6 +13,7 @@ import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
+from tools.candidate import isolate_cli_workspace
 from tools.candidate_artifacts import (
     ROOT,
     SDK,
@@ -70,6 +71,20 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(crate_size, crate.stat().st_size)
         self.assertEqual((metadata["name"], metadata["vers"]), ("r2p-ffi", VERSION))
         self.assertEqual(metadata["deps"][0]["version_req"], "=0.30.0")
+
+    def test_registry_cli_workspace_boundary_preserves_manifest_and_is_idempotent(self):
+        manifest = self.root / "Cargo.toml"
+        original = '[package]\nname="r2p-introspection"\nversion="0.30.1"\n[dependencies]\nanyhow="1"\n'
+        manifest.write_text(original)
+        record = isolate_cli_workspace(self.root)
+        self.assertEqual(manifest.read_text(), original + "\n[workspace]\n")
+        self.assertNotEqual(record["before_sha256"], record["after_sha256"])
+        self.assertEqual(
+            isolate_cli_workspace(self.root)["before_sha256"], record["after_sha256"]
+        )
+        manifest.write_text(original + '\n[workspace]\nmembers=["other"]\n')
+        with self.assertRaisesRegex(ValueError, "unexpected workspace"):
+            isolate_cli_workspace(self.root)
 
     def test_crate_source_and_exact_dependency(self):
         row = crate_metadata(self.crate(), "r2p-ffi", VERSION, SHA)
