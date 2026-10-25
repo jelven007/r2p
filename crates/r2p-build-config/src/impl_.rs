@@ -2580,9 +2580,14 @@ where
     K: AsRef<OsStr>,
     V: AsRef<OsStr>,
 {
-    let out = Command::new(interpreter)
-        .env("PYTHONIOENCODING", "utf-8")
-        .envs(envs)
+    let mut command = Command::new(interpreter);
+    command.env("PYTHONIOENCODING", "utf-8").envs(envs);
+    // GraalPy's Windows venv launcher transports the parent's command through
+    // this variable. Inheriting it can replay a PEP 517 backend instead of the
+    // probe supplied on stdin. The child launcher supplies its own arguments.
+    #[cfg(windows)]
+    command.env_remove("GRAAL_PYTHON_VM_ARGS");
+    let out = command
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::inherit())
@@ -4401,6 +4406,24 @@ mod tests {
             )
             .expect("failed to run Python script");
         assert_eq!(out.trim_end(), "42");
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn test_run_python_script_ignores_windows_launcher_arguments() {
+        let interpreter = make_interpreter_config()
+            .expect("could not get InterpreterConfig from installed interpreter");
+        let out = interpreter
+            .run_python_script_with_envs(
+                "import os; assert 'inherited-launcher-arguments' not in \
+                 os.getenv('GRAAL_PYTHON_VM_ARGS', ''); print(2 + 2)",
+                [(
+                    "GRAAL_PYTHON_VM_ARGS",
+                    "\u{b}-c\u{b}raise RuntimeError('inherited-launcher-arguments')\u{b}",
+                )],
+            )
+            .expect("parent launcher arguments must not replace the child probe");
+        assert_eq!(out.trim_end(), "4");
     }
 
     #[test]
