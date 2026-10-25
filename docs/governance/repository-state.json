@@ -17,6 +17,11 @@
     "enable_request": "HTTP 403 Resource not accessible by integration",
     "private_contact": "not-established"
   },
+  "connector_authorization": {
+    "result": "success",
+    "continuation": "new conversation required before retrying GitHub operations",
+    "protection_and_private_reporting": "not-applied; last API attempts returned HTTP 403"
+  },
   "external_publication": {
     "crates_io": "disabled",
     "pypi": "disabled",

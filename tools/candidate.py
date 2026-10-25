@@ -606,6 +606,10 @@ def main() -> int:
         report["completed_at"] = datetime.now(timezone.utc).isoformat()
         save()
         verify_manifest(output / "manifest.json", args.sha)
+    except Exception as error:
+        report["result"] = "failure"
+        report["error"] = f"{type(error).__name__}: {error}"
+        raise
     finally:
         server.shutdown()
         server.server_close()

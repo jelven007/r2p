@@ -1,0 +1,1472 @@
+{
+  "schema_version": 1,
+  "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+  "consumer_template_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+  "tool_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+  "public_release": false,
+  "started_at": "2026-10-25T01:59:53.968710+00:00",
+  "python": "3.14.9 (main, Oct 21 2026, 17:47:42) [Clang 23.1.3 ]",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "variants": {
+    "candidate": {
+      "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+      "version": "0.30.0",
+      "crates": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "dcce6c61d3b2950e7c8a0851207e45494574a719c2b91eef2c661ac87f2f7ad7",
+          "bytes": 43451,
+          "path": "candidate/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "88c970fc91b4ea0f488403f42bd75ac975df031feb2d8265b3a0edf2ffffa960",
+          "bytes": 97132,
+          "path": "candidate/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "8bc62a2a2b8cbe8590b5023004c31a71cb3c058735dc7571dd1f82114a4a5e0c",
+          "bytes": 93342,
+          "path": "candidate/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "c7cbbdfd398b8e7e6c9415a66265879c901be8be35beaea445e3560d10089d27",
+          "bytes": 8499,
+          "path": "candidate/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "4da30a2cd3752f09d2abbe205cbcff59ab5b32a9e1a2c863ad418873d8fdf0cf",
+          "bytes": 1339197,
+          "path": "candidate/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "51c2f103dd6cb238a1ddfd2baef10b52b0fc4afa505d7b62d556c049898c171e",
+          "bytes": 26960,
+          "path": "candidate/r2p-introspection-0.30.0.crate"
+        }
+      ],
+      "wheels": [
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "f21794de37560bc96c708346aadc1ab2e1b56cd7ee7ed59b836f673672848cf4",
+          "bytes": 234492,
+          "path": "candidate/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "5feecde6690a4190a605afaf3dc910cb26736a940af015b22972d8de2cf65da4",
+          "bytes": 241793,
+          "path": "candidate/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "2cedcf61629001443c973c99951d88f68a2adcfa56027219842933be14774ae8",
+          "bytes": 643591,
+          "path": "candidate/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+        }
+      ],
+      "mirror": {
+        "public_packages": 720,
+        "provenance": "public Cargo cached index checksums and matching .crate bytes"
+      },
+      "graphs": {
+        "extension-candidate": [
+          {
+            "name": "r2p",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-build-config",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-build-config-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-ffi",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-ffi-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-macros",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-macros-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-macros-backend",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-macros-backend-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          }
+        ],
+        "embedding-candidate": [
+          {
+            "name": "r2p",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-build-config",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-build-config-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-ffi",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-ffi-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-macros",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-macros-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          },
+          {
+            "name": "r2p-macros-backend",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-macros-backend-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          }
+        ],
+        "cli": [
+          {
+            "name": "r2p-introspection",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-introspection-0.30.0/Cargo.toml",
+            "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+          }
+        ]
+      },
+      "locks": {
+        "extension-candidate.lock": "72aef754b323f9bebe7e4daef3c964ea8098b24836b8a3f0387fe573165a67f0",
+        "embedding-candidate.lock": "3d7cf0af7926635d0daaaf009ecc434736679d1c06852da34ff7247e438dae6f",
+        "cli-candidate.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "embedding": "success",
+      "behavior": {
+        "native": {
+          "python": "3.14.9 (main, Oct 21 2026, 17:47:42) [Clang 23.1.3 ]",
+          "module": "<isolated-work>/install-native/lib/python3.14/site-packages/maturin_starter/__init__.py",
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        },
+        "abi3": {
+          "python": "3.14.9 (main, Oct 21 2026, 17:47:42) [Clang 23.1.3 ]",
+          "module": "<isolated-work>/install-abi3/lib/python3.14/site-packages/maturin_starter/__init__.py",
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        },
+        "cli": {
+          "argument_error": 1,
+          "malformed_input": 1,
+          "fixture_sha256": "1536ecf4c3ccf73a45a1e814d92ea1093e0ad51a1252cfe59d9f1f77a7932ce2",
+          "stub": "__all__ = [\"answer\"]\n\ndef answer(): ...\n",
+          "result": "success"
+        }
+      },
+      "negative_admission": {
+        "wrong_version": "blocked",
+        "missing_dependency": "blocked",
+        "tampered_crate": "blocked",
+        "missing_import": "blocked",
+        "wrong_abi": "blocked"
+      },
+      "registry_result": "success"
+    },
+    "baseline": {
+      "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "version": "0.30.0",
+      "crates": [
+        {
+          "name": "r2p-build-config",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "da0f97281a08b8ad7036f40cfc09dc852659d26a1f8d9aaf35ee23e3e1a1cbe8",
+          "bytes": 42962,
+          "path": "baseline/r2p-build-config-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros-backend",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "08c7fd7a6d8bcb01ddcb69fce8a4937b396d1d22fd9922a39a057f0ff0ac2454",
+          "bytes": 97133,
+          "path": "baseline/r2p-macros-backend-0.30.0.crate"
+        },
+        {
+          "name": "r2p-ffi",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config"
+          ],
+          "sha256": "0ca658238c635573914b913d582c7f157d7196d30f7105c8a7bd395699e0df4f",
+          "bytes": 93342,
+          "path": "baseline/r2p-ffi-0.30.0.crate"
+        },
+        {
+          "name": "r2p-macros",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-macros-backend"
+          ],
+          "sha256": "058412945a77763f8162dd986001c0b1b8e492c79d6fbeadd86750138f1b95ec",
+          "bytes": 8500,
+          "path": "baseline/r2p-macros-0.30.0.crate"
+        },
+        {
+          "name": "r2p",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [
+            "r2p-build-config",
+            "r2p-ffi",
+            "r2p-macros"
+          ],
+          "sha256": "3e94ac7696bcab85b5feb54b21da08b59259d26793917852772df6d27834ce1d",
+          "bytes": 1336652,
+          "path": "baseline/r2p-0.30.0.crate"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+          "license": "MIT OR Apache-2.0",
+          "internal_dependencies": [],
+          "sha256": "199260c363a01c1142a46613f813cd8918f237964cb357dc6cc5fcaa47e9edda",
+          "bytes": 23089,
+          "path": "baseline/r2p-introspection-0.30.0.crate"
+        }
+      ],
+      "wheels": [
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp314-cp314-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp314-cp314-macosx_11_0_arm64",
+          "sha256": "d079b90030981e2c88c385234aed68310e102b177d96951e7667c0a2afc8c557",
+          "bytes": 234468,
+          "path": "baseline/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl",
+          "kind": "native",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        },
+        {
+          "name": "maturin-starter",
+          "version": "0.1.0",
+          "tags": [
+            "cp39-abi3-macosx_11_0_arm64"
+          ],
+          "filename_tag": "cp39-abi3-macosx_11_0_arm64",
+          "sha256": "4838f12082c5fb5d5a0f67278acb4a63aa2fd879426999b7ac8bdc8e34b1ee1e",
+          "bytes": 241799,
+          "path": "baseline/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl",
+          "kind": "abi3",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        },
+        {
+          "name": "r2p-introspection",
+          "version": "0.30.0",
+          "tags": [
+            "py3-none-macosx_11_0_arm64"
+          ],
+          "filename_tag": "py3-none-macosx_11_0_arm64",
+          "sha256": "7f42bda2c1318dbe21128b16b03004d6d4903e55d09a153c947e15171c907772",
+          "bytes": 624699,
+          "path": "baseline/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl",
+          "kind": "cli",
+          "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+        }
+      ],
+      "mirror": {
+        "public_packages": 720,
+        "provenance": "public Cargo cached index checksums and matching .crate bytes"
+      },
+      "graphs": {
+        "extension-baseline": [
+          {
+            "name": "r2p",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-build-config",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-build-config-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-ffi",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-ffi-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-macros",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-macros-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-macros-backend",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-macros-backend-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          }
+        ],
+        "embedding-baseline": [
+          {
+            "name": "r2p",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-build-config",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-build-config-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-ffi",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-ffi-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-macros",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-macros-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          },
+          {
+            "name": "r2p-macros-backend",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-macros-backend-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          }
+        ],
+        "cli": [
+          {
+            "name": "r2p-introspection",
+            "version": "0.30.0",
+            "source": "registry+https://github.com/rust-lang/crates.io-index",
+            "manifest_path": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-introspection-0.30.0/Cargo.toml",
+            "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+          }
+        ]
+      },
+      "locks": {
+        "extension-baseline.lock": "ecef6fa6df828f94a771832c77a17b44d6dedd1a42e2922a241b1da10815e0c5",
+        "embedding-baseline.lock": "8c5554c02b80061d3d8e866a3133f7cf59c28408d2fa178efcb9d9367a83e8eb",
+        "cli-baseline.lock": "19a860fc061017d62a362f7eefd579de4af9dd531a40cd79d413fb06d0ec79ac"
+      },
+      "embedding": "success",
+      "behavior": {
+        "native": {
+          "python": "3.14.9 (main, Oct 21 2026, 17:47:42) [Clang 23.1.3 ]",
+          "module": "<isolated-work>/install-native/lib/python3.14/site-packages/maturin_starter/__init__.py",
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        },
+        "abi3": {
+          "python": "3.14.9 (main, Oct 21 2026, 17:47:42) [Clang 23.1.3 ]",
+          "module": "<isolated-work>/install-abi3/lib/python3.14/site-packages/maturin_starter/__init__.py",
+          "function": "passed",
+          "class": "passed",
+          "exception": "passed"
+        },
+        "cli": {
+          "argument_error": 1,
+          "malformed_input": 1,
+          "fixture_sha256": "1536ecf4c3ccf73a45a1e814d92ea1093e0ad51a1252cfe59d9f1f77a7932ce2",
+          "stub": "__all__ = [\"answer\"]\n\ndef answer(): ...\n",
+          "result": "success"
+        }
+      },
+      "registry_result": "success"
+    }
+  },
+  "result": "success",
+  "limitations": "Local candidate registry, native host execution only. abi3-py39 ran on recorded CPython, not all supported interpreters. Full remote CI and external namespace/operations admission are separate gates.",
+  "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1\n",
+  "restoration": {
+    "result": "success",
+    "scope": "Local candidate \u2192 retained baseline packages and wheels; registry homes are independent and the same three wheel install environments were explicitly reinstalled.",
+    "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+    "commands": "baseline registry cargo run and uv pip install --reinstall followed by the identical behavior probes"
+  },
+  "workspace_lock_sha256": "16cc70db1ee458ab2f766fe09d76eec183bbe1aef0447bc5fce9cc255f4a7ea1",
+  "completed_at": "2026-10-25T02:03:19.399808+00:00",
+  "commands": [
+    {
+      "command": [
+        "rustc",
+        "-vV"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.1553552910045255,
+      "exit_code": 0,
+      "log": "000.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "venv",
+        "<isolated-work>/builder",
+        "--python",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.08314775000326335,
+      "exit_code": 0,
+      "log": "001.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/builder/bin/python",
+        "maturin==1.15.0"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.5123486660013441,
+      "exit_code": 0,
+      "log": "002.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+        "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3"
+      ],
+      "cwd": "<repository>",
+      "seconds": 0.5733531249861699,
+      "exit_code": 0,
+      "log": "003.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "fetch",
+        "--locked"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+      "seconds": 0.5839338749938179,
+      "exit_code": 0,
+      "log": "004.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-build-config",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+      "seconds": 0.1710032080009114,
+      "exit_code": 0,
+      "log": "005.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-macros-backend",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+      "seconds": 0.09834450000198558,
+      "exit_code": 0,
+      "log": "006.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-ffi",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+      "seconds": 0.13947958400240168,
+      "exit_code": 0,
+      "log": "007.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-macros",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+      "seconds": 0.09122200001729652,
+      "exit_code": 0,
+      "log": "008.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+      "seconds": 0.293846582993865,
+      "exit_code": 0,
+      "log": "009.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-introspection",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-candidate",
+      "seconds": 0.10276595898903906,
+      "exit_code": 0,
+      "log": "010.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/extension-candidate",
+      "seconds": 1.2756695829739328,
+      "exit_code": 0,
+      "log": "011.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/embedding-candidate",
+      "seconds": 0.16963941699941643,
+      "exit_code": 0,
+      "log": "012.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "run",
+        "--locked"
+      ],
+      "cwd": "<isolated-work>/embedding-candidate",
+      "seconds": 27.726848499994958,
+      "exit_code": 0,
+      "log": "013.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/cli-candidate",
+      "seconds": 0.5434878329979256,
+      "exit_code": 0,
+      "log": "014.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "run",
+        "--locked"
+      ],
+      "cwd": "<isolated-work>/cli-candidate",
+      "seconds": 13.237945374974515,
+      "exit_code": 0,
+      "log": "015.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "generate-lockfile"
+      ],
+      "cwd": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-introspection-0.30.0",
+      "seconds": 0.11267662502359599,
+      "exit_code": 0,
+      "log": "016.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "<isolated-work>/builder/bin/python",
+        "-m",
+        "maturin",
+        "build",
+        "--release",
+        "--locked",
+        "--interpreter",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "--out",
+        "<repository>/target/optimization/candidate-20261025-4/candidate/native"
+      ],
+      "cwd": "<isolated-work>/extension-candidate",
+      "seconds": 27.032392624998465,
+      "exit_code": 0,
+      "log": "017.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "venv",
+        "<isolated-work>/install-native",
+        "--python",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.07896354101831093,
+      "exit_code": 0,
+      "log": "018.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/install-native/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "<repository>/target/optimization/candidate-20261025-4/candidate/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.8787314160144888,
+      "exit_code": 0,
+      "log": "019.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "<isolated-work>/install-native/bin/python",
+        "-I",
+        "-c",
+        "<inline Python probe; SHA-256 recorded>"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.48096008400898427,
+      "exit_code": 0,
+      "log": "020.log",
+      "expected_rejection": null,
+      "inline_python_sha256": "11502e9b452b6ea18f87e61ba4afb400e6d502364faf5205f51dd329138b06a3"
+    },
+    {
+      "command": [
+        "<isolated-work>/builder/bin/python",
+        "-m",
+        "maturin",
+        "build",
+        "--release",
+        "--locked",
+        "--interpreter",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "--out",
+        "<repository>/target/optimization/candidate-20261025-4/candidate/abi3",
+        "--features",
+        "abi3"
+      ],
+      "cwd": "<isolated-work>/extension-candidate",
+      "seconds": 9.107285083999159,
+      "exit_code": 0,
+      "log": "021.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "venv",
+        "<isolated-work>/install-abi3",
+        "--python",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.02758541700313799,
+      "exit_code": 0,
+      "log": "022.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/install-abi3/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "<repository>/target/optimization/candidate-20261025-4/candidate/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.11357179199694656,
+      "exit_code": 0,
+      "log": "023.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "<isolated-work>/install-abi3/bin/python",
+        "-I",
+        "-c",
+        "<inline Python probe; SHA-256 recorded>"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.49258412499330007,
+      "exit_code": 0,
+      "log": "024.log",
+      "expected_rejection": null,
+      "inline_python_sha256": "11502e9b452b6ea18f87e61ba4afb400e6d502364faf5205f51dd329138b06a3"
+    },
+    {
+      "command": [
+        "<isolated-work>/builder/bin/python",
+        "-m",
+        "maturin",
+        "build",
+        "--release",
+        "--locked",
+        "--interpreter",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "--out",
+        "<repository>/target/optimization/candidate-20261025-4/candidate/cli"
+      ],
+      "cwd": "<isolated-work>/cargo-candidate/registry/src/127.0.0.1-1b730303b4905b72/r2p-introspection-0.30.0",
+      "seconds": 16.650402625004062,
+      "exit_code": 0,
+      "log": "025.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "venv",
+        "<isolated-work>/install-cli",
+        "--python",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.02887633300269954,
+      "exit_code": 0,
+      "log": "026.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/install-cli/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "<repository>/target/optimization/candidate-20261025-4/candidate/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.12039504200220108,
+      "exit_code": 0,
+      "log": "027.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/negative-consumer",
+      "seconds": 0.09161320800194517,
+      "exit_code": 101,
+      "log": "028.log",
+      "expected_rejection": "failed to select a version"
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/negative-consumer",
+      "seconds": 0.08253666601376608,
+      "exit_code": 101,
+      "log": "029.log",
+      "expected_rejection": "no matching package named"
+    },
+    {
+      "command": [
+        "cargo",
+        "fetch"
+      ],
+      "cwd": "<isolated-work>/negative-consumer",
+      "seconds": 0.101681208005175,
+      "exit_code": 101,
+      "log": "030.log",
+      "expected_rejection": "failed to verify the checksum"
+    },
+    {
+      "command": [
+        "<isolated-work>/install-native/bin/python",
+        "-I",
+        "-c",
+        "<inline Python probe; SHA-256 recorded>"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.04626533400733024,
+      "exit_code": 1,
+      "log": "031.log",
+      "expected_rejection": "ModuleNotFoundError",
+      "inline_python_sha256": "a00fc282a10b258179c9f531376c7a7d40fcb6e7b66c672c71453c331c784088"
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/install-native/bin/python",
+        "--no-deps",
+        "<isolated-work>/maturin_starter-0.1.0-cp38-cp38-macosx_11_0_arm64.whl"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.03228624997427687,
+      "exit_code": 1,
+      "log": "032.log",
+      "expected_rejection": "matching Python version tag"
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+        "3a24917eb2766aa8ded8c04fefde1c1d4b133c00"
+      ],
+      "cwd": "<repository>",
+      "seconds": 0.4430194169981405,
+      "exit_code": 0,
+      "log": "033.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "fetch",
+        "--locked"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+      "seconds": 0.4661892090225592,
+      "exit_code": 0,
+      "log": "034.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-build-config",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+      "seconds": 0.2687667499994859,
+      "exit_code": 0,
+      "log": "035.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-macros-backend",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+      "seconds": 0.12358258399763145,
+      "exit_code": 0,
+      "log": "036.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-ffi",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+      "seconds": 0.1311618330073543,
+      "exit_code": 0,
+      "log": "037.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-macros",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+      "seconds": 0.09464883399778046,
+      "exit_code": 0,
+      "log": "038.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+      "seconds": 0.2649138330016285,
+      "exit_code": 0,
+      "log": "039.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "package",
+        "-p",
+        "r2p-introspection",
+        "--no-verify",
+        "--exclude-lockfile",
+        "--offline"
+      ],
+      "cwd": "<repository>/target/optimization/candidate-20261025-4/source-baseline",
+      "seconds": 0.13702562500839122,
+      "exit_code": 0,
+      "log": "040.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/extension-baseline",
+      "seconds": 1.3045114159758668,
+      "exit_code": 0,
+      "log": "041.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/embedding-baseline",
+      "seconds": 0.17427804099861532,
+      "exit_code": 0,
+      "log": "042.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "run",
+        "--locked"
+      ],
+      "cwd": "<isolated-work>/embedding-baseline",
+      "seconds": 25.934671166993212,
+      "exit_code": 0,
+      "log": "043.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "<isolated-work>/cli-baseline",
+      "seconds": 0.5167725830106065,
+      "exit_code": 0,
+      "log": "044.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "run",
+        "--locked"
+      ],
+      "cwd": "<isolated-work>/cli-baseline",
+      "seconds": 12.243141665996518,
+      "exit_code": 0,
+      "log": "045.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "cargo",
+        "generate-lockfile"
+      ],
+      "cwd": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-introspection-0.30.0",
+      "seconds": 0.10687458299798891,
+      "exit_code": 0,
+      "log": "046.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "<isolated-work>/builder/bin/python",
+        "-m",
+        "maturin",
+        "build",
+        "--release",
+        "--locked",
+        "--interpreter",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "--out",
+        "<repository>/target/optimization/candidate-20261025-4/baseline/native"
+      ],
+      "cwd": "<isolated-work>/extension-baseline",
+      "seconds": 25.411567291012034,
+      "exit_code": 0,
+      "log": "047.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/install-native/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "<repository>/target/optimization/candidate-20261025-4/baseline/native/maturin_starter-0.1.0-cp314-cp314-macosx_11_0_arm64.whl"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.9953337909828406,
+      "exit_code": 0,
+      "log": "048.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "<isolated-work>/install-native/bin/python",
+        "-I",
+        "-c",
+        "<inline Python probe; SHA-256 recorded>"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.4932544580078684,
+      "exit_code": 0,
+      "log": "049.log",
+      "expected_rejection": null,
+      "inline_python_sha256": "11502e9b452b6ea18f87e61ba4afb400e6d502364faf5205f51dd329138b06a3"
+    },
+    {
+      "command": [
+        "<isolated-work>/builder/bin/python",
+        "-m",
+        "maturin",
+        "build",
+        "--release",
+        "--locked",
+        "--interpreter",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "--out",
+        "<repository>/target/optimization/candidate-20261025-4/baseline/abi3",
+        "--features",
+        "abi3"
+      ],
+      "cwd": "<isolated-work>/extension-baseline",
+      "seconds": 8.625730332976673,
+      "exit_code": 0,
+      "log": "050.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/install-abi3/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "<repository>/target/optimization/candidate-20261025-4/baseline/abi3/maturin_starter-0.1.0-cp39-abi3-macosx_11_0_arm64.whl"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.1060536669974681,
+      "exit_code": 0,
+      "log": "051.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "<isolated-work>/install-abi3/bin/python",
+        "-I",
+        "-c",
+        "<inline Python probe; SHA-256 recorded>"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.5056440409971401,
+      "exit_code": 0,
+      "log": "052.log",
+      "expected_rejection": null,
+      "inline_python_sha256": "11502e9b452b6ea18f87e61ba4afb400e6d502364faf5205f51dd329138b06a3"
+    },
+    {
+      "command": [
+        "<isolated-work>/builder/bin/python",
+        "-m",
+        "maturin",
+        "build",
+        "--release",
+        "--locked",
+        "--interpreter",
+        "<repository>/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "--out",
+        "<repository>/target/optimization/candidate-20261025-4/baseline/cli"
+      ],
+      "cwd": "<isolated-work>/cargo-baseline/registry/src/127.0.0.1-fd86cef5b5929f8d/r2p-introspection-0.30.0",
+      "seconds": 16.52614166701096,
+      "exit_code": 0,
+      "log": "053.log",
+      "expected_rejection": null
+    },
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "<isolated-work>/install-cli/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "<repository>/target/optimization/candidate-20261025-4/baseline/cli/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl"
+      ],
+      "cwd": "<isolated-work>",
+      "seconds": 0.1201569160039071,
+      "exit_code": 0,
+      "log": "054.log",
+      "expected_rejection": null
+    }
+  ],
+  "raw_manifest_sha256": "978cb7b552370dbd607e1a16f0944ad85ae10b4fef49e86c085f979d9aa4053f",
+  "artifact_root": "target/optimization/candidate-20261025-4",
+  "evidence_kind": "compact local candidate evidence; raw manifest and artifacts required for publishing",
+  "independent_verification": {
+    "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+    "manifest_sha256": "978cb7b552370dbd607e1a16f0944ad85ae10b4fef49e86c085f979d9aa4053f",
+    "negative_cases": [
+      {
+        "case": "source",
+        "result": "blocked",
+        "error": "candidate is incomplete or has a different source"
+      },
+      {
+        "case": "incomplete",
+        "result": "blocked",
+        "error": "candidate is incomplete or has a different source"
+      },
+      {
+        "case": "missing_crate",
+        "result": "blocked",
+        "error": "candidate SDK package set differs"
+      },
+      {
+        "case": "duplicate_crate",
+        "result": "blocked",
+        "error": "candidate SDK package set differs"
+      },
+      {
+        "case": "missing_wheel",
+        "result": "blocked",
+        "error": "candidate wheel set differs"
+      },
+      {
+        "case": "crate_hash",
+        "result": "blocked",
+        "error": "candidate artifact hash/path mismatch"
+      },
+      {
+        "case": "lock_hash",
+        "result": "blocked",
+        "error": "candidate lock hash/path mismatch"
+      },
+      {
+        "case": "restoration",
+        "result": "blocked",
+        "error": "candidate restoration is incomplete"
+      },
+      {
+        "case": "path_escape",
+        "result": "blocked",
+        "error": "candidate artifact hash/path mismatch"
+      },
+      {
+        "case": "missing_crate_license",
+        "result": "blocked",
+        "error": "\"filename 'r2p-build-config-0.30.0/LICENSE-MIT' not found\""
+      },
+      {
+        "case": "missing_wheel_license",
+        "result": "blocked",
+        "error": "missing/incorrect wheel license: <repository>/target/optimization/candidate-20261025-4/r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl"
+      },
+      {
+        "case": "incomplete_native_platform_set",
+        "result": "blocked",
+        "error": "missing or duplicate native wheel platform acceptance"
+      },
+      {
+        "case": "wrong_version",
+        "result": "blocked",
+        "exit_code": 2,
+        "error": "usage: python -m tools.release_gate [-h] --sha SHA --version VERSION\n                                    --run-id RUN_ID [--manifest MANIFEST]\n                                    [--gh GH] --output OUTPUT\npython -m tools.release_gate: error: checked-out source or version differs from the candidate"
+      },
+      {
+        "case": "wrong_release_tag",
+        "result": "blocked",
+        "exit_code": 2,
+        "error": "usage: python -m tools.release_gate [-h] --sha SHA --version VERSION\n                                    --run-id RUN_ID [--manifest MANIFEST]\n                                    [--gh GH] --output OUTPUT\npython -m tools.release_gate: error: release tag differs from the candidate SDK version"
+      }
+    ],
+    "upload_body_assembly": [
+      {
+        "name": "r2p-build-config",
+        "metadata_bytes": 785,
+        "crate_bytes": 43451,
+        "crate_sha256": "dcce6c61d3b2950e7c8a0851207e45494574a719c2b91eef2c661ac87f2f7ad7",
+        "result": "success"
+      },
+      {
+        "name": "r2p-macros-backend",
+        "metadata_bytes": 1323,
+        "crate_bytes": 97132,
+        "crate_sha256": "88c970fc91b4ea0f488403f42bd75ac975df031feb2d8265b3a0edf2ffffa960",
+        "result": "success"
+      },
+      {
+        "name": "r2p-ffi",
+        "metadata_bytes": 11335,
+        "crate_bytes": 93342,
+        "crate_sha256": "8bc62a2a2b8cbe8590b5023004c31a71cb3c058735dc7571dd1f82114a4a5e0c",
+        "result": "success"
+      },
+      {
+        "name": "r2p-macros",
+        "metadata_bytes": 1370,
+        "crate_bytes": 8499,
+        "crate_sha256": "c7cbbdfd398b8e7e6c9415a66265879c901be8be35beaea445e3560d10089d27",
+        "result": "success"
+      },
+      {
+        "name": "r2p",
+        "metadata_bytes": 13961,
+        "crate_bytes": 1339197,
+        "crate_sha256": "4da30a2cd3752f09d2abbe205cbcff59ab5b32a9e1a2c863ad418873d8fdf0cf",
+        "result": "success"
+      },
+      {
+        "name": "r2p-introspection",
+        "metadata_bytes": 1195,
+        "crate_bytes": 26960,
+        "crate_sha256": "51c2f103dd6cb238a1ddfd2baef10b52b0fc4afa505d7b62d556c049898c171e",
+        "result": "success"
+      }
+    ],
+    "public_upload": false,
+    "full_ci_gate": "not-run at candidate SHA; no synthetic success gate used"
+  },
+  "independent_cli_acceptance": {
+    "schema_version": 1,
+    "source_sha": "9bdbaeba9c8c5e3f1738abedd467f4b47bef1bb3",
+    "platform_id": "macos-aarch64",
+    "host": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "python": "3.14.9 (main, Oct 21 2026, 17:47:42) [Clang 23.1.3 ]",
+    "artifact": {
+      "name": "r2p-introspection",
+      "version": "0.30.0",
+      "tags": [
+        "py3-none-macosx_11_0_arm64"
+      ],
+      "filename_tag": "py3-none-macosx_11_0_arm64",
+      "sha256": "2cedcf61629001443c973c99951d88f68a2adcfa56027219842933be14774ae8",
+      "bytes": 643591,
+      "path": "r2p_introspection-0.30.0-py3-none-macosx_11_0_arm64.whl"
+    },
+    "behavior": {
+      "argument_error": 1,
+      "malformed_input": 1,
+      "fixture_sha256": "1536ecf4c3ccf73a45a1e814d92ea1093e0ad51a1252cfe59d9f1f77a7932ce2",
+      "stub": "__all__ = [\"answer\"]\n\ndef answer(): ...\n",
+      "result": "success"
+    },
+    "result": "success"
+  }
+}

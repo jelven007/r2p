@@ -27,6 +27,31 @@ PLATFORMS = {
 }
 
 
+def matches_platform(tag: str, platform_id: str) -> bool:
+    if not tag.startswith("py3-none-"):
+        return False
+    platforms = tag.split("-", 2)[2].split(".")
+    windows = {
+        "windows-x64": "win_amd64",
+        "windows-x86": "win32",
+        "windows-aarch64": "win_arm64",
+    }
+    if platform_id in windows:
+        return platforms == [windows[platform_id]]
+    operating_system, architecture = platform_id.split("-", 1)
+    prefixes = (
+        ("macosx_",)
+        if operating_system == "macos"
+        else ("manylinux", "musllinux_", "linux_")
+    )
+    if architecture == "aarch64" and operating_system == "macos":
+        architecture = "arm64"
+    return all(
+        value.startswith(prefixes) and value.endswith("_" + architecture)
+        for value in platforms
+    )
+
+
 def verify_set(directory: Path, sha: str, version: str) -> list[dict]:
     records = [
         json.loads(path.read_text()) for path in directory.glob("cli-acceptance-*.json")
@@ -40,9 +65,11 @@ def verify_set(directory: Path, sha: str, version: str) -> list[dict]:
     for row in records:
         path = directory / row["artifact"]["path"]
         if (
-            row["source_sha"] != sha
+            row.get("schema_version") != 1
+            or row["source_sha"] != sha
             or row["result"] != "success"
             or row["behavior"]["result"] != "success"
+            or not matches_platform(row["artifact"]["filename_tag"], row["platform_id"])
             or path.parent != directory
             or digest(path) != row["artifact"]["sha256"]
         ):
@@ -51,7 +78,9 @@ def verify_set(directory: Path, sha: str, version: str) -> list[dict]:
             path, "r2p-introspection", version, row["artifact"]["filename_tag"]
         )
         wheels.add(path.name)
-    if wheels != {path.name for path in directory.glob("*.whl")}:
+    if len(wheels) != len(PLATFORMS) or wheels != {
+        path.name for path in directory.glob("*.whl")
+    }:
         raise ValueError("unaccepted wheel is present in the publish directory")
     return records
 
@@ -79,8 +108,8 @@ def main() -> int:
         parser.error("--platform-id is required for native execution")
     (wheel,) = args.dist.glob("*.whl")
     tag = wheel.stem.split("-", 2)[2]
-    if not tag.startswith("py3-none-"):
-        parser.error("r2p-introspection must retain its CLI wheel ABI")
+    if not matches_platform(tag, args.platform_id):
+        parser.error("CLI wheel ABI/platform differs from the native platform ID")
     metadata = wheel_metadata(wheel, "r2p-introspection", version, tag)
     install = Path(tempfile.mkdtemp(prefix="r2p-cli-wheel-")) / "venv"
     subprocess.run(["uv", "venv", str(install), "--python", sys.executable], check=True)

@@ -15,10 +15,10 @@
 | O-03 环境与工具组织 | 本地验收通过，CI 绑定修复待远端复验 | 工具/目标解释器分别记录，40 会话不变，MSRV 隔离 52 条编译检查通过、原锁不变；严格 Clippy 通过；真实矩阵发现的漂移已补[显式绑定](../testing/reports/ci-interpreter-binding-2026-10-25.md) |
 | O-04 CI 分层与去重 | 本地验收通过，远端待核验 | 已实现统一选择、文档编译检查、基准/站点分流与缓存去重；见[CI 验证](../testing/reports/ci-policy-optimization-2026-10-25.md) |
 | O-05 门禁与矩阵 | 本地门禁通过，远端保护受限 | 50 个原始汇总场景及意外跳过/矩阵遗漏阻断通过；完整周期矩阵已配置；远端保护 GET/PUT 均返回 403，main 仍未保护 |
-| O-06 候选制品准入 | 验收契约已落实，制品实现与验证中 | 同 SHA 清单、隔离 sparse 注册表、扩展与 CLI wheel 分别验收、发布 gate 和恢复；见[实施契约](candidate-acceptance.md)，尚不计验收成功 |
+| O-06 候选制品准入 | 本机候选与恢复验收通过，远端完整准入待验证 | 两组各六 crate/三 wheel/三锁，真实注册表消费及恢复、五个真实拒绝和 14 个独立拒绝均通过；见[候选报告](../testing/reports/candidate-acceptance-2026-10-25.md)，同 SHA CI 与七平台 wheel 尚未运行 |
 | O-07 上游同步 | 上游工程依赖同步本地通过，运行时移植未覆盖 | 真实 fda3c584 来源、原始冲突、精确 pin 映射、1,166 条含 owner 文件清单和负例已验证；见[同步演练](../testing/reports/upstream-sync-2026-10-25.md) |
 | O-08 性能基线 | 本地采样完成，性能门限尚未校准 | 固定 3a24917e/ba53c8a1，GIL/真实 free-threaded 共 204 条运行和 54 条编译样本，分布/CV/效果量/成本/大小已保留；见[报告](../testing/reports/performance-baseline-2026-10-25.md)，不宣称运行时加速 |
-| O-09 文档与运营 | 治理本地通过，外部样本/私密渠道未完成 | 20 条结构化证据、实现/验收分列、真实维护者与新片段来源已落实；见[治理验证](../testing/reports/evidence-governance-2026-10-25.md)及后续边界/绑定/同步验证 |
+| O-09 文档与运营 | 治理本地通过，外部样本/私密渠道未完成 | 27 条结构化证据、实现/验收分列、真实维护者与新片段来源已落实；见[治理验证](../testing/reports/evidence-governance-2026-10-25.md)及后续边界/绑定/同步验证 |
 | O-10 鲁棒性 | 本地验收通过，最终跨平台待核验 | 文件/JSON/关系/展开预算、11 项边界及 4,096 组变异输入、Mach-O 三形态 stub、43 项生命周期/GC/异常回归通过；见[边界验证](../testing/reports/introspection-boundaries-2026-10-25.md) |
 
 ## 2. 实施顺序与边界
@@ -53,3 +53,11 @@ main 保护应用接口因当前 GitHub integration 缺少相应权限返回 403
 free-threaded 并发样本存在高波动，未将三样本效果量当作稳定退化或加速结论。
 最小/full 特性的编译成本分别记录，保留现有 ReferencePool 与同步算法。
 simulation [40150316510](https://github.com/jelven007/r2p/actions/runs/40150316510) 成功；它与本地 walltime 分开。
+
+2026-10-25：O-06 固定 9bdbaeba/3a24917e 完成本机候选、旧制品恢复和独立复核。
+完整 manifest、原始日志与制品保留在 target，摘要纳入[候选数据](../testing/data/candidate-2026-10-25.json)，五条行为/恢复证据进入当前结构化摘要。
+普通/abi3/CLI wheel 均运行，abi3 仅在 CPython 3.14.9 实测。
+发布体组装保留原始 `.crate` 字节，尚无成功同 SHA 远端 gate，未执行外部上传。
+七个原生 wheel 的平台标签、独立制品与完整集合门禁已实现，远端运行尚待完成。
+main 保护读取及私密报告启用接口再次返回 403；授权入口成功后要求新会话才能继续服务操作。
+本轮完成本地代码、报告与提交，推送、PR 更新、新 CI、wheel 调度及合并待新会话继续；两个历史标签未修改。

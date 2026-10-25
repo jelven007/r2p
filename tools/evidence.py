@@ -10,6 +10,8 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from tools.candidate_artifacts import digest, verify_manifest
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "docs/testing/evidence.json"
 SUMMARY = ROOT / "docs/testing/evidence-summary.md"
@@ -314,6 +316,52 @@ def import_performance(path: Path) -> list[dict]:
     return records
 
 
+def import_candidate(path: Path) -> list[dict]:
+    source_sha = json.loads(path.read_text())["source_sha"]
+    snapshot = verify_manifest(path, source_sha)
+    variant = snapshot["variants"]["candidate"]
+    records = []
+    for mode, features in (
+        ("native", ["default"]),
+        ("abi3", ["abi3-py39"]),
+        ("embedding", ["default"]),
+        ("cli", ["introspection"]),
+        ("restoration", ["retained baseline", "native", "abi3", "CLI"]),
+    ):
+        retained = mode == "restoration"
+        selected = snapshot["variants"]["baseline"] if retained else variant
+        records.append(
+            {
+                "id": f"candidate-{source_sha[:8]}-{mode}",
+                "source_sha": selected["source_sha"],
+                "candidate_sha": source_sha,
+                "consumer_template_sha": snapshot["consumer_template_sha"],
+                "tool_sha": snapshot["tool_sha"],
+                "source_state": "committed",
+                "target": snapshot["platform"],
+                "rust": snapshot["rust"].splitlines()[0],
+                "python": "CPython " + snapshot["python"].split(" (", 1)[0],
+                "gil": "enabled",
+                "abi": mode,
+                "features": features,
+                "commands": [
+                    "python -m tools.candidate --sha <recorded candidate SHA> --baseline-sha <recorded baseline SHA> --output <new-directory>",
+                    "python -m tools.candidate_artifacts verify --manifest <retained manifest> --sha <recorded candidate SHA> --output <verification>",
+                ],
+                "result": "success",
+                "level": "run",
+                "limitations": "local sparse registry and recorded native host/interpreter only; baseline SDK uses the fixed candidate consumer template; ABI tags do not prove older interpreters; full remote CI and external publication remain separate",
+                "log": "docs/testing/reports/candidate-acceptance-2026-10-25.md",
+                "verified_at": snapshot["completed_at"],
+                "lock_sha256": selected["locks"],
+                "manifest_sha256": digest(path),
+                "data": "docs/testing/data/candidate-2026-10-25.json",
+                "artifacts": selected["crates"] + selected["wheels"],
+            }
+        )
+    return records
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -325,6 +373,7 @@ def main() -> int:
             "import-local",
             "import-consumer",
             "import-performance",
+            "import-candidate",
         ),
     )
     parser.add_argument("--run-id", type=int)
@@ -358,6 +407,10 @@ def main() -> int:
         if not args.snapshot:
             parser.error("--snapshot is required")
         additions = import_performance(args.snapshot.resolve())
+    elif args.command == "import-candidate":
+        if not args.snapshot:
+            parser.error("--snapshot is required")
+        additions = import_candidate(args.snapshot.resolve())
     else:
         additions = []
     if additions:
@@ -376,6 +429,7 @@ def main() -> int:
             "import-local",
             "import-consumer",
             "import-performance",
+            "import-candidate",
         }
         and not errors
     ):

@@ -113,9 +113,34 @@ jobs:
           path: crates/r2p-introspection/dist
           if-no-files-found: error
 
+  verify_native_wheels:
+    needs: [admission, native_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: accepted-cli-*
+          path: crates/r2p-introspection/dist
+          merge-multiple: true
+      - name: Require the complete native platform set
+        run: python -m tools.cli_wheel_acceptance --sha "$SDK_SOURCE_SHA" --dist crates/r2p-introspection/dist --verify-set
+        env:
+          SDK_SOURCE_SHA: ${{ github.sha }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: accepted-cli-set
+          path: crates/r2p-introspection/dist
+          if-no-files-found: error
+
   pypi_release:
     if: startsWith(github.ref, 'refs/tags/v') && vars.R2P_ENABLE_PYPI == 'true'
-    needs: [admission, native_wheels]
+    needs: [admission, verify_native_wheels]
     permissions:
       contents: read
       id-token: write
@@ -131,9 +156,8 @@ jobs:
           python-version: "3.14"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          pattern: accepted-cli-*
+          name: accepted-cli-set
           path: crates/r2p-introspection/dist
-          merge-multiple: true
       - name: Verify the exact accepted native platform set before publishing
         run: python -m tools.cli_wheel_acceptance --sha "$SDK_SOURCE_SHA" --dist crates/r2p-introspection/dist --verify-set
         env:

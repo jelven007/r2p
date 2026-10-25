@@ -13,6 +13,7 @@ import zipfile
 from pathlib import Path
 
 from tools.candidate_artifacts import ROOT, crate_metadata, wheel_metadata
+from tools.cli_wheel_acceptance import matches_platform, verify_set
 from tools.publish_candidate import upload_body
 from tools.release_gate import REPOSITORY, required_jobs, validate_run
 
@@ -148,6 +149,77 @@ class PackageTests(unittest.TestCase):
         ):
             with self.subTest(fields=fields), self.assertRaises(ValueError):
                 wheel_metadata(self.wheel(**fields), "r2p-introspection", VERSION, tag)
+
+    def test_native_platform_and_abi_must_match_the_record(self):
+        for platform_id, tag in (
+            ("linux-x86_64", "py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64"),
+            ("linux-aarch64", "py3-none-manylinux_2_17_aarch64"),
+            ("windows-x64", "py3-none-win_amd64"),
+            ("windows-x86", "py3-none-win32"),
+            ("windows-aarch64", "py3-none-win_arm64"),
+            ("macos-x86_64", "py3-none-macosx_10_12_x86_64"),
+            ("macos-aarch64", "py3-none-macosx_11_0_arm64"),
+        ):
+            with self.subTest(platform_id=platform_id):
+                self.assertTrue(matches_platform(tag, platform_id))
+                self.assertFalse(
+                    matches_platform(tag.replace("py3-none", "cp39-abi3"), platform_id)
+                )
+        self.assertFalse(
+            matches_platform("py3-none-macosx_11_0_arm64", "linux-aarch64")
+        )
+        self.assertFalse(matches_platform("py3-none-macosx_11_0_arm64", "macos-x86_64"))
+
+    def test_publish_set_requires_seven_distinct_accepted_native_wheels(self):
+        tags = {
+            "linux-x86_64": "manylinux_2_17_x86_64",
+            "linux-aarch64": "manylinux_2_17_aarch64",
+            "windows-x64": "win_amd64",
+            "windows-x86": "win32",
+            "windows-aarch64": "win_arm64",
+            "macos-x86_64": "macosx_10_12_x86_64",
+            "macos-aarch64": "macosx_11_0_arm64",
+        }
+        records = {}
+        for platform_id, platform_tag in tags.items():
+            tag = "py3-none-" + platform_tag
+            path = self.wheel(tag=tag)
+            record = {
+                "schema_version": 1,
+                "source_sha": SHA,
+                "platform_id": platform_id,
+                "artifact": wheel_metadata(path, "r2p-introspection", VERSION, tag)
+                | {"path": path.name},
+                "behavior": {"result": "success"},
+                "result": "success",
+            }
+            record_path = self.root / f"cli-acceptance-{platform_id}.json"
+            record_path.write_text(json.dumps(record))
+            records[platform_id] = (record_path, record)
+        self.assertEqual(len(verify_set(self.root, SHA, VERSION)), 7)
+        record_path, original = records["linux-aarch64"]
+        for mutation in ("source", "platform", "hash", "behavior", "duplicate"):
+            record = copy.deepcopy(original)
+            if mutation == "source":
+                record["source_sha"] = "2" * 40
+            elif mutation == "platform":
+                record["artifact"] = records["macos-aarch64"][1]["artifact"]
+            elif mutation == "hash":
+                record["artifact"]["sha256"] = "0" * 64
+            elif mutation == "behavior":
+                record["behavior"]["result"] = "failure"
+            elif mutation == "duplicate":
+                record["platform_id"] = "linux-x86_64"
+            record_path.write_text(json.dumps(record))
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                verify_set(self.root, SHA, VERSION)
+        record_path.unlink()
+        with self.assertRaises(ValueError):
+            verify_set(self.root, SHA, VERSION)
+        record_path.write_text(json.dumps(original))
+        self.wheel(tag="py3-none-macosx_12_0_arm64")
+        with self.assertRaises(ValueError):
+            verify_set(self.root, SHA, VERSION)
 
 
 class ReleaseGateTests(unittest.TestCase):
