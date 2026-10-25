@@ -198,6 +198,7 @@ def main() -> int:
     report = {
         "schema_version": 1,
         "source_sha": args.sha,
+        "consumer_template_sha": args.sha,
         "tool_sha": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
@@ -350,7 +351,7 @@ def main() -> int:
                 name="maturin-starter",
                 authors="r2p candidate acceptance",
                 source=candidate_source,
-                root=source,
+                root=output / "source-candidate",
             )
             embedding = generate(
                 "plugin",
@@ -358,7 +359,7 @@ def main() -> int:
                 name="plugin",
                 authors="r2p candidate acceptance",
                 source=candidate_source,
-                root=source,
+                root=output / "source-candidate",
             )
             records["graphs"] = {}
             for consumer in (project, embedding):

@@ -108,10 +108,17 @@ def validate_run(run: dict, jobs: list[dict], sha: str, msrv: str) -> list[str]:
                 f"required full-matrix job missing, duplicated or unsuccessful: {name}"
             )
     for job in jobs:
-        if job.get("status") != "completed" or job.get("conclusion") not in {
-            "success",
-            "skipped",
-        }:
+        prospective = (
+            job["name"] == "check-nightly/x86_64-unknown-linux-gnu/nightly"
+            or job["name"] == "clippy/x86_64-unknown-linux-gnu/beta"
+            or job["name"]
+            in {
+                "python3.14-x64 ubuntu-latest rust-nightly / build",
+                "python3.14-x64 ubuntu-latest rust-beta / build",
+            }
+        )
+        allowed = {"success", "failure"} if prospective else {"success", "skipped"}
+        if job.get("status") != "completed" or job.get("conclusion") not in allowed:
             errors.append(f"CI job incomplete or unsuccessful: {job['name']}")
     return errors
 

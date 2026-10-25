@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import io
 import json
+import struct
 import tarfile
 import tempfile
 import unittest
@@ -12,6 +13,7 @@ import zipfile
 from pathlib import Path
 
 from tools.candidate_artifacts import ROOT, crate_metadata, wheel_metadata
+from tools.publish_candidate import upload_body
 from tools.release_gate import REPOSITORY, required_jobs, validate_run
 
 SHA = "1" * 40
@@ -45,6 +47,17 @@ class PackageTests(unittest.TestCase):
                 member.size = len(content)
                 archive.addfile(member, io.BytesIO(content))
         return path
+
+    def test_registry_upload_preserves_the_accepted_crate_bytes(self):
+        crate = self.crate()
+        body = upload_body(crate)
+        (metadata_size,) = struct.unpack_from("<I", body)
+        metadata = json.loads(body[4 : 4 + metadata_size])
+        (crate_size,) = struct.unpack_from("<I", body, 4 + metadata_size)
+        self.assertEqual(body[8 + metadata_size :], crate.read_bytes())
+        self.assertEqual(crate_size, crate.stat().st_size)
+        self.assertEqual((metadata["name"], metadata["vers"]), ("r2p-ffi", VERSION))
+        self.assertEqual(metadata["deps"][0]["version_req"], "=0.30.0")
 
     def test_crate_source_and_exact_dependency(self):
         row = crate_metadata(self.crate(), "r2p-ffi", VERSION, SHA)
@@ -177,6 +190,22 @@ class ReleaseGateTests(unittest.TestCase):
             run = self.run | {key: value}
             with self.subTest(key=key):
                 self.assertTrue(validate_run(run, self.jobs, SHA, "1.85"))
+
+    def test_only_declared_forward_toolchains_can_tolerate_failure(self):
+        future = {
+            "name": "python3.14-x64 ubuntu-latest rust-nightly / build",
+            "status": "completed",
+            "conclusion": "failure",
+        }
+        self.assertEqual(validate_run(self.run, self.jobs + [future], SHA, "1.85"), [])
+        for change in (
+            {"conclusion": "cancelled"},
+            {"name": "unknown-optional-job"},
+            {"status": "in_progress"},
+        ):
+            self.assertTrue(
+                validate_run(self.run, self.jobs + [future | change], SHA, "1.85")
+            )
 
 
 if __name__ == "__main__":
