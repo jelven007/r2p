@@ -611,6 +611,33 @@
       }
     },
     {
+      "id": "local-introspection-boundaries-20261025",
+      "source_sha": "36e76e56807c327c3840905feff8d77902667725",
+      "source_state": "worktree-changes",
+      "target": "aarch64-apple-darwin",
+      "rust": "1.99.1",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "experimental-inspect",
+        "experimental-async",
+        "full (lifecycle tests)"
+      ],
+      "commands": [
+        "cargo test -p r2p-introspection --locked",
+        "cargo clippy -p r2p-introspection --all-targets --locked -- -D warnings",
+        "python tools/dev.py -- -r -s test-introspection",
+        "cargo test -p r2p --locked --features full --lib internal::state::tests",
+        "cargo test -p r2p --locked --features full --test test_gc --test test_exceptions --test test_init_race --test test_pybuffer_drop_without_interpreter --test test_pyerr_debug_unformattable"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "24 parser/stub unit tests, 4096 bounded mutations, three Mach-O forms, 16 Python stub tests and 43 lifecycle/GC/exception tests; two existing stub skips; final ELF/PE/free-threaded CI pending",
+      "log": "docs/testing/reports/introspection-boundaries-2026-10-25.md",
+      "verified_at": "2026-10-25T00:18:09.014833+00:00"
+    },
+    {
       "id": "local-msrv-20261025",
       "source_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
       "source_state": "worktree-changes",
@@ -636,29 +663,6 @@
       }
     },
     {
-      "id": "local-introspection-boundaries-20261025",
-      "source_sha": "36e76e56807c327c3840905feff8d77902667725",
-      "source_state": "worktree-changes",
-      "target": "aarch64-apple-darwin",
-      "rust": "1.99.1",
-      "python": "CPython 3.14.9",
-      "gil": "enabled",
-      "abi": "native",
-      "features": ["experimental-inspect", "experimental-async", "full (lifecycle tests)"],
-      "commands": [
-        "cargo test -p r2p-introspection --locked",
-        "cargo clippy -p r2p-introspection --all-targets --locked -- -D warnings",
-        "python tools/dev.py -- -r -s test-introspection",
-        "cargo test -p r2p --locked --features full --lib internal::state::tests",
-        "cargo test -p r2p --locked --features full --test test_gc --test test_exceptions --test test_init_race --test test_pybuffer_drop_without_interpreter --test test_pyerr_debug_unformattable"
-      ],
-      "result": "success",
-      "level": "run",
-      "limitations": "24 parser/stub unit tests, 4096 bounded mutations, three Mach-O forms, 16 Python stub tests and 43 lifecycle/GC/exception tests; two existing stub skips; final ELF/PE/free-threaded CI pending",
-      "log": "docs/testing/reports/introspection-boundaries-2026-10-25.md",
-      "verified_at": "2026-10-25T00:18:09.014833+00:00"
-    },
-    {
       "id": "local-pypy-bound-20261025",
       "source_sha": "25bf6fde2c074b0fd54804ffa4e16cc74462145d",
       "source_state": "worktree-changes",
@@ -667,8 +671,13 @@
       "python": "PyPy 3.12.15 (tool CPython 3.14.9)",
       "gil": "enabled",
       "abi": "abi3 targeting PyPy 3.12",
-      "features": ["abi3", "no-default-features"],
-      "commands": ["python tools/dev.py --target-python <PyPy> -- -s test-rust -- scope=abi skip-full"],
+      "features": [
+        "abi3",
+        "no-default-features"
+      ],
+      "commands": [
+        "python tools/dev.py --target-python <PyPy> -- -s test-rust -- scope=abi skip-full"
+      ],
       "result": "success",
       "level": "compiled",
       "limitations": "five test executables compiled with --no-run; PyPy cannot run standalone embedding tests; Windows and extension behavior pending final CI",
@@ -684,13 +693,83 @@
       "python": "CPython 3.14.9",
       "gil": "not-applicable",
       "abi": "not-applicable",
-      "features": ["tooling-only"],
-      "commands": ["python tools/upstream_sync.py --patch upstream.patch --output target/upstream-replay"],
+      "features": [
+        "tooling-only"
+      ],
+      "commands": [
+        "python tools/upstream_sync.py --patch upstream.patch --output target/upstream-replay"
+      ],
       "result": "success",
       "level": "check",
       "limitations": "real upstream fda3c584 Action update, contextual conflicts and exact mapped replay; 1166 path-level differences; no runtime fix or SDK upgrade; remote installers/simulation pending",
       "log": "docs/testing/reports/upstream-sync-2026-10-25.md",
       "verified_at": "2026-10-25T00:28:26.793522+00:00"
+    },
+    {
+      "id": "performance-free-threaded-20261025",
+      "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "disabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "full-sdk build profile",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode free-threaded"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "102 walltime and 27 build samples per mode; three processes cannot establish P95 or a 5% gate; noisy free-threaded scaling is not an optimization claim",
+      "log": "docs/testing/reports/performance-baseline-2026-10-25.md",
+      "verified_at": "2026-10-25T01:47:34.346524+00:00",
+      "lock_sha256": {
+        "free-threaded-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "free-threaded-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "69e6e0024b4487861a42048a175d7ef4879e9dd60e37dfa41b59f80f5336826c"
+      },
+      "data": "docs/testing/data/performance-2026-10-25.json"
+    },
+    {
+      "id": "performance-gil-20261025",
+      "source_sha": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "baseline_sha": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "source_state": "committed",
+      "target": "macOS-26.5.1-arm64-arm-64bit-Mach-O / Apple M4",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "python": "CPython 3.14.9",
+      "gil": "enabled",
+      "abi": "native",
+      "features": [
+        "minimal",
+        "full-sdk build profile",
+        "1/2/4/8 threads"
+      ],
+      "commands": [
+        "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode gil"
+      ],
+      "result": "success",
+      "level": "run",
+      "limitations": "102 walltime and 27 build samples per mode; three processes cannot establish P95 or a 5% gate; noisy free-threaded scaling is not an optimization claim",
+      "log": "docs/testing/reports/performance-baseline-2026-10-25.md",
+      "verified_at": "2026-10-25T01:34:10.335936+00:00",
+      "lock_sha256": {
+        "gil-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "gil-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "69e6e0024b4487861a42048a175d7ef4879e9dd60e37dfa41b59f80f5336826c"
+      },
+      "data": "docs/testing/data/performance-2026-10-25.json"
     }
   ]
 }

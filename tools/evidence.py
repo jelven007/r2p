@@ -273,6 +273,47 @@ def import_consumer(path: Path) -> list[dict]:
     return records
 
 
+def import_performance(path: Path) -> list[dict]:
+    records = []
+    for snapshot in json.loads(path.read_text())["datasets"]:
+        mode = snapshot["samples"][0]["python_mode"]
+        if (
+            not snapshot.get("finished_at")
+            or len(snapshot["samples"]) != 102
+            or len(snapshot["builds"]) != 27
+        ):
+            raise ValueError(
+                "performance evidence requires completed independent samples"
+            )
+        records.append(
+            {
+                "id": f"performance-{mode}-20261025",
+                "source_sha": snapshot["candidate"],
+                "baseline_sha": snapshot["baseline"],
+                "source_state": "committed",
+                "target": snapshot["os"] + " / " + snapshot["cpu"],
+                "rust": snapshot["rust"].splitlines()[0],
+                "python": "CPython " + ".".join(map(str, snapshot[mode]["version"])),
+                "gil": "enabled" if mode == "gil" else "disabled",
+                "abi": "native",
+                "features": ["minimal", "full-sdk build profile", "1/2/4/8 threads"],
+                "commands": [
+                    "python -m tools.performance --baseline <recorded SHA> --candidate <recorded SHA> --python-mode "
+                    + mode
+                ],
+                "result": "success",
+                "level": "run",
+                "limitations": "102 walltime and 27 build samples per mode; three processes cannot establish P95 or a 5% gate; noisy free-threaded scaling is not an optimization claim",
+                "log": "docs/testing/reports/performance-baseline-2026-10-25.md",
+                "verified_at": snapshot["finished_at"],
+                "lock_sha256": snapshot["locks"],
+                "harness_sha256": snapshot["harness_sha256"],
+                "data": str(path.relative_to(ROOT)),
+            }
+        )
+    return records
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -283,6 +324,7 @@ def main() -> int:
             "import-actions",
             "import-local",
             "import-consumer",
+            "import-performance",
         ),
     )
     parser.add_argument("--run-id", type=int)
@@ -312,6 +354,10 @@ def main() -> int:
         if not args.snapshot:
             parser.error("--snapshot is required")
         additions = import_consumer(args.snapshot)
+    elif args.command == "import-performance":
+        if not args.snapshot:
+            parser.error("--snapshot is required")
+        additions = import_performance(args.snapshot.resolve())
     else:
         additions = []
     if additions:
@@ -323,7 +369,14 @@ def main() -> int:
         data["records"] = sorted(existing.values(), key=lambda row: row["id"])
     errors = validate(data)
     if (
-        args.command in {"render", "import-actions", "import-local", "import-consumer"}
+        args.command
+        in {
+            "render",
+            "import-actions",
+            "import-local",
+            "import-consumer",
+            "import-performance",
+        }
         and not errors
     ):
         if additions:

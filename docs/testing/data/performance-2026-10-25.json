@@ -1,0 +1,3355 @@
+{
+  "schema_version": 1,
+  "input_sha256": {
+    "gil": "3aa5cdf5297eacbea5abf18346d46824e3dc9d7744bb06b78f7eab102914ad93",
+    "free-threaded": "0d2a788359ffb5d62c9a64c737a7578017f19a66f8a060d04c007bf17ff6d4b1"
+  },
+  "datasets": [
+    {
+      "schema_version": 1,
+      "mode": "walltime",
+      "baseline": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "candidate": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1",
+      "cpu": "Apple M4",
+      "os": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "jobs": 4,
+      "iterations": 50000,
+      "started_at": "2026-10-25T01:27:34.630465+00:00",
+      "builds": [
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "clean",
+          "seconds": 25.999711417010985,
+          "peak_rss_bytes": 414302208,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-0-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "consumer-edit",
+          "seconds": 1.306349541991949,
+          "peak_rss_bytes": 323551232,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-0-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "sdk-edit",
+          "seconds": 4.2068913750117645,
+          "peak_rss_bytes": 323551232,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-0-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "clean",
+          "seconds": 26.521734624984674,
+          "peak_rss_bytes": 415989760,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-1-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "consumer-edit",
+          "seconds": 1.4945512909907848,
+          "peak_rss_bytes": 323567616,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-1-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "sdk-edit",
+          "seconds": 2.5254102920007426,
+          "peak_rss_bytes": 323567616,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-1-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "clean",
+          "seconds": 23.67082600001595,
+          "peak_rss_bytes": 414531584,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-2-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "consumer-edit",
+          "seconds": 1.2875000410131179,
+          "peak_rss_bytes": 323534848,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-2-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "sdk-edit",
+          "seconds": 2.9209706670080777,
+          "peak_rss_bytes": 323502080,
+          "binary_bytes": 674480,
+          "binary_sha256": "2a1dcd9634617c8c0c7fb23410dad1dea80d35ef72c294fc3473390ebe586eb3",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-baseline-minimal-2-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "clean",
+          "seconds": 25.842970166006126,
+          "peak_rss_bytes": 412467200,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-0-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "consumer-edit",
+          "seconds": 1.4654139170015696,
+          "peak_rss_bytes": 323551232,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-0-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "sdk-edit",
+          "seconds": 3.147575707989745,
+          "peak_rss_bytes": 323502080,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-0-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "clean",
+          "seconds": 25.29302733298391,
+          "peak_rss_bytes": 410140672,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-1-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "consumer-edit",
+          "seconds": 1.1821389170072507,
+          "peak_rss_bytes": 323551232,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-1-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "sdk-edit",
+          "seconds": 2.719334749999689,
+          "peak_rss_bytes": 323600384,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-1-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "clean",
+          "seconds": 24.29722508401028,
+          "peak_rss_bytes": 416972800,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-2-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "consumer-edit",
+          "seconds": 1.2749039169866592,
+          "peak_rss_bytes": 323469312,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-2-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "sdk-edit",
+          "seconds": 2.6605180829938035,
+          "peak_rss_bytes": 323485696,
+          "binary_bytes": 674432,
+          "binary_sha256": "3d047f868ef1769c0bf1b4ff310bb875d49d40a6d071edfc68778c7ab2d73467",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-minimal-2-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 0,
+          "kind": "clean",
+          "seconds": 48.6049388750107,
+          "peak_rss_bytes": 611057664,
+          "binary_bytes": 674720,
+          "binary_sha256": "614c8f5ad303e8fa48a8cb1af69b4f7d758a7948d988d8b8240652e59876e58d",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-0-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 0,
+          "kind": "consumer-edit",
+          "seconds": 1.3602284580119886,
+          "peak_rss_bytes": 323633152,
+          "binary_bytes": 674720,
+          "binary_sha256": "614c8f5ad303e8fa48a8cb1af69b4f7d758a7948d988d8b8240652e59876e58d",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-0-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 0,
+          "kind": "sdk-edit",
+          "seconds": 4.843189290986629,
+          "peak_rss_bytes": 453902336,
+          "binary_bytes": 674720,
+          "binary_sha256": "3278614eeb8a7fa005ae775bfc8ce2f58f8dc78ecae777ef0f0d0b812282fa0a",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-0-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 1,
+          "kind": "clean",
+          "seconds": 51.368189875007374,
+          "peak_rss_bytes": 611041280,
+          "binary_bytes": 674720,
+          "binary_sha256": "614c8f5ad303e8fa48a8cb1af69b4f7d758a7948d988d8b8240652e59876e58d",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-1-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 1,
+          "kind": "consumer-edit",
+          "seconds": 1.5918141660222318,
+          "peak_rss_bytes": 323600384,
+          "binary_bytes": 674720,
+          "binary_sha256": "614c8f5ad303e8fa48a8cb1af69b4f7d758a7948d988d8b8240652e59876e58d",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-1-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 1,
+          "kind": "sdk-edit",
+          "seconds": 4.203016082989052,
+          "peak_rss_bytes": 453722112,
+          "binary_bytes": 674720,
+          "binary_sha256": "3278614eeb8a7fa005ae775bfc8ce2f58f8dc78ecae777ef0f0d0b812282fa0a",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-1-sdk-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 2,
+          "kind": "clean",
+          "seconds": 47.74450762500055,
+          "peak_rss_bytes": 610992128,
+          "binary_bytes": 674720,
+          "binary_sha256": "614c8f5ad303e8fa48a8cb1af69b4f7d758a7948d988d8b8240652e59876e58d",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-2-clean.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 2,
+          "kind": "consumer-edit",
+          "seconds": 1.6401020839984994,
+          "peak_rss_bytes": 323665920,
+          "binary_bytes": 674720,
+          "binary_sha256": "614c8f5ad303e8fa48a8cb1af69b4f7d758a7948d988d8b8240652e59876e58d",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-2-consumer-edit.log"
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 2,
+          "kind": "sdk-edit",
+          "seconds": 4.861899875017116,
+          "peak_rss_bytes": 454082560,
+          "binary_bytes": 674720,
+          "binary_sha256": "3278614eeb8a7fa005ae775bfc8ce2f58f8dc78ecae777ef0f0d0b812282fa0a",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-gil-20261025/gil-candidate-full-sdk-2-sdk-edit.log"
+        }
+      ],
+      "samples": [
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 60235417,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "batch_call_64",
+          "elapsed_ns": 57698875,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 25646833,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 13434708,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "list_iter_1024",
+          "elapsed_ns": 180259041,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 391047208,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "attach_detach",
+          "elapsed_ns": 18621708,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "drop_attached_64",
+          "elapsed_ns": 41943459,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 69592167,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 5591292,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 78538750,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 26125500,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 352175959,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 199767750,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1306796167,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1732498334,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3690866459,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 63001834,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "batch_call_64",
+          "elapsed_ns": 60075250,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 23448000,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 13789458,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "list_iter_1024",
+          "elapsed_ns": 167363292,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 401766208,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "attach_detach",
+          "elapsed_ns": 19298458,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "drop_attached_64",
+          "elapsed_ns": 42958958,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 72227209,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 5305250,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 72879250,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 26960875,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 339661042,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 172964500,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1081577833,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1991238750,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 2981934500,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 68309042,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "batch_call_64",
+          "elapsed_ns": 64549084,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 24271042,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 13699250,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "list_iter_1024",
+          "elapsed_ns": 175647000,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 386323333,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "attach_detach",
+          "elapsed_ns": 19824250,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "drop_attached_64",
+          "elapsed_ns": 43650083,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 76375166,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 5339291,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 80200417,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 25293417,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 330663166,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 222097292,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1096485334,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2035026375,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3099096167,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 67022000,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "batch_call_64",
+          "elapsed_ns": 61316666,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 24017167,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 13652583,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "list_iter_1024",
+          "elapsed_ns": 166616709,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 393270959,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "attach_detach",
+          "elapsed_ns": 19582125,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "drop_attached_64",
+          "elapsed_ns": 39691333,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 68895083,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 6226542,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 79513791,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 25452333,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 323854625,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 187188834,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1092104542,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2105847750,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 2982328459,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 68515542,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "batch_call_64",
+          "elapsed_ns": 62024625,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 25557959,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 13614667,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "list_iter_1024",
+          "elapsed_ns": 175960333,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 398477209,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "attach_detach",
+          "elapsed_ns": 18705167,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "drop_attached_64",
+          "elapsed_ns": 39023458,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 66756125,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 5547292,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 70861917,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 29616958,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 324662500,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 170479625,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1070657541,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2125008125,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3048503500,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 66587625,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "batch_call_64",
+          "elapsed_ns": 62501125,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 25027833,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 13593292,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "list_iter_1024",
+          "elapsed_ns": 169780875,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 390841708,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "attach_detach",
+          "elapsed_ns": 17811500,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "drop_attached_64",
+          "elapsed_ns": 39149875,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 68754833,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 5462750,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 70224125,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 28027833,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 340638625,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 166786167,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1086402666,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1995681000,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 2976750292,
+          "threads": 8,
+          "units": 25600000
+        }
+      ],
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "69e6e0024b4487861a42048a175d7ef4879e9dd60e37dfa41b59f80f5336826c"
+      },
+      "limitations": "Warm local dependency cache, offline builds, native ABI, release incremental enabled. time peak RSS is the largest child process, not simultaneous process memory. Three samples do not estimate P95 or prove a 5% gate.",
+      "gil": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14-macos-aarch64-none/bin/python3.14",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": false,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9-macos-aarch64-none"
+      },
+      "locks": {
+        "gil-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "gil-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "summary": [
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 23.38145875,
+          "mean_ns_per_unit": 23.712083333333332,
+          "stdev_ns_per_unit": 0.665054343083063,
+          "cv": 0.028047065023095667
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "batch_call_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 19.161458125,
+          "mean_ns_per_unit": 18.858350625,
+          "stdev_ns_per_unit": 0.7250822816978288,
+          "cv": 0.038448870535719444
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "bytes_roundtrip_256",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 17.01833375,
+          "mean_ns_per_unit": 16.959149166666666,
+          "stdev_ns_per_unit": 0.14549876535308093,
+          "cv": 0.008579367038003287
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "dict_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 7.68107341796875,
+          "mean_ns_per_unit": 7.700490729166667,
+          "stdev_ns_per_unit": 0.07448170865893998,
+          "cv": 0.009672332748461117
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "drop_attached_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 12.4035415625,
+          "mean_ns_per_unit": 12.568567708333333,
+          "stdev_ns_per_unit": 0.4781102662405434,
+          "cv": 0.03804015519791823
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "drop_deferred_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 21.5297134375,
+          "mean_ns_per_unit": 21.379518229166667,
+          "stdev_ns_per_unit": 0.4618273834869597,
+          "cv": 0.021601393377373632
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "list_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 3.43672525390625,
+          "mean_ns_per_unit": 3.4038807486979166,
+          "stdev_ns_per_unit": 0.13622852548664052,
+          "cv": 0.040021532933770344
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "scalar_calls_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 20.944375,
+          "mean_ns_per_unit": 20.3930165625,
+          "stdev_ns_per_unit": 1.379070953556299,
+          "cv": 0.0676246669701737
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "string_roundtrip_240",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 31.94744875,
+          "mean_ns_per_unit": 31.342482916666665,
+          "stdev_ns_per_unit": 1.1453881536741508,
+          "cv": 0.03654426985633227
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 111.82584,
+          "mean_ns_per_unit": 115.76750666666666,
+          "stdev_ns_per_unit": 7.602013439433878,
+          "cv": 0.06566621030651212
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 261.255,
+          "mean_ns_per_unit": 270.6493033333333,
+          "stdev_ns_per_unit": 22.356033550355786,
+          "cv": 0.08260148197323072
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 935.94417,
+          "mean_ns_per_unit": 929.0603483333333,
+          "stdev_ns_per_unit": 73.46260554289852,
+          "cv": 0.07907194153176926
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 5264.619375,
+          "mean_ns_per_unit": 4969.461840833334,
+          "stdev_ns_per_unit": 553.2299499572804,
+          "cv": 0.11132592777179043
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 24.543359375,
+          "mean_ns_per_unit": 23.84525604166667,
+          "stdev_ns_per_unit": 1.4808862157312441,
+          "cv": 0.0621040182224748
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 50.728515625,
+          "mean_ns_per_unit": 52.11943145833333,
+          "stdev_ns_per_unit": 2.5192464290722585,
+          "cv": 0.04833603050881819
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 85.32066734375,
+          "mean_ns_per_unit": 90.35307942708333,
+          "stdev_ns_per_unit": 10.201916482742856,
+          "cv": 0.11291166330391648
+        },
+        {
+          "python_mode": "gil",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 119.08216796875,
+          "mean_ns_per_unit": 126.58461481770833,
+          "stdev_ns_per_unit": 15.287994952258629,
+          "cv": 0.12077293100962173
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 24.1230725,
+          "mean_ns_per_unit": 23.72258666666667,
+          "stdev_ns_per_unit": 1.3049049976922007,
+          "cv": 0.05500685975049098,
+          "relative_median_change": 0.03171802743060237
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "batch_call_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 19.5316015625,
+          "mean_ns_per_unit": 19.4922353125,
+          "stdev_ns_per_unit": 0.6998674102579096,
+          "cv": 0.03590493337668142,
+          "relative_median_change": 0.019317080938484166
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "bytes_roundtrip_256",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 17.1240625,
+          "mean_ns_per_unit": 17.1175,
+          "stdev_ns_per_unit": 0.1227354036891961,
+          "cv": 0.0071701710932785805,
+          "relative_median_change": 0.006212638179105001
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "dict_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 7.633627109375,
+          "mean_ns_per_unit": 7.67533365234375,
+          "stdev_ns_per_unit": 0.15507427141604802,
+          "cv": 0.02020423846573684,
+          "relative_median_change": -0.00617704141230524
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "drop_attached_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 13.424674375,
+          "mean_ns_per_unit": 13.099887083333334,
+          "stdev_ns_per_unit": 0.7573279068061451,
+          "cv": 0.05781178890997274,
+          "relative_median_change": 0.0823259072704865
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "drop_deferred_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 22.5710028125,
+          "mean_ns_per_unit": 22.641375833333335,
+          "stdev_ns_per_unit": 1.1922357419119014,
+          "cv": 0.052657389316273576,
+          "relative_median_change": 0.04836522223218753
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "list_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 3.31603271484375,
+          "mean_ns_per_unit": 3.33848416015625,
+          "stdev_ns_per_unit": 0.08319943732764416,
+          "cv": 0.02492132157480424,
+          "relative_median_change": -0.035118471843310295
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "scalar_calls_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 20.8086328125,
+          "mean_ns_per_unit": 20.6144271875,
+          "stdev_ns_per_unit": 0.8461350389936549,
+          "cv": 0.041045770095747655,
+          "relative_median_change": -0.006481080839127462
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "string_roundtrip_240",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 30.3388025,
+          "mean_ns_per_unit": 30.311197916666668,
+          "stdev_ns_per_unit": 0.98768498522297,
+          "cv": 0.032584821884584426,
+          "relative_median_change": -0.050352886159649946
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 106.78582,
+          "mean_ns_per_unit": 107.38194,
+          "stdev_ns_per_unit": 1.6574511428093395,
+          "cv": 0.015435101496670106,
+          "relative_median_change": -0.04507026283012938
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 269.60875,
+          "mean_ns_per_unit": 267.6070833333333,
+          "stdev_ns_per_unit": 13.781537418217649,
+          "cv": 0.05149915034592439,
+          "relative_median_change": 0.03197546458440992
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 864.8225,
+          "mean_ns_per_unit": 936.413265,
+          "stdev_ns_per_unit": 151.54102300944484,
+          "cv": 0.16183135018857817,
+          "relative_median_change": -0.07598922273323205
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 4989.2025,
+          "mean_ns_per_unit": 5018.2884375,
+          "stdev_ns_per_unit": 60.252491494938276,
+          "cv": 0.01200658197418296,
+          "relative_median_change": -0.05231467944441848
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 22.774765625,
+          "mean_ns_per_unit": 23.26081166666667,
+          "stdev_ns_per_unit": 1.6146282440500097,
+          "cv": 0.06941409728895286,
+          "relative_median_change": -0.0720599703967787
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 53.0720378125,
+          "mean_ns_per_unit": 52.65431421875,
+          "stdev_ns_per_unit": 0.8592026893870709,
+          "cv": 0.016317802294747427,
+          "relative_median_change": 0.046197334154699066
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 84.87520828125,
+          "mean_ns_per_unit": 85.01213106770832,
+          "stdev_ns_per_unit": 0.5942747077955756,
+          "cv": 0.006990469481611543,
+          "relative_median_change": -0.0052209983391865444
+        },
+        {
+          "python_mode": "gil",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 116.48181640625,
+          "mean_ns_per_unit": 117.93985623697917,
+          "stdev_ns_per_unit": 2.702673624683172,
+          "cv": 0.022915693735056197,
+          "relative_median_change": -0.021836615900227674
+        }
+      ],
+      "finished_at": "2026-10-25T01:34:10.335936+00:00"
+    },
+    {
+      "schema_version": 1,
+      "mode": "walltime",
+      "baseline": "3a24917eb2766aa8ded8c04fefde1c1d4b133c00",
+      "candidate": "ba53c8a1c38498891bde3091209f9a63302f1c0d",
+      "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1",
+      "cpu": "Apple M4",
+      "os": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "jobs": 4,
+      "iterations": 50000,
+      "started_at": "2026-10-25T01:38:00.693373+00:00",
+      "builds": [
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "clean",
+          "seconds": 30.541952291008784,
+          "peak_rss_bytes": 413450240,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-0-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "consumer-edit",
+          "seconds": 1.391654999984894,
+          "peak_rss_bytes": 323584000,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-0-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "sdk-edit",
+          "seconds": 4.248005666973768,
+          "peak_rss_bytes": 323436544,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-0-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "clean",
+          "seconds": 25.33261849998962,
+          "peak_rss_bytes": 420380672,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-1-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "consumer-edit",
+          "seconds": 1.4231432499946095,
+          "peak_rss_bytes": 323584000,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-1-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "sdk-edit",
+          "seconds": 2.7420180000190157,
+          "peak_rss_bytes": 323502080,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-1-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "clean",
+          "seconds": 26.96307316599996,
+          "peak_rss_bytes": 418922496,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-2-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "consumer-edit",
+          "seconds": 1.1375985000049695,
+          "peak_rss_bytes": 323551232,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-2-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "sdk-edit",
+          "seconds": 2.449411749985302,
+          "peak_rss_bytes": 323567616,
+          "binary_bytes": 675312,
+          "binary_sha256": "39c2d46c6e492c000ffab74da198e2fc009f2ae903cf037f2a901e96699ac562",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-baseline-minimal-2-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "clean",
+          "seconds": 24.996595584001625,
+          "peak_rss_bytes": 418234368,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-0-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "consumer-edit",
+          "seconds": 1.2565465410007164,
+          "peak_rss_bytes": 323534848,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-0-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 0,
+          "kind": "sdk-edit",
+          "seconds": 3.6995900830079336,
+          "peak_rss_bytes": 323567616,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-0-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "clean",
+          "seconds": 29.51874850000604,
+          "peak_rss_bytes": 419921920,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-1-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "consumer-edit",
+          "seconds": 1.2180197080015205,
+          "peak_rss_bytes": 323534848,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-1-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 1,
+          "kind": "sdk-edit",
+          "seconds": 3.979596583987586,
+          "peak_rss_bytes": 323567616,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-1-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "clean",
+          "seconds": 30.12510691600619,
+          "peak_rss_bytes": 417038336,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-2-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "consumer-edit",
+          "seconds": 1.2773594160098583,
+          "peak_rss_bytes": 323551232,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-2-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "minimal",
+          "repeat": 2,
+          "kind": "sdk-edit",
+          "seconds": 3.253906083002221,
+          "peak_rss_bytes": 323518464,
+          "binary_bytes": 675296,
+          "binary_sha256": "1d000c10596cdae84b46150bd10f34d6226dc25dcef11c7d1bef6bf2ef04df64",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-minimal-2-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 0,
+          "kind": "clean",
+          "seconds": 44.662870083004236,
+          "peak_rss_bytes": 610664448,
+          "binary_bytes": 675488,
+          "binary_sha256": "17944aee5f5d3b2b675282723341a030b84b82580cb92f50ee263a3a1ffeb912",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-0-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 0,
+          "kind": "consumer-edit",
+          "seconds": 1.5591800000111107,
+          "peak_rss_bytes": 323682304,
+          "binary_bytes": 675488,
+          "binary_sha256": "17944aee5f5d3b2b675282723341a030b84b82580cb92f50ee263a3a1ffeb912",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-0-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 0,
+          "kind": "sdk-edit",
+          "seconds": 4.818277334008599,
+          "peak_rss_bytes": 455589888,
+          "binary_bytes": 675488,
+          "binary_sha256": "a46acea1396d48028bcc69116542dd7b5cf102a791407f425b679747bf6ec33b",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-0-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 1,
+          "kind": "clean",
+          "seconds": 70.410520290985,
+          "peak_rss_bytes": 595656704,
+          "binary_bytes": 675488,
+          "binary_sha256": "17944aee5f5d3b2b675282723341a030b84b82580cb92f50ee263a3a1ffeb912",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-1-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 1,
+          "kind": "consumer-edit",
+          "seconds": 2.234731542004738,
+          "peak_rss_bytes": 323682304,
+          "binary_bytes": 675488,
+          "binary_sha256": "17944aee5f5d3b2b675282723341a030b84b82580cb92f50ee263a3a1ffeb912",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-1-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 1,
+          "kind": "sdk-edit",
+          "seconds": 6.006174207985168,
+          "peak_rss_bytes": 455557120,
+          "binary_bytes": 675488,
+          "binary_sha256": "a46acea1396d48028bcc69116542dd7b5cf102a791407f425b679747bf6ec33b",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-1-sdk-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 2,
+          "kind": "clean",
+          "seconds": 65.1027966249967,
+          "peak_rss_bytes": 610615296,
+          "binary_bytes": 675488,
+          "binary_sha256": "17944aee5f5d3b2b675282723341a030b84b82580cb92f50ee263a3a1ffeb912",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-2-clean.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 2,
+          "kind": "consumer-edit",
+          "seconds": 1.5492857079952955,
+          "peak_rss_bytes": 323649536,
+          "binary_bytes": 675488,
+          "binary_sha256": "17944aee5f5d3b2b675282723341a030b84b82580cb92f50ee263a3a1ffeb912",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-2-consumer-edit.log"
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "profile": "full-sdk",
+          "repeat": 2,
+          "kind": "sdk-edit",
+          "seconds": 4.155121750023682,
+          "peak_rss_bytes": 455180288,
+          "binary_bytes": 675488,
+          "binary_sha256": "a46acea1396d48028bcc69116542dd7b5cf102a791407f425b679747bf6ec33b",
+          "log": "/Users/bytedance/Documents/trae_projects/p2r/target/optimization/performance-ft-20261025/free-threaded-candidate-full-sdk-2-sdk-edit.log"
+        }
+      ],
+      "samples": [
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 74155292,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "batch_call_64",
+          "elapsed_ns": 58289333,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 21915083,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 12756000,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "list_iter_1024",
+          "elapsed_ns": 450234083,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 828594166,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "attach_detach",
+          "elapsed_ns": 7625958,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "drop_attached_64",
+          "elapsed_ns": 39745000,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 67321542,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2728118916,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 9676711083,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1757602334,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 4251337084,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 862688292,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 2316907958,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1848992417,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 4383514292,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 63898625,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "batch_call_64",
+          "elapsed_ns": 61997166,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 22134792,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 13583583,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "list_iter_1024",
+          "elapsed_ns": 443654791,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 836075542,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "attach_detach",
+          "elapsed_ns": 7321208,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "drop_attached_64",
+          "elapsed_ns": 42005583,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 69429250,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2837235334,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 10979301500,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1912472958,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 4816849292,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1222718250,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3296959375,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2992551083,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 0,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 4584062625,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 88173167,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "batch_call_64",
+          "elapsed_ns": 82586166,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 28479917,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 17385458,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "list_iter_1024",
+          "elapsed_ns": 514897166,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 964793833,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "attach_detach",
+          "elapsed_ns": 8153250,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "drop_attached_64",
+          "elapsed_ns": 44502208,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 73453666,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2871231167,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 9337902625,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1325492375,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 4091045000,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 633622875,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1416157083,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1470327833,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3994071958,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 80014042,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "batch_call_64",
+          "elapsed_ns": 73145334,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 26130667,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 15973958,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "list_iter_1024",
+          "elapsed_ns": 465925209,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 825239542,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "attach_detach",
+          "elapsed_ns": 7542000,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "drop_attached_64",
+          "elapsed_ns": 39516792,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 66686084,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2732030875,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 9210159875,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1284882583,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3796884708,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 476628250,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 1270882375,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2237953333,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 1,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 5170546834,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 79140625,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "batch_call_64",
+          "elapsed_ns": 71875417,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 25552583,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 15346833,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "list_iter_1024",
+          "elapsed_ns": 460395875,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 824945167,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "attach_detach",
+          "elapsed_ns": 7326625,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "drop_attached_64",
+          "elapsed_ns": 38346375,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 64843583,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2698835250,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 9162501917,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1313928375,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3500406417,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 419391250,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 971479750,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1551039125,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3356273125,
+          "threads": 8,
+          "units": 25600000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "scalar_calls_64",
+          "elapsed_ns": 82163792,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "batch_call_64",
+          "elapsed_ns": 73917125,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "string_roundtrip_240",
+          "elapsed_ns": 26143958,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "bytes_roundtrip_256",
+          "elapsed_ns": 15826708,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "list_iter_1024",
+          "elapsed_ns": 493226500,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "dict_iter_1024",
+          "elapsed_ns": 865689000,
+          "threads": 1,
+          "units": 51200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "attach_detach",
+          "elapsed_ns": 8133667,
+          "threads": 1,
+          "units": 800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "drop_attached_64",
+          "elapsed_ns": 42336084,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "drop_deferred_64",
+          "elapsed_ns": 70662666,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2710127875,
+          "threads": 1,
+          "units": 50000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 9185920958,
+          "threads": 1,
+          "units": 3200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1320460917,
+          "threads": 2,
+          "units": 100000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 3171837250,
+          "threads": 2,
+          "units": 6400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 1142184708,
+          "threads": 4,
+          "units": 200000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 2246580750,
+          "threads": 4,
+          "units": 12800000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_call_attach_detach",
+          "elapsed_ns": 2126182166,
+          "threads": 8,
+          "units": 400000
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "repeat": 2,
+          "case": "threaded_deferred_drop_64",
+          "elapsed_ns": 5179776916,
+          "threads": 8,
+          "units": 25600000
+        }
+      ],
+      "harness_sha256": {
+        "Cargo.toml": "14b70acc5f97df32e50b2a9a9c22b62a5a21095fed6e494bf8af0b094b7a28dc",
+        "src/main.rs": "69e6e0024b4487861a42048a175d7ef4879e9dd60e37dfa41b59f80f5336826c"
+      },
+      "limitations": "Warm local dependency cache, offline builds, native ABI, release incremental enabled. time peak RSS is the largest child process, not simultaneous process memory. Three samples do not estimate P95 or prove a 5% gate.",
+      "free-threaded": {
+        "executable": "/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none/bin/python3.14t",
+        "implementation": "cpython",
+        "version": [
+          3,
+          14,
+          9
+        ],
+        "free_threaded": true,
+        "platform": "macosx-11.0-arm64",
+        "base_prefix": "/private/tmp/.sboxcache_501/audit_trae-sandbox_d8714b4b/.sandbox_exec/Users/bytedance/Documents/trae_projects/p2r/.tools/python/cpython-3.14.9+freethreaded-macos-aarch64-none"
+      },
+      "locks": {
+        "free-threaded-baseline": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2",
+        "free-threaded-candidate": "dbd5df2fc1da62fa43db61b9bb5aad9402ecf0310e013046353ac99fae71b9b2"
+      },
+      "summary": [
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 9.4275,
+          "mean_ns_per_unit": 9.372742916666667,
+          "stdev_ns_per_unit": 0.1929996095621591,
+          "cv": 0.020591582557862125
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "batch_call_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 22.4610678125,
+          "mean_ns_per_unit": 21.17813375,
+          "stdev_ns_per_unit": 2.573449464130337,
+          "cv": 0.1215144589466169
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "bytes_roundtrip_256",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 19.18354125,
+          "mean_ns_per_unit": 18.365329583333335,
+          "stdev_ns_per_unit": 2.1323985840283575,
+          "cv": 0.11611000904462526
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "dict_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 16.1179598046875,
+          "mean_ns_per_unit": 16.13788330078125,
+          "stdev_ns_per_unit": 0.0395922353196369,
+          "cv": 0.002453372265848533
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "drop_attached_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 12.3489975,
+          "mean_ns_per_unit": 12.250850729166666,
+          "stdev_ns_per_unit": 0.23448284795688126,
+          "cv": 0.019140127746281942
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "drop_deferred_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 20.83940125,
+          "mean_ns_per_unit": 20.713667604166666,
+          "stdev_ns_per_unit": 0.40220133220608917,
+          "cv": 0.019417195442741595
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "list_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 8.99210693359375,
+          "mean_ns_per_unit": 8.961947701822917,
+          "stdev_ns_per_unit": 0.15544367679761154,
+          "cv": 0.017344854262650217
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "scalar_calls_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 24.7314453125,
+          "mean_ns_per_unit": 24.303120729166665,
+          "stdev_ns_per_unit": 0.9877286946687854,
+          "cv": 0.04064205192724045
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "string_roundtrip_240",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 31.94072875,
+          "mean_ns_per_unit": 30.665972083333333,
+          "stdev_ns_per_unit": 2.856677840955877,
+          "cv": 0.09315464819419353
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 54562.37832,
+          "mean_ns_per_unit": 54393.23360666667,
+          "stdev_ns_per_unit": 362.8393617711894,
+          "cv": 0.006670670921956701
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 13139.28375,
+          "mean_ns_per_unit": 14521.37764,
+          "stdev_ns_per_unit": 2649.384214344731,
+          "cv": 0.18244716720587476
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 2383.14125,
+          "mean_ns_per_unit": 2931.1796533333336,
+          "stdev_ns_per_unit": 1205.5958029884218,
+          "cv": 0.41130054980335984
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_call_attach_detach",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 4622.4810425,
+          "mean_ns_per_unit": 4698.320729166667,
+          "stdev_ns_per_unit": 861.1510511261603,
+          "cv": 0.1832891155727679
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 2878.1749609375,
+          "mean_ns_per_unit": 2921.809674479167,
+          "stdev_ns_per_unit": 88.78817190448319,
+          "cv": 0.03038807513029072
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 593.263235625,
+          "mean_ns_per_unit": 601.4910525520834,
+          "stdev_ns_per_unit": 59.09759779357775,
+          "cv": 0.09825183191475731
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 99.287685546875,
+          "mean_ns_per_unit": 118.73099174479167,
+          "stdev_ns_per_unit": 55.187341064403725,
+          "cv": 0.4648099055975805
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "baseline",
+          "case": "threaded_deferred_drop_64",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 171.23102703125,
+          "mean_ns_per_unit": 168.10331055989582,
+          "stdev_ns_per_unit": 35.53840947915488,
+          "cv": 0.2114081475301607
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 10.16708375,
+          "mean_ns_per_unit": 9.83671875,
+          "stdev_ns_per_unit": 0.5935343929443452,
+          "cv": 0.060338656418772285,
+          "relative_median_change": 0.07844961548660834
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "batch_call_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 23.0991015625,
+          "mean_ns_per_unit": 22.760464270833335,
+          "stdev_ns_per_unit": 3.2303709500546622,
+          "cv": 0.14192904466339287,
+          "relative_median_change": 0.028406207368508074
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "bytes_roundtrip_256",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 19.783385,
+          "mean_ns_per_unit": 19.49822875,
+          "stdev_ns_per_unit": 2.3889701431216266,
+          "cv": 0.12252241851053403,
+          "relative_median_change": 0.03126866631050196
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "dict_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 16.90798828125,
+          "mean_ns_per_unit": 17.360406087239582,
+          "stdev_ns_per_unit": 1.3166613113512444,
+          "cv": 0.075842771461379,
+          "relative_median_change": 0.04901541424198963
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "drop_attached_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 13.23002625,
+          "mean_ns_per_unit": 13.421236979166666,
+          "stdev_ns_per_unit": 0.42378926204315226,
+          "cv": 0.031576021100065965,
+          "relative_median_change": 0.07134415162040475
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "drop_deferred_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 22.082083125,
+          "mean_ns_per_unit": 22.244331458333335,
+          "stdev_ns_per_unit": 0.6443226641032291,
+          "cv": 0.02896570145567797,
+          "relative_median_change": 0.059631361769570956
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "list_iter_1024",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 9.633330078125,
+          "mean_ns_per_unit": 9.451682662760417,
+          "stdev_ns_per_unit": 0.7132895258514353,
+          "cv": 0.07546693549729432,
+          "relative_median_change": 0.07130955506497538
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "scalar_calls_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 25.676185,
+          "mean_ns_per_unit": 24.399540000000002,
+          "stdev_ns_per_unit": 3.9507513104426297,
+          "cv": 0.16191908988622858,
+          "relative_median_change": 0.038199938400789835
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "string_roundtrip_240",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 32.6799475,
+          "mean_ns_per_unit": 31.982777916666667,
+          "stdev_ns_per_unit": 4.01140067140876,
+          "cv": 0.12542377281487996,
+          "relative_median_change": 0.02314345285562691
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 56744.70668,
+          "mean_ns_per_unit": 56123.96250666667,
+          "stdev_ns_per_unit": 1698.357902760541,
+          "cv": 0.030260833820470213,
+          "relative_median_change": 0.03999694344702087
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 13254.92375,
+          "mean_ns_per_unit": 15194.754166666666,
+          "stdev_ns_per_unit": 3403.5515202936945,
+          "cv": 0.2239951685273198,
+          "relative_median_change": 0.008801088567708115
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 5710.92354,
+          "mean_ns_per_unit": 4997.543055,
+          "stdev_ns_per_unit": 1597.0730392108146,
+          "cv": 0.3195716418316709,
+          "relative_median_change": 1.3963848303158697
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_call_attach_detach",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 5315.455415,
+          "mean_ns_per_unit": 5490.8842349999995,
+          "stdev_ns_per_unit": 1908.834621923367,
+          "cv": 0.34763701805185976,
+          "relative_median_change": 0.14991394580716677
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 1,
+          "samples": 3,
+          "median_ns_per_unit": 2918.0945703125,
+          "mean_ns_per_unit": 3073.242196145833,
+          "stdev_ns_per_unit": 310.7634684240722,
+          "cv": 0.10111909462059386,
+          "relative_median_change": 0.013869764665729978
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 2,
+          "samples": 3,
+          "median_ns_per_unit": 639.22578125,
+          "mean_ns_per_unit": 629.1526844791666,
+          "stdev_ns_per_unit": 128.81229808959344,
+          "cv": 0.20473932841314746,
+          "relative_median_change": 0.07747411749959299
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 4,
+          "samples": 3,
+          "median_ns_per_unit": 175.51412109375,
+          "mean_ns_per_unit": 181.24211479166667,
+          "stdev_ns_per_unit": 73.63611760488934,
+          "cv": 0.40628591036654055,
+          "relative_median_change": 0.7677330287942659
+        },
+        {
+          "python_mode": "free-threaded",
+          "variant": "candidate",
+          "case": "threaded_deferred_drop_64",
+          "threads": 8,
+          "samples": 3,
+          "median_ns_per_unit": 179.0649462890625,
+          "mean_ns_per_unit": 179.13947264322917,
+          "stdev_ns_per_unit": 23.15838989899465,
+          "cv": 0.12927575121936674,
+          "relative_median_change": 0.04575058266970977
+        }
+      ],
+      "finished_at": "2026-10-25T01:47:34.346524+00:00"
+    }
+  ]
+}

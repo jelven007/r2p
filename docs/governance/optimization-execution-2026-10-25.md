@@ -17,7 +17,7 @@
 | O-05 门禁与矩阵 | 本地门禁通过，远端保护受限 | 50 个原始汇总场景及意外跳过/矩阵遗漏阻断通过；完整周期矩阵已配置；远端保护 GET/PUT 均返回 403，main 仍未保护 |
 | O-06 候选制品准入 | 验收契约已落实，制品实现与验证中 | 同 SHA 清单、隔离 sparse 注册表、扩展与 CLI wheel 分别验收、发布 gate 和恢复；见[实施契约](candidate-acceptance.md)，尚不计验收成功 |
 | O-07 上游同步 | 上游工程依赖同步本地通过，运行时移植未覆盖 | 真实 fda3c584 来源、原始冲突、精确 pin 映射、1,166 条含 owner 文件清单和负例已验证；见[同步演练](../testing/reports/upstream-sync-2026-10-25.md) |
-| O-08 性能基线 | 采样中，尚未形成结论 | 新 walltime 程序覆盖调用/批量、转换、容器、附着与释放及 1/2/4/8 线程；固定 3a24917e/ba53c8a1，采集三次独立运行、干净/增量编译、RSS 与大小；free-threaded 待实际运行 |
+| O-08 性能基线 | 本地采样完成，性能门限尚未校准 | 固定 3a24917e/ba53c8a1，GIL/真实 free-threaded 共 204 条运行和 54 条编译样本，分布/CV/效果量/成本/大小已保留；见[报告](../testing/reports/performance-baseline-2026-10-25.md)，不宣称运行时加速 |
 | O-09 文档与运营 | 治理本地通过，外部样本/私密渠道未完成 | 20 条结构化证据、实现/验收分列、真实维护者与新片段来源已落实；见[治理验证](../testing/reports/evidence-governance-2026-10-25.md)及后续边界/绑定/同步验证 |
 | O-10 鲁棒性 | 本地验收通过，最终跨平台待核验 | 文件/JSON/关系/展开预算、11 项边界及 4,096 组变异输入、Mach-O 三形态 stub、43 项生命周期/GC/异常回归通过；见[边界验证](../testing/reports/introspection-boundaries-2026-10-25.md) |
 
@@ -47,3 +47,9 @@ MSRV 1.85.1 在隔离副本内完成 52 条编译检查，保留 9 个实际锁�
 九个 cargo-generate 模板也全部通过同源 FFI 解析。
 O-04/O-05 本地工作流 lint 和受影响工作流 zizmor 通过，Rustdoc/指南构建通过。
 main 保护应用接口因当前 GitHub integration 缺少相应权限返回 403；已保留可审阅的[规则配置](main-protection.json)，未将远端强制标为完成。
+
+2026-10-25：O-08 正式采样完成；两种解释器均为 3.14.9，free-threaded 实际 GIL 关闭。
+每模式三次独立进程、17 个场景、27 次编译；原始数据已纳入[结构化样本](../testing/data/performance-2026-10-25.json)。
+free-threaded 并发样本存在高波动，未将三样本效果量当作稳定退化或加速结论。
+最小/full 特性的编译成本分别记录，保留现有 ReferencePool 与同步算法。
+simulation [40150316510](https://github.com/jelven007/r2p/actions/runs/40150316510) 成功；它与本地 walltime 分开。
