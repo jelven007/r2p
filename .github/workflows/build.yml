@@ -52,6 +52,7 @@ jobs:
       # installs using setup-python do not work for arm macOS 3.9 and below
       - if: ${{ !(inputs.os == 'macos-latest' && contains(fromJSON('["3.9"]'), inputs.python-version) && inputs.python-architecture == 'x64') }}
         name: Set up Python ${{ inputs.python-version }}
+        id: interpreter
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ inputs.python-version }}
@@ -64,6 +65,33 @@ jobs:
           # workaround for the above, only available for 3.9
           python-version: ${{ inputs.os == 'macos-latest' && contains(fromJSON('["3.9"]'), inputs.python-version) && inputs.python-architecture == 'x64' && format('cpython-{0}-macos-x86-64', inputs.python-version) || '' }}
           save-cache: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'CI-save-pr-cache') }}
+
+      - name: Bind Nox and Rust to the selected interpreter
+        shell: bash
+        env:
+          TARGET_PYTHON: ${{ steps.interpreter.outputs.python-path }}
+          FALLBACK_PYTHON: cpython-3.9-macos-x86-64
+          FALLBACK_ALLOWED: ${{ inputs.os == 'macos-latest' && inputs.python-version == '3.9' && inputs.python-architecture == 'x64' }}
+        run: |
+          if [[ -z "$TARGET_PYTHON" ]]; then
+            if [[ "$FALLBACK_ALLOWED" != "true" ]]; then
+              echo "setup-python did not return the requested interpreter" >&2
+              exit 1
+            fi
+            TARGET_PYTHON="$(uv python find "$FALLBACK_PYTHON")"
+          fi
+          "$TARGET_PYTHON" - <<'PY'
+          import json, os, sys, sysconfig
+          with open(os.environ["GITHUB_ENV"], "a") as output:
+              for key in ("UV_PYTHON", "R2P_PYTHON"):
+                  output.write(f"{key}={sys.executable}\n")
+          print(json.dumps({
+              "executable": sys.executable,
+              "implementation": sys.implementation.name,
+              "version": list(sys.version_info[:3]),
+              "free_threaded": bool(sysconfig.get_config_var("Py_GIL_DISABLED")),
+          }))
+          PY
 
       - name: Install Rust toolchain
         shell: bash
@@ -124,6 +152,10 @@ jobs:
         run: uv run --isolated --only-group nox nox -s set-msrv-package-versions -- docs test-rust test-py
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target
+
+      - name: Diagnose Windows PyPy loader failures
+        if: failure() && inputs.os == 'windows-latest' && startsWith(inputs.python-version, 'pypy')
+        run: uv run --no-project --with pefile==2024.8.26 python tools/inspect_windows_imports.py target/debug/deps
 
       - name: Preserve MSRV source and dependency evidence
         if: always() && inputs.rust == inputs.MSRV
