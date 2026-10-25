@@ -8,7 +8,6 @@ import os
 import platform
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 import tomllib
@@ -16,6 +15,7 @@ import tomllib
 from tools.candidate_artifacts import ROOT, check_cli, digest, wheel_metadata
 from tools.consumer_smoke import python_in
 from tools.engineering.ci_matrix import CLI_PLATFORMS
+from tools.engineering.resources import scratch_directory
 
 PLATFORMS = CLI_PLATFORMS.keys()
 
@@ -92,37 +92,42 @@ def main() -> int:
     if not matches_platform(tag, args.platform_id):
         parser.error("CLI wheel ABI/platform differs from the native platform ID")
     metadata = wheel_metadata(wheel, "r2p-introspection", version, tag)
-    install = Path(tempfile.mkdtemp(prefix="r2p-cli-wheel-")) / "venv"
-    subprocess.run(["uv", "venv", str(install), "--python", sys.executable], check=True)
-    subprocess.run(
-        [
-            "uv",
-            "pip",
-            "install",
-            "--python",
-            str(python_in(install)),
-            "--no-deps",
-            str(wheel.resolve()),
-        ],
-        check=True,
-    )
-    executable = install / (
-        "Scripts/r2p-introspection.exe" if os.name == "nt" else "bin/r2p-introspection"
-    )
-    behavior = check_cli(executable, install.parent / "behavior")
-    record = {
-        "schema_version": 1,
-        "source_sha": source,
-        "platform_id": args.platform_id,
-        "host": platform.platform(),
-        "python": sys.version,
-        "artifact": metadata | {"path": wheel.name},
-        "behavior": behavior,
-        "result": "success",
-    }
-    (args.dist / f"cli-acceptance-{args.platform_id}.json").write_text(
-        json.dumps(record, indent=2) + "\n"
-    )
+    with scratch_directory(args.dist / ".scratch", "native-cli-") as scratch:
+        install = scratch / "venv"
+        subprocess.run(
+            ["uv", "venv", str(install), "--python", sys.executable], check=True
+        )
+        subprocess.run(
+            [
+                "uv",
+                "pip",
+                "install",
+                "--python",
+                str(python_in(install)),
+                "--no-deps",
+                str(wheel.resolve()),
+            ],
+            check=True,
+        )
+        executable = install / (
+            "Scripts/r2p-introspection.exe"
+            if os.name == "nt"
+            else "bin/r2p-introspection"
+        )
+        behavior = check_cli(executable, scratch / "behavior")
+        record = {
+            "schema_version": 1,
+            "source_sha": source,
+            "platform_id": args.platform_id,
+            "host": platform.platform(),
+            "python": sys.version,
+            "artifact": metadata | {"path": wheel.name},
+            "behavior": behavior,
+            "result": "success",
+        }
+        (args.dist / f"cli-acceptance-{args.platform_id}.json").write_text(
+            json.dumps(record, indent=2) + "\n"
+        )
     print(f"CLI wheel accepted after isolated native execution: {wheel.name}")
     return 0
 

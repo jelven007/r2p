@@ -9,6 +9,7 @@
 | `consumer_smoke.py` | 九个模板依赖图、sdist 重建、普通/abi3 wheel 隔离安装和嵌入异常验证 | `python -m tools.consumer_smoke --output target/consumer-check`；Python 3.14、uv、Rust |
 | `candidate.py` | 六个 SDK crate 的独立 sparse 注册表消费、三种 wheel 安装和跨版本 baseline 恢复 | Python 3.14、uv、Rust；各 SHA 独立稳定版本、精确依赖；输出目录须不存在 |
 | `candidate_artifacts.py` | 原始 crate/wheel 内容、精确依赖、源码、哈希和恢复 manifest 复验；CLI 行为探针 | `python -m tools.candidate_artifacts verify --manifest <path> --sha <SHA> --output <path>` |
+| `artifact_bundle.py` | 归档已验收的原始制品、manifest 和锁文件；按归档及逐文件摘要取回复验 | Python 3.14；取回需保存的完整 SHA 与归档 SHA256；不清理最后验收的制品 |
 | `release_gate.py` | 要求发行源码对应完整 CI 的全部必需任务与候选制品通过 | 已完成 Actions run、GitHub 权限；本地制品不替代完整远端 CI |
 | `publish_candidate.py` | 按顺序上传验收原始字节，等待索引/下载摘要，保存 journal 并恢复部分进度；默认仅验证请求 | 外部执行需同 SHA gate、--execute、开关及 token；--local-registry 仅接受回环 HTTP fixture |
 | `cli_wheel_acceptance.py` | 本机安装/执行 CLI wheel，核验七个原生平台制品集合 | 原始 wheel、完整 SHA、平台 ID；集合完整不代表本机执行了七个平台 |
@@ -19,7 +20,7 @@
 | `ci_policy.py` | 根据真实变更/事件选择检查，汇总阻断异常跳过和遗漏 | `python -m tools.ci_policy check`；CI select/conclude 使用事件与 needs JSON |
 | `engineering/ci_matrix.py` | 构建、Clippy、内省、跨编译、CLI 等执行组合与发行允许结果的统一定义 | Python 3.11+；稳定 ID、动态工作流和 gate 单源；矩阵修改进入完整验证 |
 | `evidence.py` | 校验 SHA/实际 GIL/步骤等级/理由；导入 Actions、离线导出、本地/候选/性能/环境数据，生成摘要 | Python 3.11+；`python -m tools.evidence check`，同 ID 不覆盖；缺少实际观测时 unrecorded |
-| `engineering/`、`tests/` | 无副作用的特性矩阵、参数契约、环境快照和 MSRV 隔离；标准库回归 | `python -m unittest discover -s tools/tests` |
+| `engineering/`、`tests/` | 特性矩阵、参数契约、环境快照、文档/平台/打包辅助与临时资源管理；标准库回归 | `python -m unittest discover -s tools/tests`；成功 scratch 清理、失败保留，成功 MSRV 会话保留证据与精确锁 |
 | `ffi-check/` | 对照 Python 头文件生成的 bindgen 定义与手写 FFI | 独立 workspace；Python 头文件、libclang 和可链接库 |
 | `maturin-bridge/` | 为 Maturin 提供固定协议包名；转发 r2p FFI 与 ABI 特性 | 私有、禁止发布；仅打包示例和测试依赖 |
 
