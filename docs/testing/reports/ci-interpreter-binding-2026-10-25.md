@@ -28,3 +28,9 @@ taiki-e/install-action 不支持 actionlint，回退 Cargo binstall 后报告该
 已改为下载官方 1.7.12 Linux amd64 release，并核验官方 asset SHA-256 `8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8`。
 工作流兼容副本 actionlint 和 zizmor 均通过，原始失败日志为 `target/optimization/engineering-ba53-failure.log`。
 该失败仍保留原始结果，新的安装步骤等待最终远端复验。
+
+该完整周期最终结束：91 个任务已完成，engineering 和 Windows GraalPy 失败，conclusion 正确阻断。
+[Windows GraalPy 任务](https://github.com/jelven007/r2p/actions/runs/40150316493/job/121040450770) 的官方 25.4.4 分发安装及 ensurepip 已成功运行 `bin/python.exe`；setup-python 的 `python-path` 却返回不存在的 `Scripts/python.exe`，绑定步骤因此退出 127，尚未运行 SDK 测试。
+已针对 Windows GraalPy 使用同一安装目录的 `bin/python.exe`；其他目标仍读取原输出。
+原始日志为 `target/optimization/graalpy-windows-40150316493.log`。
+这是安装器路径修正，未以其他解释器代替 GraalPy，也未减少矩阵；实际版本和 SDK 行为等待新 SHA 的远端运行。

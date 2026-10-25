@@ -47,7 +47,9 @@ def verify_set(directory: Path, sha: str, version: str) -> list[dict]:
             or digest(path) != row["artifact"]["sha256"]
         ):
             raise ValueError("CLI acceptance source/behavior/artifact mismatch")
-        wheel_metadata(path, "r2p-introspection", version, row["artifact"]["tags"][0])
+        wheel_metadata(
+            path, "r2p-introspection", version, row["artifact"]["filename_tag"]
+        )
         wheels.add(path.name)
     if wheels != {path.name for path in directory.glob("*.whl")}:
         raise ValueError("unaccepted wheel is present in the publish directory")

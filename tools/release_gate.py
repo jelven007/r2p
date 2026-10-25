@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from collections import Counter
@@ -135,6 +136,9 @@ def main() -> int:
     version = args.version.removeprefix("v")
     if actual_sha != args.sha or package["package"]["version"] != version:
         parser.error("checked-out source or version differs from the candidate")
+    reference = os.environ.get("GITHUB_REF", "")
+    if reference.startswith("refs/tags/") and reference != f"refs/tags/v{version}":
+        parser.error("release tag differs from the candidate SDK version")
 
     def api(path: str) -> dict:
         return json.loads(subprocess.check_output([args.gh, "api", path], text=True))

@@ -11,6 +11,7 @@ import sys
 import tarfile
 import zipfile
 from email.parser import Parser
+from itertools import product
 from pathlib import Path
 
 import tomllib
@@ -95,10 +96,14 @@ def wheel_metadata(path: Path, name: str, version: str, expected_tag: str) -> di
         (wheel_file,) = [file for file in files if file.endswith("/WHEEL")]
         wheel = Parser().parsestr(archive.read(wheel_file).decode())
         tags = wheel.get_all("Tag", [])
+        expanded_tags = {
+            "-".join(parts)
+            for parts in product(*(part.split(".") for part in expected_tag.split("-")))
+        }
         if (
             metadata["Name"] != name
             or metadata["Version"] != version
-            or expected_tag not in tags
+            or set(tags) not in (expanded_tags, {expected_tag})
             or not path.name.endswith(expected_tag + ".whl")
         ):
             raise ValueError(f"wheel identity/version/ABI/tag mismatch: {path}")
@@ -116,6 +121,7 @@ def wheel_metadata(path: Path, name: str, version: str, expected_tag: str) -> di
         "name": name,
         "version": version,
         "tags": tags,
+        "filename_tag": expected_tag,
         "sha256": digest(path),
         "bytes": path.stat().st_size,
     }
@@ -243,7 +249,9 @@ def verify_manifest(path: Path, sha: str) -> dict:
         raise ValueError("candidate is incomplete or has a different source")
     if set(manifest.get("variants", {})) != {"candidate", "baseline"}:
         raise ValueError("candidate and retained baseline are required")
-    for variant in manifest["variants"].values():
+    for variant_name, variant in manifest["variants"].items():
+        if variant["version"] != "0.30.0":
+            raise ValueError("candidate SDK version differs from the accepted contract")
         packages = variant["crates"]
         if {row["name"] for row in packages} != set(SDK) or len(packages) != len(SDK):
             raise ValueError("candidate SDK package set differs")
@@ -267,7 +275,18 @@ def verify_manifest(path: Path, sha: str) -> dict:
                     artifact, row["name"], variant["version"], variant["source_sha"]
                 )
             else:
-                wheel_metadata(artifact, row["name"], row["version"], row["tags"][0])
+                wheel_metadata(
+                    artifact, row["name"], row["version"], row["filename_tag"]
+                )
+        if len(variant.get("locks", {})) != 3:
+            raise ValueError("candidate consumer/embedding/CLI locks are incomplete")
+        for name, checksum in variant["locks"].items():
+            lock = (path.parent / variant_name / name).resolve()
+            if (
+                not lock.is_relative_to(path.parent.resolve())
+                or digest(lock) != checksum
+            ):
+                raise ValueError("candidate lock hash/path mismatch")
         if variant.get("registry_result") != "success":
             raise ValueError("candidate registry behavior is incomplete")
         for kind in ("native", "abi3"):
@@ -288,6 +307,16 @@ def verify_manifest(path: Path, sha: str) -> dict:
         raise ValueError("candidate and baseline sources differ from the contract")
     if manifest.get("restoration", {}).get("result") != "success":
         raise ValueError("candidate restoration is incomplete")
+    if manifest["restoration"]["source_sha"] != manifest["variants"]["baseline"][
+        "source_sha"
+    ] or manifest["variants"]["candidate"].get("negative_admission") != {
+        "wrong_version": "blocked",
+        "missing_dependency": "blocked",
+        "tampered_crate": "blocked",
+        "missing_import": "blocked",
+        "wrong_abi": "blocked",
+    }:
+        raise ValueError("candidate negative admission/restoration differs")
     return manifest
 
 

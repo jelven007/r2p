@@ -396,7 +396,27 @@ def main() -> int:
             cli_source = Path(cli_package["manifest_path"]).parent
             if not cli_source.is_relative_to(home / "registry/src"):
                 raise ValueError("CLI package did not come from the candidate registry")
+            if (
+                json.loads((cli_source / ".cargo_vcs_info.json").read_text())["git"][
+                    "sha1"
+                ]
+                != sha
+            ):
+                raise ValueError("CLI registry source differs from the candidate SHA")
             run("cargo", "run", "--locked", cwd=cli_project)
+            run("cargo", "generate-lockfile", cwd=cli_source)
+            cli_lock = output / variant / f"cli-{variant}.lock"
+            shutil.copyfile(cli_source / "Cargo.lock", cli_lock)
+            records["locks"][cli_lock.name] = digest(cli_lock)
+            records["graphs"]["cli"] = [
+                {
+                    "name": cli_package["name"],
+                    "version": cli_package["version"],
+                    "source": cli_package["source"],
+                    "manifest_path": str(cli_source / "Cargo.toml"),
+                    "source_sha": sha,
+                }
+            ]
             for abi in ("native", "abi3", "cli"):
                 wheel_dir = output / variant / abi
                 flags = ("--features", "abi3") if abi == "abi3" else ()
@@ -407,6 +427,7 @@ def main() -> int:
                     "maturin",
                     "build",
                     "--release",
+                    "--locked",
                     "--interpreter",
                     sys.executable,
                     "--out",
@@ -560,7 +581,7 @@ def main() -> int:
                     interpreter,
                     "--no-deps",
                     wrong_abi,
-                    reject="not compatible",
+                    reject="matching Python version tag",
                 )
                 records["negative_admission"] = {
                     "wrong_version": "blocked",

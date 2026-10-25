@@ -72,7 +72,14 @@ jobs:
           TARGET_PYTHON: ${{ steps.interpreter.outputs.python-path }}
           FALLBACK_PYTHON: cpython-3.9-macos-x86-64
           FALLBACK_ALLOWED: ${{ inputs.os == 'macos-latest' && inputs.python-version == '3.9' && inputs.python-architecture == 'x64' }}
+          GRAALPY_WINDOWS: ${{ inputs.os == 'windows-latest' && startsWith(inputs.python-version, 'graalpy') }}
+          GRAALPY_LOCATION: ${{ env.pythonLocation }}
         run: |
+          # setup-python reports Scripts/python.exe for Windows GraalPy, whose
+          # official archive and ensurepip use bin/python.exe instead.
+          if [[ "$GRAALPY_WINDOWS" == "true" ]]; then
+            TARGET_PYTHON="$GRAALPY_LOCATION/bin/python.exe"
+          fi
           if [[ -z "$TARGET_PYTHON" ]]; then
             if [[ "$FALLBACK_ALLOWED" != "true" ]]; then
               echo "setup-python did not return the requested interpreter" >&2
