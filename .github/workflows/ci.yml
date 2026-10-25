@@ -115,7 +115,9 @@ jobs:
           python-version: "3.14"
       - name: resolve MSRV
         id: resolve-msrv
-        run: echo MSRV=`python -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["workspace"]["package"]["rust-version"])'` >> $GITHUB_OUTPUT
+        run: |
+          MSRV=$(python -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["workspace"]["package"]["rust-version"])')
+          echo "MSRV=$MSRV" >> "$GITHUB_OUTPUT"
       - name: Select checks with explicit applicability
         id: selection
         run: python -m tools.ci_policy select

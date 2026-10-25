@@ -65,7 +65,7 @@ jobs:
         id: prepare_tag
         run: |
           TAG_NAME="${GITHUB_REF##*/}"
-          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
+          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Restore lychee cache
         id: restore-cache
@@ -105,7 +105,7 @@ jobs:
       - name: Get current r2p version
         run: |
           R2P_VERSION=$(python -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')
-          echo "R2P_VERSION=${R2P_VERSION}" >> $GITHUB_ENV
+          echo "R2P_VERSION=${R2P_VERSION}" >> "$GITHUB_ENV"
 
       - name: Build the site
         run: uv run --isolated --only-group nox nox -s build-netlify-site -- ${{ (github.ref != 'refs/heads/main' && '--preview') || '' }}
