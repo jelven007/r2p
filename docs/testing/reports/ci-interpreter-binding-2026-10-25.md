@@ -22,3 +22,9 @@ PyPy 没有 Py_Initialize API，独立 Rust 嵌入测试只编译；Python 扩�
 因此本次没有据此修改 FFI，Windows 专用导入的最终诊断仍由真实任务完成。
 工作流 actionlint（兼容副本）和 zizmor 均通过。
 最终解释器、ABI、平台行为和汇总结果必须按修复后的 SHA 重新核验。
+
+后续 [CI 40150316493](https://github.com/jelven007/r2p/actions/runs/40150316493) 的 engineering 中，格式、仓库/证据和工具回归已通过，随后在 actionlint 安装阶段失败。
+taiki-e/install-action 不支持 actionlint，回退 Cargo binstall 后报告该 crate 不存在；actionlint 是 Go 工具。
+已改为下载官方 1.7.12 Linux amd64 release，并核验官方 asset SHA-256 `8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8`。
+工作流兼容副本 actionlint 和 zizmor 均通过，原始失败日志为 `target/optimization/engineering-ba53-failure.log`。
+该失败仍保留原始结果，新的安装步骤等待最终远端复验。

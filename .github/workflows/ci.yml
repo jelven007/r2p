@@ -36,10 +36,19 @@ jobs:
         run: |
           uv run --isolated --only-group nox nox -s ruff rumdl repository-check typos
           uv run --isolated --only-group nox python -m tools.ci_policy check
-      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2.87.28
+      - name: Install actionlint
         if: contains(fromJSON(needs.resolve.outputs.plan).categories, 'tooling')
-        with:
-          tool: actionlint
+        env:
+          ACTIONLINT_VERSION: "1.7.12"
+          ACTIONLINT_SHA256: "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
+        run: |
+          curl --fail --silent --show-error --location \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+            --output "$RUNNER_TEMP/actionlint.tar.gz"
+          echo "${ACTIONLINT_SHA256}  $RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/r2p-tools"
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP/r2p-tools" actionlint
+          echo "$RUNNER_TEMP/r2p-tools" >> "$GITHUB_PATH"
       - name: Validate workflow syntax
         if: contains(fromJSON(needs.resolve.outputs.plan).categories, 'tooling')
         run: uv run --isolated --only-group nox python tools/check_workflows.py
