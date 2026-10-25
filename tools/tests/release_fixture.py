@@ -49,6 +49,7 @@ def main() -> int:
     ]
     for path in (
         consumer / "pyproject.toml",
+        consumer / ".template/pyproject.toml",
         consumer / ".template/Cargo.toml",
         consumer / "Cargo.toml",
     ):
